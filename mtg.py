@@ -99,7 +99,7 @@ def replace_reminders(text):
     return re.sub(r'^.*\)', '', text) # catch any unmatched closing parens at the beginning of the line (needed for hybrid cost reminders)
 
 def formatted_wrap(text):
-    return textwrap.fill('            {0}'.format(text)).strip()
+    return textwrap.fill(u'            {0}'.format(text)).strip()
 
 def get_modifiers(lst):
     modifiers = re.compile('^([!=|<>]+)')
@@ -165,9 +165,9 @@ def main(options, args):
     unified_content = [item for item in unified_content if item != u'\n||\n']
     unified_content = group(unified_content, 2)
     unified_content = group(unified_content, 6)
-    card_template = ("{0[Name]} {0[Cost]}\n"
-                   "{0[Type]}\nText: {0[Number]} {0[Rules Text]}\n"
-                   "{0[Set/Rarity]}")
+    card_template = (u"{0[Name]} {0[Cost]}\n"
+                   u"{0[Type]}\nText: {0[Number]} {0[Rules Text]}\n"
+                   u"{0[Set/Rarity]}")
     for card in unified_content:
         cards = {}
         print '\n------------------------------'
