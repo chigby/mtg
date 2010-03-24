@@ -53,7 +53,7 @@ Examples:
 import httplib2
 import re
 import textwrap
-import urllib
+import urllib, urllib2
 from BeautifulSoup import BeautifulSoup
 from optparse import OptionParser
 
@@ -100,6 +100,23 @@ def replace_reminders(text):
 
 def formatted_wrap(text):
     return textwrap.fill(u'            {0}'.format(text)).strip()
+
+def get_rulings(url):
+    url = url.replace('..', 'http://gatherer.wizards.com/Pages')
+    rulings_id = ('sctl00_ctl00_ctl00_MainContent_'
+                  'SubContent_SubContent_rulingsRow')
+    try:
+        sock = urllib2.urlopen(url)
+    except Exception as err:
+        return err.message
+    soup = BeautifulSoup(sock.read())
+    for tag in soup.findAll('autocard'):
+        tag.replaceWith(tag.string)
+    rulings_text = soup.findAll(attrs={'id' : re.compile('rulingText$')})
+    rulings_date = soup.findAll(attrs={'id' : re.compile('rulingDate$')})
+    rulings_text = [''.join(tag.contents) for tag in rulings_text]
+    rulings_date = [''.join(tag.contents) for tag in rulings_date]
+    return zip(rulings_date, rulings_text)
 
 def get_modifiers(lst):
     modifiers = re.compile('^([!=|<>]+)')
@@ -158,7 +175,12 @@ def main(options, args):
 
     td_tags = soup.table.findAll('td')
 
+    if options.rulings:
+        a_tags = soup.table.findAll('a')
+        hrefs = [tag['href'] for tag in a_tags]
+    
     content_lists = [tag.contents for tag in td_tags]
+    
     unified_content = []
     for lst in content_lists:
         unified_content.append(''.join([item.string or u'' for item in lst]))
@@ -168,7 +190,7 @@ def main(options, args):
     card_template = (u"{0[Name]} {0[Cost]}\n"
                    u"{0[Type]}\nText: {0[Number]} {0[Rules Text]}\n"
                    u"{0[Set/Rarity]}")
-    for card in unified_content:
+    for i, card in enumerate(unified_content):
         cards = {}
         print '\n------------------------------'
         for line in card:
@@ -188,7 +210,11 @@ def main(options, args):
             cards['Set/Rarity'] = textwrap.fill(cards['Set/Rarity'])
         cards['Rules Text'] = formatted_wrap(cards['Rules Text'])        
         print card_template.format(cards)
-    return len(unified_content)
+        if options.rulings and i < 5:
+            rulings = get_rulings(hrefs[i])
+            for date, text in rulings:
+                print textwrap.fill('{0}: {1}'.format(date, text))
+    return i+1
 
 if __name__ == '__main__':
     parser = OptionParser(usage='Usage: %prog [options] [cardname]')
@@ -212,6 +238,8 @@ if __name__ == '__main__':
                       help='include reminder text')
     parser.add_option('--hidesets', dest='hidesets', action='store_true',
                       help='hide which sets the card was in')
+    parser.add_option('--rulings', dest='rulings', action='store_true',
+                      help='show rulings for the card')
     (options, args) = parser.parse_args()
     num_results = main(options, args)
     if num_results != 1:
