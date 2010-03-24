@@ -148,7 +148,9 @@ def main(options, args):
             value = sep.split(value)
             url += '&%s=' % opt
             url += ('%s[%s]' * (len(value))) % tuple(get_modifiers(value))
-
+    
+    if options.special:
+        url += '&special=true'
     print url
     url = url.replace('"', '%22').replace(' ', '%20')
     http = httplib2.Http()
@@ -240,6 +242,8 @@ if __name__ == '__main__':
                       help='hide which sets the card was in')
     parser.add_option('--rulings', dest='rulings', action='store_true',
                       help='show rulings for the card')
+    parser.add_option('--special', dest='special', action='store_true',
+                      help='include special cards (e.g. planes)')
     (options, args) = parser.parse_args()
     num_results = main(options, args)
     if num_results != 1:
