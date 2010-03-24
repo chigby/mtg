@@ -103,8 +103,6 @@ def formatted_wrap(text):
 
 def get_rulings(url):
     url = url.replace('..', 'http://gatherer.wizards.com/Pages')
-    rulings_id = ('sctl00_ctl00_ctl00_MainContent_'
-                  'SubContent_SubContent_rulingsRow')
     try:
         sock = urllib2.urlopen(url)
     except Exception as err:
