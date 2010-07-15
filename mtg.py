@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/opt/local/bin/python
 """
 Console-based access to the Gatherer Magic Card Database.
 
@@ -91,12 +91,12 @@ params = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'
           }
 
 def prettify_text(text):
-    return text.strip('\r\n ').replace(u'\u2014', '--').replace('||', '') \
-        .replace('\n', ' ; ')
+    return text.strip('\r\n ').replace('||', '').replace('\n', ' ; ')
 
 def replace_reminders(text):
-    text = re.sub(r'\([^/]{15,}\)\ *', '', text)
-    return text
+    """Remove reminder text from cards (complete sentences enclosed in
+    parentheses)."""
+    return re.sub(r'\(.*\.\)\ *', '', text)    
 
 def formatted_wrap(text):
     return textwrap.fill(u'            {0}'.format(text)).strip()
