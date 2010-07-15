@@ -1,4 +1,4 @@
-#!/opt/local/bin/python
+#!/usr/bin/python
 """
 Console-based access to the Gatherer Magic Card Database.
 
@@ -95,8 +95,8 @@ def prettify_text(text):
         .replace('\n', ' ; ')
 
 def replace_reminders(text):
-    text = re.sub(r'\([^)]*\)\ *', '', text)
-    return re.sub(r'^.*\)', '', text) # catch any unmatched closing parens at the beginning of the line (needed for hybrid cost reminders)
+    text = re.sub(r'\([^/]{15,}\)\ *', '', text)
+    return text
 
 def formatted_wrap(text):
     return textwrap.fill(u'            {0}'.format(text)).strip()
