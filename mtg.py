@@ -149,8 +149,7 @@ def main(options, args):
     
     if options.special:
         url += '&special=true'
-    print options
-    return 0;
+    
     print url
     url = url.replace('"', '%22').replace(' ', '%20')
     http = httplib2.Http()
