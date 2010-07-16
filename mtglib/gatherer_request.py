@@ -32,13 +32,19 @@ class CardRequest(object):
     base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
                 '?output=spoiler&method=text&')
 
-    def __init__(self, options, name=None):
+    def __init__(self, options, special=False):
         self.options = options
+        self.special = special
         
     @property
     def url_fragments(self):
         return get_url_fragments(self.options)
 
     @property
+    def special_fragment(self):
+        return self.special and '&special=true' or ''
+
+    @property
     def url(self):
-        return self.base_url + '&'.join(self.url_fragments)
+        return self.base_url + '&'.join(self.url_fragments) + \
+            self.special_fragment

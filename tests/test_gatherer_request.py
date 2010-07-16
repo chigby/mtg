@@ -32,6 +32,14 @@ class GathererRequestTestCase(unittest2.TestCase):
                'output=spoiler&method=text&name=+[sengir]+[vampire]')
         self.assertEqual(request.url, url)
 
+    def test_url_special(self):
+        request = CardRequest({'name': 'only,blood,ends,your,nightmares'},
+                              special=True)
+        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
+               'output=spoiler&method=text&name=+[only]+[blood]+[ends]+[your]'
+               '+[nightmares]&special=true')
+        self.assertEqual(request.url, url)
+
     def test_url_complex(self):
         options = dict(set='eldrazi', type='instant', color='|r,|w', cmc='=1')
         request = CardRequest(options)

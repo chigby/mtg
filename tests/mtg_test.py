@@ -8,11 +8,11 @@ class ReminderTestCase(unittest2.TestCase):
     def setUp(self):
         pass
 
-    def test_regular(self):
+    def test_flying(self):
         text = 'Flying (Can only be blocked by creatures with flying.)'
         self.assertEqual(mtg.replace_reminders(text), 'Flying ')
 
-    def test_hybrid(self):
+    def test_hybrid_mana(self):
         text = '({(g/w)} can be paid with either {G} or {W}.) ; Other ' \
             'permanents you control can\'t be the targets of spells or' \
             ' abilities your opponents control.'
@@ -20,7 +20,7 @@ class ReminderTestCase(unittest2.TestCase):
             ' targets of spells or abilities your opponents control.'
         self.assertEqual(mtg.replace_reminders(text), replaced_text)
     
-    def test_hybrid_cost(self):
+    def test_hybrid_activation_cost(self):
         text = '{(g/u)}: ~this~ gains shroud until end of turn. ;'
         self.assertEqual(mtg.replace_reminders(text), text)
 
