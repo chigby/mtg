@@ -1,5 +1,8 @@
 import unittest2
+import httplib2 
+from dingus import DingusTestCase
 
+import mtglib.gatherer_request as mod
 from mtglib.gatherer_request import CardRequest
 
 class WhenInstantiatingCardRequest(unittest2.TestCase):
@@ -18,6 +21,9 @@ class WhenInstantiatingCardRequest(unittest2.TestCase):
                '?output=spoiler&method=text&')
         self.assertEqual(CardRequest.base_url, url)
 
+    def should_have_settings_url(self):
+        settings_url = 'http://gatherer.wizards.com/Pages/Settings.aspx'
+        assert CardRequest.settings_url == settings_url
 
 class WhenGettingUrl(unittest2.TestCase):
 
@@ -94,3 +100,15 @@ class WhenMakingSpecialRequest(unittest2.TestCase):
                'output=spoiler&method=text&name=+[only]+[blood]+[ends]+[your]'
                '+[nightmares]&special=true')
         self.assertEqual(request.url, url)
+
+class WhenSendingRequest(DingusTestCase(CardRequest)):
+
+    def setup(self):
+        super(WhenSendingRequest, self).setup()
+        self.request = CardRequest({'text': '"first strike"'})
+        
+    def should_send_settings_request(self):
+        self.request.send()
+        http = mod.httplib2.Http()
+        headers = {'Content-type': 'application/x-www-form-urlencoded'}
+        assert http.calls('request').once().args[1] == 'POST'

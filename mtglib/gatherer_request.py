@@ -1,5 +1,6 @@
 """Request to the Gatherer site"""
 import re
+import httplib2
 
 def get_modifiers(lst):
     modifiers = re.compile('^([!=|<>]+)')
@@ -31,6 +32,7 @@ class CardRequest(object):
 
     base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
                 '?output=spoiler&method=text&')
+    settings_url = 'http://gatherer.wizards.com/Pages/Settings.aspx'
 
     def __init__(self, options, special=False):
         self.options = options
@@ -48,3 +50,9 @@ class CardRequest(object):
     def url(self):
         return self.base_url + '&'.join(self.url_fragments) + \
             self.special_fragment
+
+    def send(self):
+        http = httplib2.Http()
+        http.request('', 'POST', headers={}, body='')
+        
+        
