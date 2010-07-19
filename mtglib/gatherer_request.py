@@ -1,4 +1,4 @@
-"""Request to the gatherer site"""
+"""Request to the Gatherer site"""
 import re
 
 def get_modifiers(lst):
