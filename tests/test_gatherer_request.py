@@ -1,7 +1,8 @@
 import unittest2
 import httplib2 
 import urllib
-from dingus import DingusTestCase
+from nose.tools import assert_raises
+from dingus import DingusTestCase, exception_raiser
 
 import mtglib.gatherer_request as mod
 from mtglib.gatherer_request import CardRequest
@@ -157,3 +158,16 @@ class WhenSendingRequest(DingusTestCase(CardRequest, exclude=['urllib', 'get_url
         assert http_args[0] == self.request.url
         assert http_args[1] == 'GET'
         assert http_kwargs['headers'] == {'Cookie': 'cookiedata'}
+
+class WhenCannotConnect(DingusTestCase(CardRequest)):
+    
+    def setup(self):
+        super(WhenCannotConnect, self).setup()
+        self.request = CardRequest({'text': '"first strike"'})
+        self.http = mod.httplib2.Http()
+
+    def should_fail_if_cannot_connect(self):
+        # needed since httplib2 is a dingus
+        mod.httplib2.ServerNotFoundError = httplib2.ServerNotFoundError
+        self.http.request = exception_raiser(httplib2.ServerNotFoundError)
+        assert self.request.send() == False

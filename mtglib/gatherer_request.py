@@ -1,6 +1,7 @@
 """Request to the Gatherer site"""
 import re
 import httplib2
+import logging
 import urllib
 
 def get_modifiers(lst):
@@ -78,9 +79,13 @@ class CardRequest(object):
 
     def send(self):
         http = httplib2.Http()
-        response, content = http.request(self.settings_url, 'POST', 
-                                         headers=self.settings_header,
-                                         body=urllib.urlencode(self.params))
+        try:
+            response, content = http.request(self.settings_url, 'POST', 
+                                             headers=self.settings_header,
+                                             body=urllib.urlencode(self.params))
+        except httplib2.ServerNotFoundError as ex:
+            logging.warning(ex)
+            return False
         card_header = headers = {'Cookie': response['set-cookie']}
 
         response, content = http.request(self.url, 'GET', headers=headers) 

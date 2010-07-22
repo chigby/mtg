@@ -11,3 +11,10 @@ class WhenInstantiatingCardExtractor(object):
 
     def should_accept_html(self):
         assert hasattr(self.extractor, 'html')
+
+
+class WhenExtractingCards(object):
+
+    def should_be_false_if_empty(self):
+        self.extractor = CardExtractor('')
+        assert not self.extractor.extract()

@@ -167,7 +167,7 @@ def main(options, args):
     except httplib2.ServerNotFoundError:
         print 'Could not connect.'
         return 0
-
+    
     soup = BeautifulSoup(content)
     if not soup.table:
         return 0
