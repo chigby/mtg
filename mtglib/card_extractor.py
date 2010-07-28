@@ -14,3 +14,9 @@ class CardExtractor(object):
             raise Exception('Bad format for cards.')
         for tag in soup.findAll('br'):
             tag.replaceWith('||')
+
+        td_tags = soup.table.findAll('td')
+        
+        # Get rulings hrefs here.
+
+        #content_lists = [tag.contents for tag in td_tags]

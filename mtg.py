@@ -96,7 +96,7 @@ def prettify_text(text):
 def replace_reminders(text):
     """Remove reminder text from cards (complete sentences enclosed in
     parentheses)."""
-    return re.sub(r'\(.*\.\)\ *', '', text)    
+    return re.sub(r'\(.*?\.\)\ *', '', text)    
 
 def formatted_wrap(text):
     return textwrap.fill(u'            {0}'.format(text)).strip()

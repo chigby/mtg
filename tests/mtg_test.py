@@ -15,6 +15,7 @@ class WhenRemovingReminderText(unittest2.TestCase):
             ' abilities your opponents control.'
         replaced_text =  '; Other permanents you control can\'t be the' \
             ' targets of spells or abilities your opponents control.'
+        print mtg.replace_reminders(text)
         assert mtg.replace_reminders(text) == replaced_text
     
     def should_preserve_hybrid_activation_costs(self):
@@ -34,3 +35,15 @@ class WhenRemovingReminderText(unittest2.TestCase):
                 '{(r/w)}: If ~this~ is a Warrior, it becomes an 8/8 Kithkin'
                 ' Spirit Warrior Avatar with flying and first strike.')
         assert mtg.replace_reminders(text) == text
+
+    def should_handle_multiple_reminders_with_mana_costs(self):
+        text = ('Kicker {2}{B} (You may pay an additional {2}{B} as you'
+                ' cast this spell.) ; Target creature gets +3/+0 until end of'
+                ' turn. If ~this~ was kicked, that creature gains lifelink '
+                'until end of turn. (Damage dealt by the creature also causes '
+                'its controller to gain that much life.)')
+        replaced_text = ('Kicker {2}{B} ; Target creature gets +3/+0 until '
+                         'end of turn. If ~this~ was kicked, that creature '
+                         'gains lifelink until end of turn. ')
+        print '({0})'.format(mtg.replace_reminders(text))
+        assert mtg.replace_reminders(text) == replaced_text

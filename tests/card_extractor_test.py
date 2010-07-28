@@ -31,12 +31,13 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         assert_raises(Exception, CardExtractor('<html></html>').extract)
        
     def should_replace_br_tags_with_pipes(self):
-        soup = mod.BeautifulSoup.BeautifulSoup()
         CardExtractor('<html></html>').extract()
         soup = mod.BeautifulSoup.BeautifulSoup()
         for tag in soup.findAll():
             assert tag.calls('replaceWith', '||')
         assert soup.calls('findAll', 'br').once()
         
-        
-        
+    def should_find_all_td_tags(self):
+        CardExtractor('<html></html>').extract()
+        table = mod.BeautifulSoup.BeautifulSoup().table
+        assert table.calls('findAll', 'td').once()
