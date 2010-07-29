@@ -22,6 +22,10 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         assert not CardExtractor('').extract()
         
     def should_parse_html(self):
+        table = mod.BeautifulSoup.BeautifulSoup().table
+        for tag in table.findAll():
+            for contents in tag.contents:
+                contents.string = 'stringish'
         CardExtractor('<html></html>').extract()
         assert mod.BeautifulSoup.calls('BeautifulSoup', '<html></html>').once()
 
@@ -31,6 +35,10 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         assert_raises(Exception, CardExtractor('<html></html>').extract)
        
     def should_replace_br_tags_with_pipes(self):
+        table = mod.BeautifulSoup.BeautifulSoup().table
+        for tag in table.findAll():
+            for contents in tag.contents:
+                contents.string = 'stringish'
         CardExtractor('<html></html>').extract()
         soup = mod.BeautifulSoup.BeautifulSoup()
         for tag in soup.findAll():
@@ -38,6 +46,16 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         assert soup.calls('findAll', 'br').once()
         
     def should_find_all_td_tags(self):
-        CardExtractor('<html></html>').extract()
         table = mod.BeautifulSoup.BeautifulSoup().table
+        for tag in table.findAll():
+            for contents in tag.contents:
+                contents.string = 'stringish'
+        CardExtractor('<html></html>').extract()
         assert table.calls('findAll', 'td').once()
+
+    def should_extract_text_from_tags(self):
+        table = mod.BeautifulSoup.BeautifulSoup().table
+        for tag in table.findAll():
+            for contents in tag.contents:
+                contents.string = 'stringish'
+        CardExtractor('<html></html>').extract()

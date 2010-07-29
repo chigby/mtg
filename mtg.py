@@ -135,7 +135,7 @@ def main(options, args):
     name = '+'.join(['[{0}]'.format(arg) for arg in args])
 
     url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-           '?output=spoiler&method=text&name={0}'.format(name)) 
+           '?output=spoiler&method=text&name={0}'.format(name))
 
     possible_options = ['text', 'color', 'subtype', 'type', 'set', 'cmc',
                         'power', 'tough', 'rarity']
@@ -181,7 +181,7 @@ def main(options, args):
         hrefs = [tag['href'] for tag in a_tags]
     
     content_lists = [tag.contents for tag in td_tags]
-    
+    print content_lists
     unified_content = []
     for lst in content_lists:
         unified_content.append(''.join([item.string or u'' for item in lst]))
