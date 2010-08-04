@@ -48,7 +48,8 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
     def should_find_all_td_tags(self):
         assert self.table.calls('findAll', 'td').once()
 
-    def should_extract_text_from_tags(self):
-        print self.extracted
-        assert self.extracted == \
-            [u'\r\n string\r\n\r\n string\r\n\r\n string\r\n'] * 13
+    def should_extract_and_group_text_from_tags(self):
+        fragment = '\r\n string\r\n'
+        # assert self.extracted == \
+        #     [u'\r\n string\r\n\r\n string\r\n\r\n string\r\n'] * 13
+        assert self.extracted == [((fragment*3,)*2,)*6]
