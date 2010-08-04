@@ -45,5 +45,4 @@ class WhenRemovingReminderText(unittest2.TestCase):
         replaced_text = ('Kicker {2}{B} ; Target creature gets +3/+0 until '
                          'end of turn. If ~this~ was kicked, that creature '
                          'gains lifelink until end of turn. ')
-        print '({0})'.format(mtg.replace_reminders(text))
         assert mtg.replace_reminders(text) == replaced_text
