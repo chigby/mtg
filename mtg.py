@@ -181,7 +181,7 @@ def main(options, args):
         hrefs = [tag['href'] for tag in a_tags]
     
     content_lists = [tag.contents for tag in td_tags]
-    print content_lists
+    
     unified_content = []
     for lst in content_lists:
         unified_content.append(''.join([item.string or u'' for item in lst]))

@@ -1,4 +1,4 @@
-from dingus import DingusTestCase
+from dingus import DingusTestCase, Dingus, returner
 from nose.tools import assert_raises
 
 import mtglib.card_extractor as mod
@@ -22,10 +22,12 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         super(WhenExtractingCards, self).setup()
         self.extractor = CardExtractor('<html></html>')
         self.table = mod.BeautifulSoup.BeautifulSoup().table
+        self.table.findAll.return_value = [Dingus()] * 13 
         for tag in self.table.findAll():
+            tag.contents = [Dingus()] * 3
             for contents in tag.contents:
-                contents.string = 'stringish'
-        self.extractor.extract()
+                contents.string = u'\r\n string\r\n'
+        self.extracted = self.extractor.extract()
 
     def should_be_false_if_empty(self):
         assert not CardExtractor('').extract()
@@ -34,8 +36,7 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         assert mod.BeautifulSoup.calls('BeautifulSoup', '<html></html>').once()
 
     def should_raise_exception_if_bad_format(self):
-        soup = mod.BeautifulSoup.BeautifulSoup()
-        soup.table = False
+        mod.BeautifulSoup.BeautifulSoup().table = False
         assert_raises(Exception, CardExtractor('<html></html>').extract)
        
     def should_replace_br_tags_with_pipes(self):
@@ -48,4 +49,6 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         assert self.table.calls('findAll', 'td').once()
 
     def should_extract_text_from_tags(self):
-        pass
+        print self.extracted
+        assert self.extracted == \
+            [u'\r\n string\r\n\r\n string\r\n\r\n string\r\n'] * 13
