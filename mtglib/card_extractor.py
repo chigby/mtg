@@ -5,6 +5,7 @@ class CardExtractor(object):
 
     def __init__(self, html):
         self.html = html
+        self.fields_per_card = 6
 
     def _group(self, lst, n):
         newlist = []
@@ -14,7 +15,8 @@ class CardExtractor(object):
                 newlist.append(tuple(val))
         return newlist
 
-    def extract(self):
+    def extract(self, get_card_urls=False):
+        data_fields = self.fields_per_card
         if not self.html:
             return False
         soup = BeautifulSoup.BeautifulSoup(self.html)
@@ -26,13 +28,20 @@ class CardExtractor(object):
         td_tags = soup.table.findAll('td')
         
         # Get rulings hrefs here.
+        if get_card_urls:
+            data_fields = data_fields + 1
+            a_tags = soup.table.findAll('a')
+            card_urls = [tag['href'] for tag in a_tags]
 
         content_lists = [tag.contents for tag in td_tags]
-        print td_tags
         unified_content = []
-        for lst in content_lists:
+        for i, lst in enumerate(content_lists):
+            if get_card_urls and i % (self.fields_per_card * 2) == 0:
+                unified_content.append('card_url')
+                unified_content.append(card_urls.pop(0))
             unified_content.append(''.join([item.string or u'' for item in lst]))
         # TODO: filter '\n||\n here
         unified_content = self._group(unified_content, 2)
-        unified_content = self._group(unified_content, 6)        
+        unified_content = self._group(unified_content, data_fields)
+        print unified_content
         return unified_content
