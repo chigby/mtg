@@ -121,6 +121,9 @@ class WhenSendingRequest(DingusTestCase(CardRequest, exclude=['urllib', 'params'
         assert http_args[1] == 'GET'
         assert http_kwargs['headers'] == {'Cookie': 'cookiedata'}
 
+    def should_return_content(self):
+        assert self.request.send() == 'foo'
+
 class WhenCannotConnect(DingusTestCase(CardRequest)):
     
     def setup(self):

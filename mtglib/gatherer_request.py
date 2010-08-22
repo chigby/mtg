@@ -63,6 +63,6 @@ class CardRequest(object):
         card_header = headers = {'Cookie': response['set-cookie']}
 
         response, content = http.request(self.url, 'GET', headers=headers)
-
+        return content
 
         
