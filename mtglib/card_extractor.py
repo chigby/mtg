@@ -37,11 +37,12 @@ class CardExtractor(object):
         unified_content = []
         for i, lst in enumerate(content_lists):
             if get_card_urls and i % (self.fields_per_card * 2) == 0:
-                unified_content.append('card_url')
+                unified_content.append('url')
                 unified_content.append(card_urls.pop(0))
             unified_content.append(''.join([item.string or u'' for item in lst]))
-        # TODO: filter '\n||\n here
+        
+        unified_content = [item for item in unified_content if item != u'\n||\n']
         unified_content = self._group(unified_content, 2)
         unified_content = self._group(unified_content, data_fields)
-        print unified_content
+        
         return unified_content

@@ -27,6 +27,7 @@ class Card(object):
         self.set_rarity = ''
         self.loyalty = ''
         self.power_toughness = ''
+        self.url = ''
         self.card_template = (u"{0.name} {0.cost}\n"
                               u"{0.type}\nText: {0.number} {0.rules_text}\n"
                               u"{0.set_rarity}")

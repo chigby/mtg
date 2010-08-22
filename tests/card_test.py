@@ -17,6 +17,9 @@ class DescribeCard(object):
 
     def should_have_rules_text(self):
         assert hasattr(self.card, 'rules_text')
+
+    def should_have_card_url(self):
+        assert hasattr(self.card, 'url')
         
     def should_have_set_rarity(self):
         assert hasattr(self.card, 'set_rarity')
@@ -73,6 +76,7 @@ class WhenCreatingPlaneswalkerFromBlock(object):
     
     def setUp(self):
         self.block = (
+            ('url', 'http://www.com'), 
             (u'\r\n                        Name:\r\n                    ', u'\nLiliana Vess\n'), 
             (u'\r\n                        Cost:\r\n                    ', u'\r\n                        3BB\r\n                    '), 
             (u'\r\n                        Type:\r\n                    ', u'\r\n                        Planeswalker  \u2014 Liliana\r\n                    '), 
@@ -98,6 +102,9 @@ class WhenCreatingPlaneswalkerFromBlock(object):
 
     def should_extract_loyalty(self):
         assert self.card.loyalty == '(5)'
+
+    def should_extract_url(self):
+        assert self.card.url == 'http://www.com'
 
 
 class WhenPrintingCreatureCard(unittest2.TestCase):

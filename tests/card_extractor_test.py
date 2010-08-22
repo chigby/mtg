@@ -18,6 +18,39 @@ class WhenInstantiatingCardExtractor(object):
     def should_recognize_fields_per_card(self):
         assert self.extractor.fields_per_card == 6
 
+class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
+    
+    def setup(self):
+        super(WhenExtractingCardsWithBlankLines, self).setup()
+        self.extractor = CardExtractor('<html></html>')
+        self.table = mod.BeautifulSoup.BeautifulSoup().table
+        self.table.findAll.return_value = [Dingus()] * 13
+        all_tags = []
+        for i in range(26):
+            print i % 2 == 0
+            tag = Dingus()
+            tag.contents = [Dingus()] * 3
+            tag['href'] = 'http://www.com'
+            if i % 2 != 0:
+                for contents in tag.contents:                    
+                    contents.string = u'\r\n string\r\n'
+            else:
+                all_contents = []
+                for i in range(3):
+                    contents = Dingus()
+                    if i == 1:
+                        contents.string = u'||'
+                    else:
+                        contents.string = u'\n'
+                    all_contents.append(contents)
+                tag.contents = all_contents
+            all_tags.append(tag)
+        self.table.findAll.return_value = all_tags
+        self.extracted = self.extractor.extract()
+
+    def should_remove_blank_lines(self):
+        fragment = '\r\n string\r\n'
+        assert self.extracted == [((fragment*3,)*2,)*6] 
 
 class WhenExtractingCards(DingusTestCase(CardExtractor)):
 
@@ -43,7 +76,7 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
     def should_add_card_urls_to_content(self):
         extracted = self.extractor.extract(get_card_urls=True)
         fragment = '\r\n string\r\n'
-        expected = [( ('card_url', 'http://www.com'), (fragment*3,)*2, 
+        expected = [( ('url', 'http://www.com'), (fragment*3,)*2, 
                       (fragment*3,)*2, (fragment*3,)*2, (fragment*3,)*2, 
                       (fragment*3,)*2, (fragment*3,)*2,)]
         assert extracted == expected
