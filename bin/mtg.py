@@ -10,6 +10,8 @@ import sys
 from logging import handlers, Formatter
 from optparse import OptionParser
 from mtglib.gatherer_request import CardRequest
+from mtglib.card_extractor import CardExtractor
+from mtglib.card import Card
 
 def main(args):
 
@@ -69,7 +71,11 @@ def main(args):
             card_options[a] = b
     logger.debug(card_options)
     request = CardRequest(card_options, special=options.special)
-    
+    extractor = CardExtractor(request.send())
+    parsed = extractor.extract()
+    cards = []
+    for block in parsed:
+        print Card.from_block(block).show()
     return 0
 
 if __name__ == '__main__':
