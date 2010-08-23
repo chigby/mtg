@@ -1,6 +1,7 @@
 import unittest2
 
-from mtglib.constants import settings_url, settings_header, params, base_url
+from mtglib.constants import settings_url, settings_header, params, base_url, \
+    card_flags
 
 PARAMS = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'
           '$CardSearchBox':'Search Terms...',
@@ -43,3 +44,7 @@ class DescribeConstants(unittest2.TestCase):
 
     def should_have_settings_params(self):
         assert params == PARAMS
+
+    def should_have_card_flags(self):
+        assert card_flags == ['text', 'color', 'subtype', 'type', 'set', 'cmc',
+                              'power', 'tough', 'rarity', 'name']

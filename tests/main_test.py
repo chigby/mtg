@@ -3,7 +3,8 @@ from dingus import DingusTestCase
 from bin.mtg import main
 import bin.mtg as mod
 
-class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser'])):
+class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser', 
+                                                        'card_flags'])):
     
     def setup(self):
         super(DescribeMainProgram, self).setup()
@@ -42,5 +43,4 @@ class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser'])):
     def should_show_cards(self):
         main(['./mtg.py', 'sengir', 'vampire'])
         assert mod.Card.from_block().calls('show')
-            # print mod.Card.from_block.calls()
-            # assert card.calls('show')
+

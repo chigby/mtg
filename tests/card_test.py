@@ -55,7 +55,6 @@ class WhenCreatingFromBlock(object):
                       'creatures with flying or reach.) ; Whenever a creature '
                       'dealt damage by Sengir Vampire this turn is put into a '
                       'graveyard, put a +1/+1 counter on Sengir Vampire.')
-        print self.card.rules_text
         assert self.card.rules_text == rules_text
 
     def should_extract_set_rarity(self):

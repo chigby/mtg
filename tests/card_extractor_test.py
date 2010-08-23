@@ -27,7 +27,6 @@ class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
         self.table.findAll.return_value = [Dingus()] * 13
         all_tags = []
         for i in range(26):
-            print i % 2 == 0
             tag = Dingus()
             tag.contents = [Dingus()] * 3
             tag['href'] = 'http://www.com'

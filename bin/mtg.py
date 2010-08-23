@@ -12,6 +12,7 @@ from optparse import OptionParser
 from mtglib.gatherer_request import CardRequest
 from mtglib.card_extractor import CardExtractor
 from mtglib.card import Card
+from mtglib.constants import card_flags
 
 def main(args):
 
@@ -63,19 +64,16 @@ def main(args):
     (options, args) = parser.parse_args(args[1:])
     options.name =  ','.join(args)
 
-    card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc',
-                  'power', 'tough', 'rarity', 'name']
     card_options = {}
     for a, b in zip(card_flags, map(vars(options).get, card_flags)):
         if b:
             card_options[a] = b
     logger.debug(card_options)
     request = CardRequest(card_options, special=options.special)
-    extractor = CardExtractor(request.send())
-    parsed = extractor.extract()
-    cards = []
+    parsed = CardExtractor(request.send()).extract()
     for block in parsed:
         print Card.from_block(block).show()
+
     return 0
 
 if __name__ == '__main__':
