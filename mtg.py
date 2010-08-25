@@ -125,6 +125,7 @@ def main(options, args):
     if options.rulings:
         a_tags = soup.table.findAll('a')
         hrefs = [tag['href'] for tag in a_tags]
+        print hrefs
     
     content_lists = [tag.contents for tag in td_tags]
     
@@ -140,10 +141,10 @@ def main(options, args):
     for i, card in enumerate(unified_content):
         cards = {}
         print '\n------------------------------'
-        print card
+        #print card
         for line in card:
             cards[line[0].strip(':\r\n ')] = prettify_text(line[1])
-        print cards
+        #print cards
         # removes the name from the card text.  make optional?
         cards['Rules Text'] = (cards['Rules Text'].
                                replace(cards['Name'], '~this~'))

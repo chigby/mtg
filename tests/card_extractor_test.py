@@ -1,8 +1,10 @@
+import re
+
 from dingus import DingusTestCase, Dingus, returner
 from nose.tools import assert_raises
 
 import mtglib.card_extractor as mod
-from mtglib.card_extractor import CardExtractor
+from mtglib.card_extractor import CardExtractor, RulingExtractor
 
 class WhenInstantiatingCardExtractor(object):
 
@@ -101,3 +103,54 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
         # assert self.extracted == \
         #     [u'\r\n string\r\n\r\n string\r\n\r\n string\r\n'] * 13
         assert self.extracted == [((fragment*3,)*2,)*6]
+
+class DescribeRulingExtractor(object):
+
+    def should_accept_html(self):
+        self.extractor = RulingExtractor('<html></html>')
+        assert self.extractor.html == '<html></html>'
+
+    def should_replace_autocard_tags_with_its_content(self):
+        self.extractor = RulingExtractor('<html></html>')
+        self.extractor.extract()
+        for tag in mod.BeautifulSoup.BeautifulSoup().findAll():
+            assert tag.calls('replaceWith', tag.string)
+
+
+class WhenExtractingRulings(DingusTestCase(RulingExtractor)):
+
+    def setup(self):
+        super(WhenExtractingRulings, self).setup()
+        self.extractor = RulingExtractor('<html></html>')
+        self.soup = mod.BeautifulSoup.BeautifulSoup()
+        
+        def compile_(string):
+            return string
+        mod.re.compile = compile_
+
+        def findAll(attrs):
+            all_tags = [Dingus()] *3 
+            for tag in all_tags:
+                if attrs == 'autocard':
+                    tag.string = 'autocard'
+                elif 'rulingText$' in attrs.values():
+                    tag.contents = 'This is a ruling'
+                elif 'rulingDate$' in attrs.values():
+                    tag.contents = '2010-08-23'
+            return all_tags
+        self.soup.findAll = findAll
+        self.extracted = self.extractor.extract()        
+
+    def should_return_false_if_no_html(self):
+        self.extractor = RulingExtractor('')
+        assert self.extractor.extract() == False
+
+    def should_parse_html(self):
+        assert mod.BeautifulSoup.calls('BeautifulSoup', '<html></html>').once()
+
+    def should_combine_ruling_contents(self):
+        print self.extracted
+        assert self.extracted == [('2010-08-23', 'This is a ruling'), 
+                                  ('2010-08-23', 'This is a ruling'), 
+                                  ('2010-08-23', 'This is a ruling')]
+

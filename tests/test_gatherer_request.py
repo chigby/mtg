@@ -5,16 +5,16 @@ from nose.tools import assert_raises
 from dingus import DingusTestCase, exception_raiser
 
 import mtglib.gatherer_request as mod
-from mtglib.gatherer_request import CardRequest
+from mtglib.gatherer_request import SearchRequest, CardRequest
 from mtglib.constants import settings_url, settings_header, params
 
-class WhenInstantiatingCardRequest(unittest2.TestCase):
+class WhenInstantiatingSearchRequest(unittest2.TestCase):
 
     def setUp(self):
-        self.request = CardRequest({'text': 'first strike'})
+        self.request = SearchRequest({'text': 'first strike'})
         
     def should_be_instance_of_card_request(self):
-        assert isinstance(self.request, CardRequest)
+        assert isinstance(self.request, SearchRequest)
         
     def should_store_options(self):
         assert self.request.options == {'text': 'first strike'}
@@ -23,36 +23,36 @@ class WhenInstantiatingCardRequest(unittest2.TestCase):
 class WhenGettingUrl(unittest2.TestCase):
 
     def should_group_text_in_brackets(self):
-        request = CardRequest({'text': 'first strike'})
+        request = SearchRequest({'text': 'first strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&text=+[first strike]')
         assert request.url == url
                                                                                 
     def should_preserve_exact_quotes(self):
-        request = CardRequest({'text': '"first strike"'})
+        request = SearchRequest({'text': '"first strike"'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&text=+["first strike"]')
         assert request.url == url
 
     def should_parse_logical_or(self):
-        request = CardRequest({'text': '|first,|strike'})
+        request = SearchRequest({'text': '|first,|strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&text=|[first]|[strike]')
         assert request.url == url
 
     def should_parse_sharp_comparison_operators(self):
-        request = CardRequest({'cmc': '=5', 'power': '<4', 'tough':'>3'})
+        request = SearchRequest({'cmc': '=5', 'power': '<4', 'tough':'>3'})
         assert 'cmc=+=[5]' in request.url
         assert 'power=+<[4]' in request.url
         assert 'tough=+>[3]' in request.url
 
     def should_parse_comparison_operators(self):
-        request = CardRequest({'power': '<=4', 'tough':'>=3'})
+        request = SearchRequest({'power': '<=4', 'tough':'>=3'})
         assert 'power=+<=[4]' in request.url
         assert 'tough=+>=[3]' in request.url
         
     def should_separate_name_words(self):
-        request = CardRequest({'name': 'sengir,vampire'})
+        request = SearchRequest({'name': 'sengir,vampire'})
         # this means we'll have to use something like:
         #     name = ','.join(args)
         #     opts['name'] = name
@@ -61,12 +61,12 @@ class WhenGettingUrl(unittest2.TestCase):
         self.assertEqual(request.url, url)
 
     def should_parse_not_operator(self):
-        request = CardRequest({'text': '!graveyard'})
+        request = SearchRequest({'text': '!graveyard'})
         assert 'text=+![graveyard]' in request.url
         
     def should_combine_multiple_terms(self):
         options = dict(set='eldrazi', type='instant', color='|r,|w', cmc='=1')
-        request = CardRequest(options)
+        request = SearchRequest(options)
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&color=|[r]|[w]&cmc=+=[1]'
                '&set=+[eldrazi]&type=+[instant]')
@@ -79,7 +79,7 @@ class WhenGettingUrl(unittest2.TestCase):
 class WhenMakingSpecialRequest(unittest2.TestCase):
 
     def setUp(self):
-        self.request = CardRequest({'name': 'only,blood,ends,your,nightmares'},
+        self.request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
                               special=True)
         
     def should_have_special(self):
@@ -89,18 +89,18 @@ class WhenMakingSpecialRequest(unittest2.TestCase):
         assert self.request.special_fragment == '&special=true'
 
     def should_include_special_option_in_url(self):
-        request = CardRequest({'name': 'only,blood,ends,your,nightmares'},
+        request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
                               special=True)
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&name=+[only]+[blood]+[ends]+[your]'
                '+[nightmares]&special=true')
         self.assertEqual(request.url, url)
 
-class WhenSendingRequest(DingusTestCase(CardRequest, exclude=['urllib', 'params', 'settings_url', 'settings_header'])):
+class WhenSendingRequest(DingusTestCase(SearchRequest, exclude=['urllib', 'params', 'settings_url', 'settings_header'])):
 
     def setup(self):
         super(WhenSendingRequest, self).setup()
-        self.request = CardRequest({'text': '"first strike"'})
+        self.request = SearchRequest({'text': '"first strike"'})
         self.http = mod.httplib2.Http()
         self.http.request.return_value = ({'set-cookie':'cookiedata'}, 'foo')
         
@@ -124,11 +124,11 @@ class WhenSendingRequest(DingusTestCase(CardRequest, exclude=['urllib', 'params'
     def should_return_content(self):
         assert self.request.send() == 'foo'
 
-class WhenCannotConnect(DingusTestCase(CardRequest)):
+class WhenCannotConnect(DingusTestCase(SearchRequest)):
     
     def setup(self):
         super(WhenCannotConnect, self).setup()
-        self.request = CardRequest({'text': '"first strike"'})
+        self.request = SearchRequest({'text': '"first strike"'})
         self.http = mod.httplib2.Http()
 
     def should_fail_if_cannot_connect(self):
@@ -136,3 +136,26 @@ class WhenCannotConnect(DingusTestCase(CardRequest)):
         mod.httplib2.ServerNotFoundError = httplib2.ServerNotFoundError
         self.http.request = exception_raiser(httplib2.ServerNotFoundError)
         assert self.request.send() == False
+
+class DescribeCardRequest(DingusTestCase(CardRequest)):
+
+    def should_accept_url(self):
+        request = CardRequest('http://www.com')
+        assert request.url == 'http://www.com'
+
+    def should_open_url(self):
+        request = CardRequest('http://www.com')
+        request.send()
+        assert mod.urllib2.calls('urlopen', 'http://www.com').once()
+
+    def should_read_from_url(self):
+        request = CardRequest('http://www.com')
+        request.send()
+        assert mod.urllib2.urlopen().calls('read')
+
+    def should_fix_relative_urls(self):
+        request = CardRequest('../Card/Details.aspx?multiverseid=212635')
+        fixed_url = ('http://gatherer.wizards.com/Pages/Card/Details.aspx'
+                     '?multiverseid=212635')
+        request.send()
+        assert mod.urllib2.calls('urlopen', fixed_url)

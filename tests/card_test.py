@@ -1,4 +1,8 @@
 import unittest2
+
+from dingus import DingusTestCase, Dingus
+
+import mtglib.card as mod
 from mtglib.card import Card, replace_reminders
 
 class DescribeCard(object):
@@ -105,7 +109,6 @@ class WhenCreatingPlaneswalkerFromBlock(object):
     def should_extract_url(self):
         assert self.card.url == 'http://www.com'
 
-
 class WhenPrintingCreatureCard(unittest2.TestCase):
 
     def setUp(self):
@@ -127,6 +130,59 @@ class WhenPrintingCreatureCard(unittest2.TestCase):
         assert self.card.show() == (u'Cloud Crusader 2WW\nCreature  \u2014 '
                                     u'Human Knight\nText: (2/3) Flying ; First'
                                     ' strike\nMagic 2011 Common')
+
+class WhenPrintingRulings(DingusTestCase(Card, exclude=['textwrap'])):
+
+    def setup(self):
+        super(WhenPrintingRulings, self).setup()
+        self.card = Card()
+        self.card.pow_tgh = '(1/1)'
+        self.card.url = 'http://www.com'
+        extractor = mod.RulingExtractor().extract
+        extractor.return_value = [('2010-08-23', 'This is a ruling'),
+                                  ('2010-08-23', 'This is a very long ruling that '
+                                   'just keeps going on and on and does not stop '
+                                   'for anything.'), 
+                                  ('2010-08-23', 'This is a ruling')]
+        
+    def should_allow_rulings_requests(self):
+        self.card.show(rulings=True)
+        assert mod.CardRequest.calls('()', 'http://www.com')
+
+    def should_extract_rulings(self):
+        self.card.show(rulings=True)
+        assert mod.RulingExtractor.calls('()', mod.CardRequest().send())
+        assert mod.RulingExtractor().calls('extract').once()
+
+    def should_format_rulings(self):
+        self.card.show(rulings=True)
+        assert self.card.rulings == ('\n2010-08-23: This is a ruling\n'
+                                     '2010-08-23: This is a very long ruling '
+                                     'that just keeps going on and on\nand '
+                                     'does not stop for anything.\n2010-08-23:'
+                                     ' This is a ruling')
+
+    def should_show_rulings(self):
+        assert self.card.rulings in self.card.show(rulings=True)
+
+
+class WhenPrintingCardWithManySets(object):
+    
+    def setup(self):
+        self.block = (
+            ('url', 'http://www.com'),
+            (u'\r\n                        Name:\r\n                    ', u'\nGiant Growth\n'), 
+            (u'\r\n                        Cost:\r\n                    ', u'\r\n                        G\r\n                    '), 
+            (u'\r\n                        Type:\r\n                    ', u'\r\n                        Instant\r\n                    '), 
+            (u'\r\n                        Pow/Tgh:\r\n                    ', u'\n'), 
+            (u'\r\n                        Rules Text:\r\n                    ', u'\r\n                        Target creature gets +3/+3 until end of turn.\r\n                    '), 
+            (u'\r\n                        Set/Rarity:\r\n                    ', u'\r\n                        Magic 2011 Common, Duel Decks: Garruk vs. Liliana Common, Masters Edition III Common, Magic 2010 Common, Masters Edition II Common, Duel Decks: Elves vs. Goblins Common, Tenth Edition Common, Ninth Edition Common, Eighth Edition Common, Seventh Edition Common, Beatdown Box Set Common, Starter 2000 Common, Battle Royale Box Set Common, Classic Sixth Edition Common, Fifth Edition Common, Ice Age Common, Fourth Edition Common, Revised Edition Common, Unlimited Edition Common, Limited Edition Beta Common, Limited Edition Alpha Common\r\n                    ')
+            )
+        self.card = Card.from_block(self.block)
+
+    def should_wrap_set_list(self):
+        print self.card.show()
+        assert self.card.show().count('\n') == 10
 
 class WhenPrintingSorceryCard(object):
 

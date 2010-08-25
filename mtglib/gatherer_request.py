@@ -2,11 +2,13 @@
 import re
 import httplib2
 import logging
-import urllib
+import urllib, urllib2
 
 from constants import settings_url, settings_header, params, base_url
 
-class CardRequest(object):
+__all__ = ['SearchRequest', 'CardRequest']
+
+class SearchRequest(object):
 
     def __init__(self, options, special=False):
         self.options = options
@@ -66,3 +68,14 @@ class CardRequest(object):
         return content
 
         
+class CardRequest(object):
+    
+    def __init__(self, url):
+        self.url = url
+        
+    def send(self):
+        base_url = 'http://gatherer.wizards.com/Pages'
+        if '..' in self.url:
+            self.url = self.url.replace('..', base_url)
+        socket = urllib2.urlopen(self.url)
+        return socket.read()
