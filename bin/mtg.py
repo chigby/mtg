@@ -10,8 +10,7 @@ import sys
 from logging import handlers, Formatter
 from optparse import OptionParser
 from mtglib.gatherer_request import SearchRequest
-from mtglib.card_extractor import CardExtractor
-from mtglib.card import Card
+from mtglib.card_extractor import CardExtractor, Card
 from mtglib.constants import card_flags
 
 def main(args):
@@ -70,9 +69,9 @@ def main(args):
             card_options[a] = b
     logger.debug(card_options)
     request = SearchRequest(card_options, special=options.special)
-    parsed = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
-    for block in parsed:
-        print Card.from_block(block).show(rulings=options.rulings)
+    cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
+    for card in cards:
+        print card.show(rulings=options.rulings)
 
     return 0
 

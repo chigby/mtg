@@ -33,21 +33,16 @@ class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser',
         main(['./mtg.py', '--text=trample', '--rulings'])
         assert mod.SearchRequest.calls('()', {'text': 'trample'})
 
-    def should_parse_response(self):
-        main(['./mtg.py', 'sengir', 'vampire'])
-        assert mod.CardExtractor.calls('()', mod.SearchRequest().send())
-        assert mod.CardExtractor().calls('extract').once()
-        for block in mod.CardExtractor().extract():
-            assert mod.Card.calls('from_block', block)
-
     def should_show_cards(self):
         main(['./mtg.py', 'sengir', 'vampire'])
-        assert mod.Card.from_block().calls('show')
+        for card in mod.CardExtractor().extract():
+            print card.calls()
+            assert card.calls('show')
         
     def should_show_cards_and_rulings(self):
         main(['./mtg.py', 'sengir', 'vampire', '--rulings'])
         assert mod.CardExtractor().calls('extract')[0].kwargs == \
             {'get_card_urls': True}
-        assert mod.Card.from_block().calls('show')[0].kwargs == \
-            {'rulings': True}
+        for card in mod.CardExtractor().extract():
+            assert card.calls('show')[0].kwargs == {'rulings': True}
 
