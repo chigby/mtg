@@ -31,3 +31,7 @@ card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc', 'power',
 
 default_modifiers = dict(text='+', color='+', type='+', subtype='+', set='|', 
                          cmc='+', power='+', tough='+', rarity='+', name='+')
+
+types = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land', 
+         'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow', 
+         'sorcery', 'tribal', 'vanguard', 'world']

@@ -37,9 +37,7 @@ def main(args):
     parser.add_option("-t", "--text", dest="text",
                       help="containing rules text TEXT", metavar="TEXT")
     parser.add_option('--color', dest='color', help='cards matching COLOR (w, u, b, r, g, c)')
-    parser.add_option('--type', dest='type', help='cards matching TYPE (e.g. artifact, creature, legendary, snow)')
-    parser.add_option('--subtype', dest='subtype', 
-                      help='cards matching SUBTYPE (e.g. goblin, equipment, aura)')
+    parser.add_option('--type', dest='type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
     parser.add_option('--power', dest='power', 
                       help='cards with power POWER (uses <, >, =)')
     parser.add_option('--tough', dest='tough', 
@@ -72,7 +70,7 @@ def main(args):
     cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
     for card in cards:
         print card.show(rulings=options.rulings)
-
+        print '\n------------------------------'
     return 0
 
 if __name__ == '__main__':

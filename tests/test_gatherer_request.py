@@ -87,6 +87,52 @@ class WhenGettingUrl(unittest2.TestCase):
                '&set=|[eldrazi]&type=+[instant]')
         self.assertEqual(request.url, url)
 
+    def should_send_type(self):
+        options = dict(type='land')
+        request = SearchRequest(options)
+        assert 'type=+[land]' in request.url
+
+    def should_recognize_creature_type_as_subtype(self):
+        options = dict(type='dryad')
+        request = SearchRequest(options)
+        assert 'subtype=+[dryad]' in request.url    
+        assert '&type=+[dryad]' not in request.url
+    
+    def should_separate_type_and_subtypes(self):
+        options = dict(type='land,dryad')
+        request = SearchRequest(options)
+        assert 'subtype=+[dryad]' in request.url    
+        assert '&type=+[land]' in request.url
+
+    def should_separate_type_and_subtypes_artifacts(self):
+        options = dict(type='artifact,bird')
+        request = SearchRequest(options)
+        assert 'subtype=+[bird]' in request.url    
+        assert '&type=+[artifact]' in request.url
+
+    def should_ignore_case_on_types(self):
+        options = dict(type='ARTIFACT,Bird')
+        request = SearchRequest(options)
+        assert 'subtype=+[bird]' in request.url    
+        assert '&type=+[artifact]' in request.url
+
+    def should_separate_many_types(self):
+        options = dict(type='creature,land,dryad,forest')
+        request = SearchRequest(options)
+        assert 'subtype=+[dryad]+[forest]' in request.url
+        assert '&type=+[creature]+[land]' in request.url
+
+    def should_separate_many_types_with_not_modifier(self):
+        options = dict(type='legendary,artifact,!equipment,!creature')
+        request = SearchRequest(options)
+        assert 'subtype=+![equipment]' in request.url
+        assert '&type=+[legendary]+[artifact]+![creature]' in request.url
+
+    def should_separate_many_types_with_or_modifier(self):
+        options = dict(type='eldrazi,|instant,|creature')
+        request = SearchRequest(options)
+        assert 'subtype=+[eldrazi]' in request.url
+        assert '&type=|[instant]|[creature]' in request.url
     
 class WhenMakingSpecialRequest(unittest2.TestCase):
 
