@@ -4,7 +4,8 @@ import httplib2
 import logging
 import urllib, urllib2
 
-from constants import settings_url, settings_header, params, base_url
+from constants import settings_url, settings_header, params, base_url, \
+    default_modifiers
 
 __all__ = ['SearchRequest', 'CardRequest']
 
@@ -22,11 +23,11 @@ class SearchRequest(object):
                 value = sep.split(value)
                 frag = '%s=' % opt
                 frag += ('%s[%s]' * (len(value))) % \
-                    tuple(self._get_modifiers(value))
+                    tuple(self._get_modifiers(opt, value))
                 fragments.append(frag)
         return fragments
 
-    def _get_modifiers(self, lst):
+    def _get_modifiers(self, opt, lst):
         modifiers = re.compile('^([!=|<>]+)')
         results = []
         for item in lst:
@@ -37,12 +38,16 @@ class SearchRequest(object):
                     modifier_char = '|'
                 item = modifiers.sub('', item)
             else:
-                modifier_char = '+'
+                modifier_char = default_modifiers[opt]
             results.extend([modifier_char, item])
         return results
 
     @property
     def url_fragments(self):
+        for attr in ['cmc', 'power', 'tough']:
+            if attr in self.options:
+                if not self.options[attr].startswith(('=', '<', '>')):
+                    self.options[attr] = '={0}'.format(self.options[attr])
         return self._get_url_fragments(self.options)
 
     @property

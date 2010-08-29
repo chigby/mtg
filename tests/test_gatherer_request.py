@@ -40,11 +40,29 @@ class WhenGettingUrl(unittest2.TestCase):
                'output=spoiler&method=text&text=|[first]|[strike]')
         assert request.url == url
 
+    def should_parse_logical_or_for_sets(self):
+        request = SearchRequest({'set': '|worldwake,|zendikar'})
+        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
+               'output=spoiler&method=text&set=|[worldwake]|[zendikar]')
+        assert request.url == url
+
+    def should_assume_logical_or_for_sets(self):
+        request = SearchRequest({'set': 'worldwake,zendikar'})
+        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
+               'output=spoiler&method=text&set=|[worldwake]|[zendikar]')
+        assert request.url == url
+
     def should_parse_sharp_comparison_operators(self):
         request = SearchRequest({'cmc': '=5', 'power': '<4', 'tough':'>3'})
         assert 'cmc=+=[5]' in request.url
         assert 'power=+<[4]' in request.url
         assert 'tough=+>[3]' in request.url
+
+    def should_use_equality_as_default_comparison_operators(self):
+        request = SearchRequest({'cmc': '5', 'power': '4', 'tough':'3'})
+        assert 'cmc=+=[5]' in request.url
+        assert 'power=+=[4]' in request.url
+        assert 'tough=+=[3]' in request.url
 
     def should_parse_comparison_operators(self):
         request = SearchRequest({'power': '<=4', 'tough':'>=3'})
@@ -53,9 +71,6 @@ class WhenGettingUrl(unittest2.TestCase):
         
     def should_separate_name_words(self):
         request = SearchRequest({'name': 'sengir,vampire'})
-        # this means we'll have to use something like:
-        #     name = ','.join(args)
-        #     opts['name'] = name
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&name=+[sengir]+[vampire]')
         self.assertEqual(request.url, url)
@@ -69,11 +84,8 @@ class WhenGettingUrl(unittest2.TestCase):
         request = SearchRequest(options)
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&color=|[r]|[w]&cmc=+=[1]'
-               '&set=+[eldrazi]&type=+[instant]')
+               '&set=|[eldrazi]&type=+[instant]')
         self.assertEqual(request.url, url)
-#dict slice
-#for a, b in zip(slice, map(x.get, slice)):
-#...     y[a] = b
 
     
 class WhenMakingSpecialRequest(unittest2.TestCase):

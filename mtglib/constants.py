@@ -28,3 +28,6 @@ params = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'
 
 card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc', 'power', 
               'tough', 'rarity', 'name']
+
+default_modifiers = dict(text='+', color='+', type='+', subtype='+', set='|', 
+                         cmc='+', power='+', tough='+', rarity='+', name='+')
