@@ -21,7 +21,7 @@ Examples:
     $ mtg.py --text='"destroy all creatures"' --type=instant
 
     Limit by subtype and rarity:
-    $ mtg.py --subtype=goblin --rarity=m
+    $ mtg.py --type=goblin --rarity=m
 
     To limit by power, toughness, or converted mana cost, use the >,
     <, and = operators as follows.  Some shells require these

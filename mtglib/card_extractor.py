@@ -84,7 +84,7 @@ class Card(object):
         self.rules_text = ''
         self.set_rarity = ''
         self.loyalty = ''
-        self.power_toughness = ''
+        self.pow_tgh = ''
         self.url = ''
         self.ruling_data = []
         self.card_template = (u"{0.name} {0.cost}\n"

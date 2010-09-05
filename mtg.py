@@ -12,7 +12,7 @@ import urllib, urllib2
 from BeautifulSoup import BeautifulSoup
 from optparse import OptionParser
 
-from mtglib.card import replace_reminders, formatted_wrap, prettify_text
+from mtglib.card_extractor import Card
 
 def group(lst, n):
     newlist = []
@@ -143,7 +143,7 @@ def main(options, args):
         print '\n------------------------------'
         #print card
         for line in card:
-            cards[line[0].strip(':\r\n ')] = prettify_text(line[1])
+            cards[line[0].strip(':\r\n ')] = Card.prettify_text(line[1])
         #print cards
         # removes the name from the card text.  make optional?
         cards['Rules Text'] = (cards['Rules Text'].
@@ -153,12 +153,12 @@ def main(options, args):
         else:
             cards['Number'] = cards['Pow/Tgh']
         if not options.reminder:
-            cards['Rules Text'] = replace_reminders(cards['Rules Text'])
+            cards['Rules Text'] = Card.replace_reminders(cards['Rules Text'])
         if options.hidesets:
             cards['Set/Rarity'] = ''
         else:
             cards['Set/Rarity'] = textwrap.fill(cards['Set/Rarity'])
-        cards['Rules Text'] = formatted_wrap(cards['Rules Text'])        
+        cards['Rules Text'] = Card.formatted_wrap(cards['Rules Text'])        
         print card_template.format(cards)
         if options.rulings and i < 5:
             rulings = get_rulings(hrefs[i])
