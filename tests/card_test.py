@@ -181,7 +181,6 @@ class WhenPrintingCardWithManySets(object):
         self.card = Card.from_block(self.block)
 
     def should_wrap_set_list(self):
-        print self.card.show()
         assert self.card.show().count('\n') == 10
 
 class WhenPrintingSorceryCard(object):
@@ -210,13 +209,13 @@ class WhenRemovingReminderText(unittest2.TestCase):
 
     def should_delete_reminder_text(self):
         text = 'Flying (Can only be blocked by creatures with flying.)'
-        assert Card.replace_reminders(text) == 'Flying '
+        assert Card.replace_reminders(text) == 'Flying'
 
     def should_remove_hybrid_mana_reminders(self):
         text = '({(g/w)} can be paid with either {G} or {W}.) ; Other ' \
             'permanents you control can\'t be the targets of spells or' \
             ' abilities your opponents control.'
-        replaced_text =  '; Other permanents you control can\'t be the' \
+        replaced_text =  ' ; Other permanents you control can\'t be the' \
             ' targets of spells or abilities your opponents control.'
         assert Card.replace_reminders(text) == replaced_text
     
@@ -238,6 +237,11 @@ class WhenRemovingReminderText(unittest2.TestCase):
                 ' Spirit Warrior Avatar with flying and first strike.')
         assert Card.replace_reminders(text) == text
 
+    def should_preserve_hybrid_activations_with_reminders(self):
+        text = 'Cycling {(w/u)} ({(w/u)}, Discard this card: Draw a card.)'
+        replaced = 'Cycling {(w/u)}'
+        assert Card.replace_reminders(text) == replaced
+
     def should_handle_multiple_reminders_with_mana_costs(self):
         text = ('Kicker {2}{B} (You may pay an additional {2}{B} as you'
                 ' cast this spell.) ; Target creature gets +3/+0 until end of'
@@ -246,5 +250,5 @@ class WhenRemovingReminderText(unittest2.TestCase):
                 'its controller to gain that much life.)')
         replaced_text = ('Kicker {2}{B} ; Target creature gets +3/+0 until '
                          'end of turn. If ~this~ was kicked, that creature '
-                         'gains lifelink until end of turn. ')
+                         'gains lifelink until end of turn.')
         assert Card.replace_reminders(text) == replaced_text

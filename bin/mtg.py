@@ -17,11 +17,11 @@ def main(args):
 
     # create logger
     logger = logging.getLogger('mtg')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     # create console handler and set level to debug
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)
 
     # create formatter
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
@@ -71,7 +71,7 @@ def main(args):
     cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
     for card in cards:
         print '\n------------------------------'
-        print card.show(rulings=options.rulings)
+        print card.show(rulings=options.rulings, reminders=options.reminder)
     return 0
 
 if __name__ == '__main__':

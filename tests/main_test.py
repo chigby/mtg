@@ -46,3 +46,10 @@ class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser',
         for card in mod.CardExtractor().extract():
             assert card.calls('show')[0].kwargs == {'rulings': True}
 
+    def should_show_cards_and_rulings(self):
+        main(['./mtg.py', 'tarmogoyf', '--reminder'])
+        assert mod.CardExtractor().calls('extract')[0].kwargs == \
+            {'get_card_urls': None}
+        for card in mod.CardExtractor().extract():
+            assert card.calls('show')[0].kwargs == {'reminders': True, 
+                                                    'rulings': None}
