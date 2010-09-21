@@ -72,6 +72,7 @@ def main(args):
     for card in cards:
         print '\n------------------------------'
         print card.show(rulings=options.rulings, reminders=options.reminder)
+    print '\n{0} results found.'.format(len(cards))    
     return 0
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ class CardExtractor(object):
             return False
         soup = BeautifulSoup.BeautifulSoup(self.html)
         if not soup.table:
-            raise Exception('Bad format for cards.')
+            return []
         for tag in soup.findAll('br'):
             tag.replaceWith('||')
 
@@ -106,6 +106,7 @@ class Card(object):
         return self.card_template.format(self)
 
     def _format_fields(self, reminders):
+        self.type = self.type.replace('  ', ' ')
         self.set_rarity = textwrap.fill(self.set_rarity)
         self._format_rules_text(reminders)
 

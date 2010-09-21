@@ -127,7 +127,7 @@ class WhenPrintingCreatureCard(unittest2.TestCase):
         assert isinstance(self.card.show(), unicode)
 
     def should_print_okay(self):
-        assert self.card.show() == (u'Cloud Crusader 2WW\nCreature  \u2014 '
+        assert self.card.show() == (u'Cloud Crusader 2WW\nCreature \u2014 '
                                     u'Human Knight\nText: (2/3) Flying ; First'
                                     ' strike\nMagic 2011 Common')
 

@@ -20,6 +20,7 @@ class SearchRequest(object):
         for opt, value in options.items():
             if value:
                 sep = re.compile('[,]+')
+                value = value.replace('"', '%22').replace(' ', '%20')
                 value = sep.split(value)
                 frag = '%s=' % opt
                 frag += ('%s[%s]' * (len(value))) % \
@@ -77,7 +78,7 @@ class SearchRequest(object):
 
     @property
     def url(self):
-        return base_url + '&'.join(self.url_fragments) + self.special_fragment
+        return (base_url + '&'.join((self.url_fragments)) + self.special_fragment)
 
     def send(self):
         http = httplib2.Http()

@@ -25,13 +25,13 @@ class WhenGettingUrl(unittest2.TestCase):
     def should_group_text_in_brackets(self):
         request = SearchRequest({'text': 'first strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&text=+[first strike]')
+               'output=spoiler&method=text&text=+[first%20strike]')
         assert request.url == url
                                                                                 
-    def should_preserve_exact_quotes(self):
+    def should_preserve_and_urlencode_exact_quotes(self):
         request = SearchRequest({'text': '"first strike"'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&text=+["first strike"]')
+               'output=spoiler&method=text&text=+[%22first%20strike%22]')
         assert request.url == url
 
     def should_parse_logical_or(self):

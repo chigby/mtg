@@ -79,7 +79,7 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
 
     def should_raise_exception_if_bad_format(self):
         mod.BeautifulSoup.BeautifulSoup().table = False
-        assert_raises(Exception, CardExtractor('<html></html>').extract)
+        assert CardExtractor('<html></html>').extract() == []
        
     def should_replace_br_tags_with_pipes(self):
         soup = mod.BeautifulSoup.BeautifulSoup()
