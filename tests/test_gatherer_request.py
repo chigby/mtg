@@ -23,13 +23,14 @@ class WhenInstantiatingSearchRequest(unittest2.TestCase):
 class WhenGettingUrl(unittest2.TestCase):
 
     def should_group_text_in_brackets(self):
-        request = SearchRequest({'text': 'first strike'})
+        request = SearchRequest({'text': 'trample'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&text=+[first%20strike]')
+               'output=spoiler&method=text&text=+[trample]')
+        print request.url
         assert request.url == url
                                                                                 
-    def should_preserve_and_urlencode_exact_quotes(self):
-        request = SearchRequest({'text': '"first strike"'})
+    def should_assume_exact_quote_if_spaces(self):
+        request = SearchRequest({'text': 'first strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&text=+[%22first%20strike%22]')
         assert request.url == url

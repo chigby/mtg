@@ -68,6 +68,9 @@ class SearchRequest(object):
     def url_fragments(self):
         if 'type' in self.options:
             self._extract_subtypes()
+        if 'text' in self.options:
+            if ' ' in self.options['text']:
+                self.options['text'] = '"{0}"'.format(self.options['text'])
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
         return self._get_url_fragments(self.options)
@@ -90,7 +93,8 @@ class SearchRequest(object):
             logging.warning(ex)
             return False
         card_header = headers = {'Cookie': response['set-cookie']}
-
+        
+        # Possibly log this url.
         response, content = http.request(self.url, 'GET', headers=headers)
         return content
 

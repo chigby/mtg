@@ -70,7 +70,7 @@ def main(args):
             card_options[a] = b
     logger.debug(card_options)
     request = SearchRequest(card_options, special=options.special)
-    logger.debug(request.url)
+    
     cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
     for card in cards:
         print '\n------------------------------'
