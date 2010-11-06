@@ -3,6 +3,16 @@ from dingus import DingusTestCase
 from bin.mtg import main
 import bin.mtg as mod
 
+class DescribeOptionParsing(DingusTestCase(main)):
+    
+    def setup(self):
+        super(DescribeOptionParsing, self).setup()
+
+    def should_print_help_if_no_args(self):
+        main(['./mtg.py'])
+        assert mod.OptionParser().calls('print_help')
+
+
 class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser', 
                                                         'card_flags'])):
     

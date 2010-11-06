@@ -57,7 +57,10 @@ def main(args):
     parser.add_option('--special', dest='special', action='store_true',
                       help='include special cards (e.g. planes)')
     logger.debug(args)
-    
+    if len(args) < 2:
+        parser.print_help()
+        return 0
+
     (options, args) = parser.parse_args(args[1:])
     options.name =  ','.join(args)
 
