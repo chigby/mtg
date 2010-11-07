@@ -56,6 +56,8 @@ def main(args):
                       help='show rulings for the card')
     parser.add_option('--special', dest='special', action='store_true',
                       help='include special cards (e.g. planes)')
+    parser.add_option('-x', '--exclude-other-colors', dest='exclude', 
+                      action='store_true', help='exclude unselected colors')
     logger.debug(args)
     if len(args) < 2:
         parser.print_help()
@@ -69,7 +71,8 @@ def main(args):
         if b:
             card_options[a] = b
     logger.debug(card_options)
-    request = SearchRequest(card_options, special=options.special)
+    request = SearchRequest(card_options, special=options.special, 
+                            exclude_other_colors=options.exclude)
     
     cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
     for card in cards:

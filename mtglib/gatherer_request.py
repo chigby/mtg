@@ -9,24 +9,31 @@ from constants import settings_url, settings_header, params, base_url, \
 
 __all__ = ['SearchRequest', 'CardRequest']
 
-class SearchRequest(object):
-
-    def __init__(self, options, special=False):
-        self.options = options
-        self.special = special
+class UrlFragment(object):
+    """A piece of query string text in gatherer format."""
+    
+    def __init__(self, field, value, group=None):
+        """
+        Arguments:
+        - `field`: Name of the field
+        - `value`: Value of the field
+        - `group`: Character that surrounds the values 
+        """
+        self._field = field
+        self._value = value
+        self._group = group
         
-    def _get_url_fragments(self, options):
-        fragments = []
-        for opt, value in options.items():
-            if value:
-                sep = re.compile('[,]+')
-                value = value.replace('"', '%22').replace(' ', '%20')
-                value = sep.split(value)
-                frag = '%s=' % opt
-                frag += ('%s[%s]' * (len(value))) % \
-                    tuple(self._get_modifiers(opt, value))
-                fragments.append(frag)
-        return fragments
+    def __str__(self):
+        if not self._value:
+            return ''
+        sep = re.compile('[,]+')        
+        value = sep.split(self.clean_value)
+        field = '%s=' % self._field
+        frag = ('%s[%s]' * (len(value))) % \
+            tuple(self._get_modifiers(self._field, value))
+        if self._group:
+            frag = '+{group}({frag})'.format(group=self._group, frag=frag[1:])
+        return field + frag
 
     def _get_modifiers(self, opt, lst):
         modifiers = re.compile('^([!=|<>]+)')
@@ -42,6 +49,28 @@ class SearchRequest(object):
                 modifier_char = default_modifiers[opt]
             results.extend([modifier_char, item])
         return results
+
+    @property
+    def clean_value(self):
+        return self._value.replace('"', '%22').replace(' ', '%20')
+
+
+class SearchRequest(object):
+
+    def __init__(self, options, special=False, exclude_other_colors=False):
+        self.options = options
+        self.special = special
+        self.exclude_other_colors = exclude_other_colors
+        
+    def _get_url_fragments(self):
+        fragments = []
+        for opt, value in self.options.items():
+            if opt == 'color' and self.exclude_other_colors:
+                group = '@'
+            else:
+                group = None
+            fragments.append(str(UrlFragment(opt, value, group=group)))
+        return fragments
 
     def _extract_subtypes(self):
         type_options = []
@@ -73,7 +102,7 @@ class SearchRequest(object):
                 self.options['text'] = '"{0}"'.format(self.options['text'])
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
-        return self._get_url_fragments(self.options)
+        return self._get_url_fragments()
 
     @property
     def special_fragment(self):

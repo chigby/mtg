@@ -29,7 +29,14 @@ class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser',
 
     def should_make_card_request_with_special(self):
         main(['./mtg.py', '--type=scheme', '--special'])
-        assert mod.SearchRequest.calls('()', {'type': 'scheme'}, special=True)
+        assert mod.SearchRequest.calls('()', {'type': 'scheme'}, special=True,
+                                       exclude_other_colors=None)
+
+    def should_make_card_request_with_exclude(self):
+        main(['./mtg.py', '--color=u', '-x'])
+        print mod.SearchRequest.calls()
+        assert mod.SearchRequest.calls('()', {'color': 'u'}, special=None,
+                                       exclude_other_colors=True)
 
     def should_not_request_reminder(self):
         main(['./mtg.py', '--text=trample', '--reminder'])

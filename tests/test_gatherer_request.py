@@ -26,7 +26,6 @@ class WhenGettingUrl(unittest2.TestCase):
         request = SearchRequest({'text': 'trample'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&text=+[trample]')
-        print request.url
         assert request.url == url
                                                                                 
     def should_assume_exact_quote_if_spaces(self):
@@ -75,6 +74,10 @@ class WhenGettingUrl(unittest2.TestCase):
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&name=+[sengir]+[vampire]')
         self.assertEqual(request.url, url)
+
+    def should_allow_color_exclusion(self):
+        request = SearchRequest({'color': 'w,u'}, exclude_other_colors=True)
+        assert '&color=+@([w]+[u])' in request.url
 
     def should_parse_not_operator(self):
         request = SearchRequest({'text': '!graveyard'})
