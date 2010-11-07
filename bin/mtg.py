@@ -11,7 +11,7 @@ from logging import handlers, Formatter
 from optparse import OptionParser
 from mtglib.gatherer_request import SearchRequest
 from mtglib.card_extractor import CardExtractor, Card
-from mtglib.constants import card_flags
+from mtglib.constants import card_flags, separator
 
 def main(args):
 
@@ -76,7 +76,7 @@ def main(args):
     
     cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
     for card in cards:
-        print '\n------------------------------'
+        print separator
         print card.show(rulings=options.rulings, reminders=options.reminder)
     print '\n{0} results found.'.format(len(cards))    
     return 0

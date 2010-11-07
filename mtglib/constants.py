@@ -35,3 +35,5 @@ default_modifiers = dict(text='+', color='+', type='+', subtype='+', set='|',
 types = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land', 
          'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow', 
          'sorcery', 'tribal', 'vanguard', 'world']
+
+separator = '\n------------------------------'
