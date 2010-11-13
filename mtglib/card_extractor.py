@@ -124,8 +124,8 @@ class Card(object):
     def rulings(self):
         if not self.ruling_data:
             return ''
-        return '\n' + '\n'.join([textwrap.fill('{0}: {1}'.format(date, text))
-                        for date, text in self.ruling_data])
+        return u'\n' + u'\n'.join([textwrap.fill(u'{0}: {1}'.format(date, text))
+                                   for date, text in self.ruling_data])
 
     
     @classmethod

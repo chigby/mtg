@@ -75,16 +75,24 @@ class WhenGettingUrl(unittest2.TestCase):
                'output=spoiler&method=text&name=+[sengir]+[vampire]')
         self.assertEqual(request.url, url)
 
-    def should_allow_color_exclusion(self):
+    def should_allow_color_exclusion_with_logical_or(self):
         request = SearchRequest({'color': 'w,u'}, exclude_other_colors=True)
-        assert '&color=+@([w]+[u])' in request.url
+        assert '&color=+@([w]|[u])' in request.url
 
     def should_parse_not_operator(self):
         request = SearchRequest({'text': '!graveyard'})
         assert 'text=+![graveyard]' in request.url
+
+    def should_assume_and_when_color_has_no_comma(self):
+        request = SearchRequest({'color': 'wu'})
+        assert 'color=+[w]+[u]' in request.url
+
+    def should_assume_or_when_comma_separated_color(self):
+        request = SearchRequest({'color': 'w,u'})
+        assert 'color=|[w]|[u]' in request.url
         
     def should_combine_multiple_terms(self):
-        options = dict(set='eldrazi', type='instant', color='|r,|w', cmc='=1')
+        options = dict(set='eldrazi', type='instant', color='r,w', cmc='=1')
         request = SearchRequest(options)
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&color=|[r]|[w]&cmc=+=[1]'

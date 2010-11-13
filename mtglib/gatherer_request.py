@@ -72,6 +72,9 @@ class SearchRequest(object):
             fragments.append(str(UrlFragment(opt, value, group=group)))
         return fragments
 
+    def _comma_join(self, list_):
+        return reduce(lambda s, t: s + ',' + t, list_)
+
     def _extract_subtypes(self):
         type_options = []
         subtype_options = []
@@ -100,6 +103,12 @@ class SearchRequest(object):
         if 'text' in self.options:
             if ' ' in self.options['text']:
                 self.options['text'] = '"{0}"'.format(self.options['text'])
+        if 'color' in self.options:
+            if ',' not in self.options['color']:
+                self.options['color'] = self._comma_join(self.options['color'])
+            else:
+                self.options['color'] = '|' + \
+                    ',|'.join(self.options['color'].split(','))
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
         return self._get_url_fragments()
