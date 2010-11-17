@@ -10,6 +10,15 @@ Examples:
     Limit by color:
     $ mtg.py thrull --color=w
 
+    Limit by multiple colors (matches using OR if comma separated):
+    $ mtg.py angel --color=w,b
+
+    Limit by multiple colors (matches using AND if not comma separated):
+    $ mtg.py angel --color=wb
+
+    Exclude unselected colors with -x (the example matches mono-black only)
+    $ mtg.py angel --color=b -x
+
     Limit by card text, including reminder text.  A string of comma
     separated terms searches cards containing all terms, not the exact
     phrase: 
