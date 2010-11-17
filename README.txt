@@ -63,6 +63,6 @@ Examples:
     $ mtg.py zendikon --color='!b'
     $ mtg.py --type='legendary,artifact,!equipment'
     $ mtg.py --text='win the game' --set='!unhinged,!unglued' 
-    $ mtg.py guildmage --color='|r,|g' 
+    $ mtg.py guildmage --color=r,g 
     $ mtg.py --text='gain life' --set='|zendikar,|worldwake' --color='!g,!w'
     $ mtg.py --text='counter target' --color='!u,!b,!r'
