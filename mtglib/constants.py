@@ -27,10 +27,11 @@ params = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'
           }
 
 card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc', 'power', 
-              'tough', 'rarity', 'name']
+              'tough', 'rarity', 'name', 'block']
 
 default_modifiers = dict(text='+', color='+', type='+', subtype='+', set='|', 
-                         cmc='+', power='+', tough='+', rarity='+', name='+')
+                         cmc='+', power='+', tough='+', rarity='+', name='+',
+                         block='+')
 
 types = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land', 
          'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow', 

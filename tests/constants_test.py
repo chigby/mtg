@@ -1,7 +1,7 @@
 import unittest2
 
 from mtglib.constants import settings_url, settings_header, params, base_url, \
-    card_flags
+    card_flags, default_modifiers
 
 PARAMS = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'
           '$CardSearchBox':'Search Terms...',
@@ -47,4 +47,7 @@ class DescribeConstants(unittest2.TestCase):
 
     def should_have_card_flags(self):
         assert card_flags == ['text', 'color', 'subtype', 'type', 'set', 'cmc',
-                              'power', 'tough', 'rarity', 'name']
+                              'power', 'tough', 'rarity', 'name', 'block']
+
+    def should_have_a_default_modifier_for_each_card_flag(self):
+        assert set(default_modifiers.keys()) == set(card_flags)
