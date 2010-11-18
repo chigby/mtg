@@ -42,6 +42,8 @@ def main(args):
                       help='cards with power POWER (uses <, >, =)')
     parser.add_option('--tough', dest='tough', 
                       help='cards with toughness TOUGHNESS (uses <, >, =)')
+    parser.add_option('--block', dest='block', 
+                      help='cards from block BLOCK')
     parser.add_option('--set', dest='set', 
                       help='cards matching expansion set SET (e.g. unlimited)')
     parser.add_option('--rarity', dest='rarity', 
@@ -56,6 +58,8 @@ def main(args):
                       help='show rulings for the card')
     parser.add_option('--special', dest='special', action='store_true',
                       help='include special cards (e.g. planes)')
+    parser.add_option('--flavor', dest='flavor', action='store_true',
+                      help='show flavor text')
     parser.add_option('-x', '--exclude-other-colors', dest='exclude', 
                       action='store_true', help='exclude unselected colors')
     logger.debug(args)
@@ -74,10 +78,12 @@ def main(args):
     request = SearchRequest(card_options, special=options.special, 
                             exclude_other_colors=options.exclude)
     
-    cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings)
+    cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings 
+                                                  or options.flavor)
     for card in cards:
         print separator
-        print card.show(rulings=options.rulings, reminders=options.reminder)
+        print card.show(rulings=options.rulings, reminders=options.reminder, 
+                        flavor=options.flavor)
     print '\n{0} results found.'.format(len(cards))    
     return 0
 

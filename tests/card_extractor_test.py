@@ -7,7 +7,7 @@ from nose.tools import assert_raises
 
 import mtglib.card_extractor as mod
 from mtglib.gatherer_request import CardRequest
-from mtglib.card_extractor import CardExtractor, RulingExtractor, Card
+from mtglib.card_extractor import CardExtractor, SingleCardExtractor, Card
 
 class WhenInstantiatingCardExtractor(object):
 
@@ -126,24 +126,24 @@ class WhenExtractingManyCards(DingusTestCase(CardExtractor,
         assert cards[2].type == 'Sorcery'
         assert cards[3].name == 'Forked-Branch Garami'
 
-class DescribeRulingExtractor(object):
+class DescribeSingleCardExtractor(object):
 
     def should_accept_html(self):
-        self.extractor = RulingExtractor('<html></html>')
+        self.extractor = SingleCardExtractor('<html></html>')
         assert self.extractor.html == '<html></html>'
 
     def should_replace_autocard_tags_with_its_content(self):
-        self.extractor = RulingExtractor('<html></html>')
+        self.extractor = SingleCardExtractor('<html></html>')
         self.extractor.extract()
         for tag in mod.BeautifulSoup.BeautifulSoup().findAll():
             assert tag.calls('replaceWith', tag.string)
 
 
-class WhenExtractingRulings(DingusTestCase(RulingExtractor)):
+class WhenExtractingRulings(DingusTestCase(SingleCardExtractor)):
 
     def setup(self):
         super(WhenExtractingRulings, self).setup()
-        self.extractor = RulingExtractor('<html></html>')
+        self.extractor = SingleCardExtractor('<html></html>')
         self.soup = mod.BeautifulSoup.BeautifulSoup()
         
         def compile_(string):
@@ -164,7 +164,7 @@ class WhenExtractingRulings(DingusTestCase(RulingExtractor)):
         self.extracted = self.extractor.extract()        
 
     def should_return_false_if_no_html(self):
-        self.extractor = RulingExtractor('')
+        self.extractor = SingleCardExtractor('')
         assert self.extractor.extract() == False
 
     def should_parse_html(self):

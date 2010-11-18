@@ -27,6 +27,10 @@ class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser',
         main(['./mtg.py', '--text=trample'])
         assert mod.SearchRequest.calls('()', {'text': 'trample'})
 
+    def should_make_card_request_with_block(self):
+        main(['./mtg.py', '--block=zendikar'])
+        assert mod.SearchRequest.calls('()', {'block': 'zendikar'})
+
     def should_make_card_request_with_special(self):
         main(['./mtg.py', '--type=scheme', '--special'])
         assert mod.SearchRequest.calls('()', {'type': 'scheme'}, special=True,
@@ -63,10 +67,18 @@ class DescribeMainProgram(DingusTestCase(main, exclude=['OptionParser',
         for card in mod.CardExtractor().extract():
             assert card.calls('show')[0].kwargs == {'rulings': True}
 
+    def should_show_cards_and_flavor(self):
+        main(['./mtg.py', 'natural', 'selection', '--flavor'])
+        assert mod.CardExtractor().calls('extract')[0].kwargs == \
+            {'get_card_urls': True}
+        for card in mod.CardExtractor().extract():
+            assert card.calls('show')[0].kwargs['flavor'] == True
+
     def should_show_cards_and_rulings(self):
         main(['./mtg.py', 'tarmogoyf', '--reminder'])
         assert mod.CardExtractor().calls('extract')[0].kwargs == \
             {'get_card_urls': None}
         for card in mod.CardExtractor().extract():
             assert card.calls('show')[0].kwargs == {'reminders': True, 
-                                                    'rulings': None}
+                                                    'rulings': None, 
+                                                    'flavor':None}

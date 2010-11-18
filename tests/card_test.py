@@ -131,19 +131,23 @@ class WhenPrintingCreatureCard(unittest2.TestCase):
                                     u'Human Knight\nText: (2/3) Flying ; First'
                                     ' strike\nMagic 2011 Common')
 
-class WhenPrintingRulings(DingusTestCase(Card, exclude=['textwrap'])):
+class WhenPrintingSingleCardInfo(DingusTestCase(Card, exclude=['textwrap'])):
 
     def setup(self):
-        super(WhenPrintingRulings, self).setup()
+        super(WhenPrintingSingleCardInfo, self).setup()
         self.card = Card()
         self.card.pow_tgh = '(1/1)'
         self.card.url = 'http://www.com'
-        extractor = mod.RulingExtractor().extract
+        extractor = mod.SingleCardExtractor().extract
         extractor.return_value = [('2010-08-23', 'This is a ruling'),
                                   ('2010-08-23', 'This is a very long ruling that '
                                    'just keeps going on and on and does not stop '
                                    'for anything.'), 
                                   ('2010-08-23', 'This is a ruling')]
+        mod.SingleCardExtractor().extract_flavor.return_value = \
+            ('As it spins, dead voices shriek in an ever-increasing cacophony, '
+             'rending the mind asunder.')
+
         
     def should_allow_rulings_requests(self):
         self.card.show(rulings=True)
@@ -151,8 +155,8 @@ class WhenPrintingRulings(DingusTestCase(Card, exclude=['textwrap'])):
 
     def should_extract_rulings(self):
         self.card.show(rulings=True)
-        assert mod.RulingExtractor.calls('()', mod.CardRequest().send())
-        assert mod.RulingExtractor().calls('extract').once()
+        assert mod.SingleCardExtractor.calls('()', mod.CardRequest().send())
+        assert mod.SingleCardExtractor().calls('extract').once()
 
     def should_format_rulings(self):
         self.card.show(rulings=True)
@@ -165,6 +169,24 @@ class WhenPrintingRulings(DingusTestCase(Card, exclude=['textwrap'])):
     def should_show_rulings(self):
         assert self.card.rulings in self.card.show(rulings=True)
 
+    def should_allow_flavor_text_request(self):
+        self.card.show(flavor=True)
+        assert mod.CardRequest.calls('()', 'http://www.com')
+
+    def should_extract_flavor_text(self):
+        self.card.show(flavor=True)
+        assert mod.SingleCardExtractor.calls('()', mod.CardRequest().send())
+        assert mod.SingleCardExtractor().calls('extract_flavor').once()
+
+    def should_show_flavor_text(self):
+        assert self.card.flavor_text in self.card.show(flavor=True)
+
+    def should_format_flavor_text(self):
+        self.card.show(flavor=True)
+        print self.card.flavor
+        assert self.card.flavor == ('As it spins, dead voices shriek in an '
+                                    'ever-increasing cacophony,\nrending the'
+                                    ' mind asunder.\n')
 
 class WhenPrintingCardWithManySets(object):
     

@@ -5,7 +5,7 @@ import BeautifulSoup
 
 from mtglib.gatherer_request import CardRequest
 
-__all__ = ['CardExtractor', 'RulingExtractor', 'Card']
+__all__ = ['CardExtractor', 'SingleCardExtractor', 'Card']
 
 class CardExtractor(object):
     """Extracts card information from Gatherer HTML."""
@@ -57,10 +57,25 @@ class CardExtractor(object):
         return cards
 
 
-class RulingExtractor(object):
+class SingleCardExtractor(object):
 
     def __init__(self, html):
         self.html = html
+
+    def _parse_html(self):
+        if not self.html:
+            return False
+                
+    def extract_flavor(self):
+        if not self.html:
+            return False
+        soup = BeautifulSoup.BeautifulSoup(self.html)
+        flavor_text = soup.findAll(attrs={'id': re.compile('FlavorText$')})
+        if flavor_text:
+            flavor_text = flavor_text[0].findAll('i')[0].contents[0]
+        else:
+            flavor_text = ''
+        return flavor_text        
 
     def extract(self):
         if not self.html:
@@ -87,9 +102,10 @@ class Card(object):
         self.pow_tgh = ''
         self.url = ''
         self.ruling_data = []
+        self.flavor_text = ''
         self.card_template = (u"{0.name} {0.cost}\n"
                               u"{0.type}\nText: {0.number} {0.rules_text}\n"
-                              u"{0.set_rarity}{0.rulings}")
+                              u"{0.flavor}{0.set_rarity}{0.rulings}")
 
     @classmethod
     def from_block(cls, block):
@@ -98,11 +114,15 @@ class Card(object):
             setattr(card, Card.prettify_attr(line[0]), Card.prettify_text(line[1]))
         return card
 
-    def show(self, reminders=False, rulings=False):
+    def show(self, reminders=False, rulings=False, flavor=False):
         self._format_fields(reminders)
         if rulings:
             self.ruling_data = \
-                RulingExtractor(CardRequest(self.url).send()).extract()
+                SingleCardExtractor(CardRequest(self.url).send()).extract()
+        if flavor:
+            self.flavor_text = \
+                SingleCardExtractor(CardRequest(self.url).send()).extract_flavor()
+            
         return self.card_template.format(self)
 
     def _format_fields(self, reminders):
@@ -127,6 +147,9 @@ class Card(object):
         return u'\n' + u'\n'.join([textwrap.fill(u'{0}: {1}'.format(date, text))
                                    for date, text in self.ruling_data])
 
+    @property
+    def flavor(self):
+        return self.flavor_text and textwrap.fill(self.flavor_text) + '\n' or ''
     
     @classmethod
     def formatted_wrap(cls, text):
