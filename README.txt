@@ -26,7 +26,7 @@ Examples:
     Limit by card text, including reminder text.  A string of comma
     separated terms searches cards containing all terms, not the exact
     phrase: 
-    $ mtg --text='flying,islandwalk'
+    $ mtg --text=flying,islandwalk
     
     To search by exact phrase, specify the phrase:
     $ mtg --text='destroy all creatures'
