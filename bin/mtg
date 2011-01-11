@@ -38,30 +38,30 @@ def main(args):
                       help="containing rules text TEXT", metavar="TEXT")
     parser.add_option('--color', dest='color', help='cards matching COLOR (w, u, b, r, g, c)')
     parser.add_option('--type', dest='type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
-    parser.add_option('--power', dest='power', 
+    parser.add_option('--power', dest='power',
                       help='cards with power POWER (uses <, >, =)')
-    parser.add_option('--tough', dest='tough', 
+    parser.add_option('--tough', dest='tough',
                       help='cards with toughness TOUGHNESS (uses <, >, =)')
-    parser.add_option('--block', dest='block', 
+    parser.add_option('--block', dest='block',
                       help='cards from block BLOCK')
-    parser.add_option('--set', dest='set', 
+    parser.add_option('--set', dest='set',
                       help='cards matching expansion set SET (e.g. unlimited)')
-    parser.add_option('--rarity', dest='rarity', 
+    parser.add_option('--rarity', dest='rarity',
                       help='cards matching rarity RARITY (c, u, r, m)')
     parser.add_option('--cmc', dest='cmc', help='cards with converted mana '
                       'cost CMC (uses <, >, =)')
     parser.add_option('-r', '--reminder', dest='reminder', action='store_true',
-                      help='include reminder text')
+                      help='show reminder text')
     parser.add_option('--hidesets', dest='hidesets', action='store_true',
                       help='hide which sets the card was in')
     parser.add_option('--rulings', dest='rulings', action='store_true',
                       help='show rulings for the card')
     parser.add_option('--special', dest='special', action='store_true',
-                      help='include special cards (e.g. planes)')
+                      help='include special cards (e.g. planes, schemes)')
     parser.add_option('--flavor', dest='flavor', action='store_true',
                       help='show flavor text')
-    parser.add_option('-x', '--exclude-other-colors', dest='exclude', 
-                      action='store_true', help='exclude unselected colors')
+    parser.add_option('-x', '--exclude-other-colors', dest='exclude',
+                      action='store_true', help='exclude colors not explicity specified')
     logger.debug(args)
     if len(args) < 2:
         parser.print_help()
@@ -75,18 +75,18 @@ def main(args):
         if b:
             card_options[a] = b
     logger.debug(card_options)
-    request = SearchRequest(card_options, special=options.special, 
+    request = SearchRequest(card_options, special=options.special,
                             exclude_other_colors=options.exclude)
-    
-    cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings 
+
+    cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings
                                                   or options.flavor)
     for card in cards:
         print separator
-        print card.show(rulings=options.rulings, reminders=options.reminder, 
+        print card.show(rulings=options.rulings, reminders=options.reminder,
                         flavor=options.flavor)
-    print '\n{0} results found.'.format(len(cards))    
+    print '\n{0} results found.'.format(len(cards))
     return 0
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
-    
+
