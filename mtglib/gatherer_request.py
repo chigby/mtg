@@ -11,22 +11,22 @@ __all__ = ['SearchRequest', 'CardRequest']
 
 class UrlFragment(object):
     """A piece of query string text in gatherer format."""
-    
+
     def __init__(self, field, value, group=None):
         """
         Arguments:
         - `field`: Name of the field
         - `value`: Value of the field
-        - `group`: Character that surrounds the values 
+        - `group`: Character that surrounds the values
         """
         self._field = field
         self._value = value
         self._group = group
-        
+
     def __str__(self):
         if not self._value:
             return ''
-        sep = re.compile('[,]+')        
+        sep = re.compile('[,]+')
         value = sep.split(self.clean_value)
         field = '%s=' % self._field
         frag = ('%s[%s]' * (len(value))) % \
@@ -61,7 +61,7 @@ class SearchRequest(object):
         self.options = options
         self.special = special
         self.exclude_other_colors = exclude_other_colors
-        
+
     def _get_url_fragments(self):
         fragments = []
         for opt, value in self.options.items():
@@ -124,24 +124,24 @@ class SearchRequest(object):
     def send(self):
         http = httplib2.Http()
         try:
-            response, content = http.request(settings_url, 'POST', 
+            response, content = http.request(settings_url, 'POST',
                                              headers=settings_header,
                                              body=urllib.urlencode(params))
         except httplib2.ServerNotFoundError as ex:
-            logging.warning(ex)
+            print(ex)
             return False
         card_header = headers = {'Cookie': response['set-cookie']}
-        
+
         # Possibly log this url.
         response, content = http.request(self.url, 'GET', headers=headers)
         return content
 
-        
+
 class CardRequest(object):
-    
+
     def __init__(self, url):
         self.url = url
-        
+
     def send(self):
         base_url = 'http://gatherer.wizards.com/Pages'
         if '..' in self.url:

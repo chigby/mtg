@@ -11,7 +11,7 @@ from logging import handlers, Formatter
 from optparse import OptionParser
 from mtglib.gatherer_request import SearchRequest
 from mtglib.card_extractor import CardExtractor, Card
-from mtglib.constants import card_flags, separator
+from mtglib.constants import card_flags, separator, readme
 
 def main(args):
 
@@ -33,7 +33,7 @@ def main(args):
     logger.addHandler(ch)
     logger.debug('Starting main program')
 
-    parser = OptionParser(usage='Usage: %prog [options] [cardname]')
+    parser = OptionParser(usage=readme)
     parser.add_option("-t", "--text", dest="text",
                       help="containing rules text TEXT", metavar="TEXT")
     parser.add_option('--color', dest='color', help='cards matching COLOR (w, u, b, r, g, c)')
@@ -80,6 +80,8 @@ def main(args):
 
     cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings
                                                   or options.flavor)
+    if not cards:
+        return 0
     for card in cards:
         print separator
         print card.show(rulings=options.rulings, reminders=options.reminder,
