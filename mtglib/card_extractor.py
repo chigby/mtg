@@ -47,9 +47,16 @@ class CardExtractor(object):
 
         unified_content = [item for item in unified_content if item != u'\n||\n']
         unified_content = self._group(unified_content, 2)
-        unified_content = self._group(unified_content, data_fields)
 
-        for block in unified_content:
+        blocks  = []
+        block = []
+        for u in unified_content:
+            block.append(u)
+            if 'Set/Rarity' in u[0]:
+                blocks.append(block)
+                block = []
+
+        for block in blocks:
             card = Card.from_block(block)
             if get_card_urls:
                 card.url = card_urls.pop(0)

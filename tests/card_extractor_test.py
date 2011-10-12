@@ -3,7 +3,7 @@ import re
 import textwrap
 
 from dingus import DingusTestCase, Dingus, returner
-from nose.tools import assert_raises
+from nose.tools import assert_raises, eq_
 
 import mtglib.card_extractor as mod
 from mtglib.gatherer_request import CardRequest
@@ -125,6 +125,31 @@ class WhenExtractingManyCards(DingusTestCase(CardExtractor,
         assert cards[2].name == 'Forked Lightning'
         assert cards[2].type == 'Sorcery'
         assert cards[3].name == 'Forked-Branch Garami'
+
+
+class WhenExtractingCardsWithoutManaCosts(
+    DingusTestCase(CardExtractor, exclude=['re', 'Card', 'BeautifulSoup'])):
+
+    def setup(self):
+        super(WhenExtractingCardsWithoutManaCosts, self).setup()
+        self.extractor = CardExtractor(costless_html)
+        self.card = self.extractor.extract()[1]
+
+    def should_extract_blank_mana_cost(self):
+        eq_(self.card.cost, '')
+
+    def should_extract_rules_text(self):
+        eq_(self.card.rules_text, u'Suspend 4—{U} (Rather than cast this card '
+            'from your hand, pay {U} and exile it with four time counters on '
+            'it. At the beginning of your upkeep, remove a time counter. When'
+            ' the last is removed, cast it without paying its mana cost.) '
+            '; Target player draws three cards.')
+
+    def should_extract_sets_and_rarity(self):
+        eq_(self.card.set_rarity, 'Duel Decks: Jace vs. Chandra Rare, '
+            'Time Spiral Rare')
+
+
 
 class DescribeSingleCardExtractor(object):
 
@@ -404,3 +429,132 @@ fork_html = """
     </table>
 </div>
 """
+
+costless_html = """
+<div class="textspoiler">
+    <table>
+
+                <tr>
+                    <td>
+                        Name:
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=122449">Aeon Chronicler</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_costRow">
+        <td>
+                        Cost:
+                    </td>
+        <td>
+                        3UU
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Creature  — Avatar
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+                        (*/*)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        Aeon Chronicler's power and toughness are each equal to the number of cards in your hand.<br />
+Suspend X—{X}{3}{U}. X can't be 0.  (Rather than cast this card from your hand, you may pay {X}{3}{U} and exile it with X time counters on it. At the beginning of your upkeep, remove a time counter. When the last is removed, cast it without paying its mana cost. It has haste.)<br />
+Whenever a time counter is removed from Aeon Chronicler while it's exiled, draw a card.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Planar Chaos Rare
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Name:
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl01_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=189244">Ancestral Vision</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl01_costRow">
+        <td>
+                        Cost:
+                    </td>
+        <td>
+
+                    </td>
+</tr>
+
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl01_colorIndicatorRow">
+        <td>
+                        Color:
+                    </td>
+        <td>
+                        Blue
+                    </td>
+</tr>
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Sorcery
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        Suspend 4—{U} (Rather than cast this card from your hand, pay {U} and exile it with four time counters on it. At the beginning of your upkeep, remove a time counter. When the last is removed, cast it without paying its mana cost.)<br />
+Target player draws three cards.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Duel Decks: Jace vs. Chandra Rare, Time Spiral Rare
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
+    </table>
+</div>"""
