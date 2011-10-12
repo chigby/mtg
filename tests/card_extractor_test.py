@@ -24,7 +24,7 @@ class WhenInstantiatingCardExtractor(object):
         assert self.extractor.fields_per_card == 6
 
 class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
-    
+
     def setup(self):
         super(WhenExtractingCardsWithBlankLines, self).setup()
         self.extractor = CardExtractor('<html></html>')
@@ -36,7 +36,7 @@ class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
             tag.contents = [Dingus()] * 3
             tag['href'] = 'http://www.com'
             if i % 2 != 0:
-                for contents in tag.contents:                    
+                for contents in tag.contents:
                     contents.string = u'\r\n string\r\n'
             else:
                 all_contents = []
@@ -52,7 +52,7 @@ class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
         self.table.findAll.return_value = all_tags
         self.extracted = self.extractor.extract()
 
-    
+
 class WhenExtractingCards(DingusTestCase(CardExtractor)):
 
     def setup(self):
@@ -69,7 +69,7 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
 
     def should_be_false_if_empty(self):
         assert not CardExtractor('').extract()
-        
+
     def should_get_card_urls_if_asked(self):
         self.extractor.extract(get_card_urls=True)
         assert mod.BeautifulSoup.BeautifulSoup().table.calls('findAll', 'a')
@@ -80,13 +80,13 @@ class WhenExtractingCards(DingusTestCase(CardExtractor)):
     def should_raise_exception_if_bad_format(self):
         mod.BeautifulSoup.BeautifulSoup().table = False
         assert CardExtractor('<html></html>').extract() == []
-       
+
     def should_replace_br_tags_with_pipes(self):
         soup = mod.BeautifulSoup.BeautifulSoup()
         for tag in soup.findAll():
             assert tag.calls('replaceWith', '||')
         assert soup.calls('findAll', 'br').once()
-        
+
     def should_find_all_td_tags(self):
         assert self.table.calls('findAll', 'td').once()
 
@@ -145,13 +145,13 @@ class WhenExtractingRulings(DingusTestCase(SingleCardExtractor)):
         super(WhenExtractingRulings, self).setup()
         self.extractor = SingleCardExtractor('<html></html>')
         self.soup = mod.BeautifulSoup.BeautifulSoup()
-        
+
         def compile_(string):
             return string
         mod.re.compile = compile_
 
         def findAll(attrs):
-            all_tags = [Dingus()] *3 
+            all_tags = [Dingus()] *3
             for tag in all_tags:
                 if attrs == 'autocard':
                     tag.string = 'autocard'
@@ -161,7 +161,7 @@ class WhenExtractingRulings(DingusTestCase(SingleCardExtractor)):
                     tag.contents = '2010-08-23'
             return all_tags
         self.soup.findAll = findAll
-        self.extracted = self.extractor.extract()        
+        self.extracted = self.extractor.extract()
 
     def should_return_false_if_no_html(self):
         self.extractor = SingleCardExtractor('')
@@ -172,15 +172,15 @@ class WhenExtractingRulings(DingusTestCase(SingleCardExtractor)):
 
     def should_combine_ruling_contents(self):
         print self.extracted
-        assert self.extracted == [('2010-08-23', 'This is a ruling'), 
-                                  ('2010-08-23', 'This is a ruling'), 
+        assert self.extracted == [('2010-08-23', 'This is a ruling'),
+                                  ('2010-08-23', 'This is a ruling'),
                                   ('2010-08-23', 'This is a ruling')]
 
 
 fork_html = """
 <div class="textspoiler">
     <table>
-        
+
                 <tr>
                     <td>
                         Name:
@@ -190,10 +190,10 @@ fork_html = """
                     </td>
                 </tr>
                 <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_costRow">
-	<td>
+        <td>
                         Cost:
                     </td>
-	<td>
+        <td>
                         RR
                     </td>
 </tr>
@@ -211,7 +211,7 @@ fork_html = """
                         Pow/Tgh:
                     </td>
                     <td>
-                        
+
                     </td>
                 </tr>
                 <tr>
@@ -235,7 +235,7 @@ fork_html = """
                         <br />
                     </td>
                 </tr>
-            
+
                 <tr>
                     <td>
                         Name:
@@ -245,10 +245,10 @@ fork_html = """
                     </td>
                 </tr>
                 <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl01_costRow">
-	<td>
+        <td>
                         Cost:
                     </td>
-	<td>
+        <td>
                         R
                     </td>
 </tr>
@@ -266,7 +266,7 @@ fork_html = """
                         Pow/Tgh:
                     </td>
                     <td>
-                        
+
                     </td>
                 </tr>
                 <tr>
@@ -290,7 +290,7 @@ fork_html = """
                         <br />
                     </td>
                 </tr>
-            
+
                 <tr>
                     <td>
                         Name:
@@ -300,10 +300,10 @@ fork_html = """
                     </td>
                 </tr>
                 <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl02_costRow">
-	<td>
+        <td>
                         Cost:
                     </td>
-	<td>
+        <td>
                         3R
                     </td>
 </tr>
@@ -321,7 +321,7 @@ fork_html = """
                         Pow/Tgh:
                     </td>
                     <td>
-                        
+
                     </td>
                 </tr>
                 <tr>
@@ -345,7 +345,7 @@ fork_html = """
                         <br />
                     </td>
                 </tr>
-            
+
                 <tr>
                     <td>
                         Name:
@@ -355,10 +355,10 @@ fork_html = """
                     </td>
                 </tr>
                 <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl03_costRow">
-	<td>
+        <td>
                         Cost:
                     </td>
-	<td>
+        <td>
                         3GG
                     </td>
 </tr>
@@ -400,7 +400,7 @@ fork_html = """
                         <br />
                     </td>
                 </tr>
-            
+
     </table>
 </div>
 """

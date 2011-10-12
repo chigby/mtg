@@ -33,22 +33,22 @@ class CardExtractor(object):
             tag.replaceWith('||')
 
         td_tags = soup.table.findAll('td')
-        
+
         # Get rulings hrefs here.
         if get_card_urls:
             a_tags = soup.table.findAll('a')
             card_urls = [tag['href'] for tag in a_tags]
-            
+
         content_lists = [tag.contents for tag in td_tags]
         unified_content = []
         cards = []
         for lst in content_lists:
             unified_content.append(''.join([item.string or u'' for item in lst]))
-        
+
         unified_content = [item for item in unified_content if item != u'\n||\n']
         unified_content = self._group(unified_content, 2)
         unified_content = self._group(unified_content, data_fields)
-        
+
         for block in unified_content:
             card = Card.from_block(block)
             if get_card_urls:
@@ -65,7 +65,7 @@ class SingleCardExtractor(object):
     def _parse_html(self):
         if not self.html:
             return False
-                
+
     def extract_flavor(self):
         if not self.html:
             return False
@@ -75,7 +75,7 @@ class SingleCardExtractor(object):
             flavor_text = flavor_text[0].findAll('i')[0].contents[0]
         else:
             flavor_text = ''
-        return flavor_text        
+        return flavor_text
 
     def extract(self):
         if not self.html:
@@ -122,7 +122,7 @@ class Card(object):
         if flavor:
             self.flavor_text = \
                 SingleCardExtractor(CardRequest(self.url).send()).extract_flavor()
-            
+
         return self.card_template.format(self)
 
     def _format_fields(self, reminders):
@@ -135,7 +135,7 @@ class Card(object):
             self.rules_text = self.replace_reminders(self.rules_text)
         self.rules_text = self.rules_text.replace(self.name, '~this~')
         self.rules_text = self.formatted_wrap(self.rules_text)
-    
+
     @property
     def number(self):
         return self.pow_tgh or self.loyalty
@@ -150,7 +150,7 @@ class Card(object):
     @property
     def flavor(self):
         return self.flavor_text and textwrap.fill(self.flavor_text) + '\n' or ''
-    
+
     @classmethod
     def formatted_wrap(cls, text):
         return textwrap.fill(u'            {0}'.format(text)).strip()
@@ -159,7 +159,7 @@ class Card(object):
     def replace_reminders(cls, text):
         """Remove reminder text from cards (complete sentences enclosed in
         parentheses)."""
-        return re.sub(r'(\A|\ )\(.*?\.\)', '', text)    
+        return re.sub(r'(\A|\ )\(.*?\.\)', '', text)
 
     @classmethod
     def prettify_text(cls, text):
