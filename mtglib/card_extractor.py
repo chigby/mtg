@@ -12,7 +12,6 @@ class CardExtractor(object):
 
     def __init__(self, html):
         self.html = html
-        self.fields_per_card = 6
 
     def _group(self, lst, n):
         newlist = []
@@ -23,7 +22,6 @@ class CardExtractor(object):
         return newlist
 
     def extract(self, get_card_urls=False):
-        data_fields = self.fields_per_card
         if not self.html:
             return False
         soup = BeautifulSoup.BeautifulSoup(self.html)

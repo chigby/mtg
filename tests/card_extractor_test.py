@@ -20,8 +20,6 @@ class WhenInstantiatingCardExtractor(object):
     def should_accept_html(self):
         assert hasattr(self.extractor, 'html')
 
-    def should_recognize_fields_per_card(self):
-        assert self.extractor.fields_per_card == 6
 
 class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 
