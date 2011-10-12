@@ -4,3 +4,7 @@ syntax: glob
 *.elc
 *.pyc
 *~
+build/*
+dist/*
+.ropeproject/*
+mtg.egg-info/*
