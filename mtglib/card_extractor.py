@@ -2,6 +2,7 @@ import re
 import textwrap
 
 import BeautifulSoup
+from lxml.html import parse
 
 from mtglib.gatherer_request import CardRequest
 
@@ -21,45 +22,97 @@ class CardExtractor(object):
                 newlist.append(tuple(val))
         return newlist
 
+    def _text_to_symbol(self, text):
+        return text[:1]
+
+    def _textbox_manasymbol(self, text):
+        return '{{{0}}}'.format(text[:1])
+
+    def _flatten(self, element):
+        """Recursively enter and extract text from all child
+        elements."""
+        result = [ (element.text or '') ]
+        if element.attrib.get('alt'):
+            result.append(self._textbox_manasymbol(element.attrib.get('alt')))
+        for sel in element:
+            result.append(self._flatten(sel))
+            result.append(sel.tail or '')
+        return ''.join(result)
+
     def extract(self, get_card_urls=False):
         if not self.html:
             return False
-        soup = BeautifulSoup.BeautifulSoup(self.html)
-        if not soup.table:
-            return []
-        for tag in soup.findAll('br'):
-            tag.replaceWith('||')
 
-        td_tags = soup.table.findAll('td')
+        doc = parse(self.html).getroot()
+        labels = doc.cssselect('div.label')
+        values = doc.cssselect('div.value')
+        pairs = zip(labels, values)
+        card = Card()
+        for (label, value) in pairs:
+            l = label.text_content().strip().replace(' ', '_') \
+                .replace(':', '').lower().replace('card_', '')
 
-        # Get rulings hrefs here.
-        if get_card_urls:
-            a_tags = soup.table.findAll('a')
-            card_urls = [tag['href'] for tag in a_tags]
+            if l == 'text':
+                v = ' ; '.join(map(self._flatten,
+                                   value.cssselect('div.cardtextbox')))
 
-        content_lists = [tag.contents for tag in td_tags]
-        unified_content = []
-        cards = []
-        for lst in content_lists:
-            unified_content.append(''.join([item.string or u'' for item in lst]))
+                # print type(v)
+                # print v.decode('raw_unicode_escape')
+                # print type(v)
+                # print repr(v)
 
-        unified_content = [item for item in unified_content if item != u'\n||\n']
-        unified_content = self._group(unified_content, 2)
+            else:
+                v = u''
+                for img in value.cssselect('img'):
+                    v += self._text_to_symbol(img.attrib['alt'])
+                v += value.text_content().strip()
 
-        blocks  = []
-        block = []
-        for u in unified_content:
-            block.append(u)
-            if 'Set/Rarity' in u[0]:
-                blocks.append(block)
-                block = []
+            # if l == 'text':
+            #     for child in value.getchildren():
+            #         v += '\n\n' + child.text_content()
 
-        for block in blocks:
-            card = Card.from_block(block)
-            if get_card_urls:
-                card.url = card_urls.pop(0)
-            cards.append(card)
-        return cards
+
+            setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
+        return [card]
+
+
+
+        # soup = BeautifulSoup.BeautifulSoup(self.html)
+        # if not soup.table:
+        #     return []
+        # for tag in soup.findAll('br'):
+        #     tag.replaceWith('||')
+
+        # td_tags = soup.table.findAll('td')
+
+        # # Get rulings hrefs here.
+        # if get_card_urls:
+        #     a_tags = soup.table.findAll('a')
+        #     card_urls = [tag['href'] for tag in a_tags]
+
+        # content_lists = [tag.contents for tag in td_tags]
+        # unified_content = []
+        # cards = []
+        # for lst in content_lists:
+        #     unified_content.append(''.join([item.string or u'' for item in lst]))
+
+        # unified_content = [item for item in unified_content if item != u'\n||\n']
+        # unified_content = self._group(unified_content, 2)
+
+        # blocks  = []
+        # block = []
+        # for u in unified_content:
+        #     block.append(u)
+        #     if 'Set/Rarity' in u[0]:
+        #         blocks.append(block)
+        #         block = []
+
+        # for block in blocks:
+        #     card = Card.from_block(block)
+        #     if get_card_urls:
+        #         card.url = card_urls.pop(0)
+        #     cards.append(card)
+        # return cards
 
 
 class SingleCardExtractor(object):

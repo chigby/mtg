@@ -133,7 +133,10 @@ class SearchRequest(object):
         card_header = headers = {'Cookie': response['set-cookie']}
 
         # Possibly log this url.
+        print self.url
         response, content = http.request(self.url, 'GET', headers=headers)
+        print response
+        print content
         return content
 
 
