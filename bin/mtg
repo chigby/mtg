@@ -78,8 +78,11 @@ def main(args):
     request = SearchRequest(card_options, special=options.special,
                             exclude_other_colors=options.exclude)
 
-    cards = CardExtractor(request.send()).extract(get_card_urls=options.rulings
-                                                  or options.flavor)
+    try:
+        cards = CardExtractor(request.send()) \
+            .extract(get_card_urls=options.rulings or options.flavor)
+    except KeyboardInterrupt:
+        return 0
     if not cards:
         return 0
     for card in cards:
