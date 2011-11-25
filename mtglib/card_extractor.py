@@ -51,7 +51,15 @@ class CardExtractor(object):
             for img in c.cssselect('span.manaCost img'):
                 setattr(card, 'mana_cost',
                         self._text_to_symbol(img.attrib['alt']))
-            #card.mana_cost =
+            regex = '\([^/]+/[^)]+\)'
+            typeline = c.cssselect('span.typeLine')[0].text_content()
+            m = re.search(regex, typeline)
+            if m:
+                card.pow_tgh = m.group(0)
+                card.types = re.sub(regex, '', typeline).strip()
+            else:
+                card.types = typeline.strip()
+            card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
             cards.append(card)
         return cards
 

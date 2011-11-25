@@ -98,6 +98,9 @@ class WhenExtractingMultipleCards(object):
     def should_extract_mana_cost(self):
         eq_(self.cards[0].mana_cost, '(G/W)')
 
+    def should_extract_types(self):
+        eq_(self.cards[0].types, unicode('Creature  — Elf Shaman', 'utf-8'))
+
 # class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 
 #     def setup(self):
