@@ -30,7 +30,7 @@ class WhenExtractingSingleCard(object):
         self.card = self.extracted[0]
 
     def should_get_one_result(self):
-        assert len(self.extracted) == 1
+        eq_(len(self.extracted), 1)
 
     def should_extract_name(self):
         assert self.card.card_name == 'Acorn Harvest'
@@ -61,6 +61,27 @@ class WhenExtractingSingleCard(object):
 
     def should_extract_card_number(self):
         eq_(self.card.card_number, '118')
+
+
+class WhenExtractingSingleDualFacedPlaneswalker(object):
+
+    def setup(self):
+        self.html = open('tests/_data/garruk_relentless.html')
+        self.cards = CardExtractor(self.html).extract()
+
+    def should_get_two_results(self):
+        eq_(len(self.cards), 2)
+
+    def should_extract_names(self):
+        eq_(self.cards[0].card_name, 'Garruk Relentless')
+        eq_(self.cards[1].card_name, 'Garruk, the Veil-Cursed')
+
+    def should_extact_loyalty(self):
+        eq_(self.cards[0].loyalty, '3')
+
+    def should_extract_color_indicator(self):
+        eq_(self.cards[1].color_indicator, 'Black, Green')
+
 
 
 

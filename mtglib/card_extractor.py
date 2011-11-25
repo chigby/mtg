@@ -44,27 +44,30 @@ class CardExtractor(object):
             return False
 
         doc = parse(self.html).getroot()
-        labels = doc.cssselect('div.label')
-        values = doc.cssselect('div.value')
-        pairs = zip(labels, values)
-        card = Card()
-        for (label, value) in pairs:
-            print label.text_content()
-            l = label.text_content().strip().replace(' ', '_') \
-                .replace(':', '').lower().replace('#', 'number')
-            print l
-            if l == 'card_text':
-                v = ' ; '.join(map(self._flatten,
-                                   value.cssselect('div.cardtextbox')))
-            else:
-                v = u''
-                if l == 'mana_cost':
-                    for img in value.cssselect('img'):
-                        v += self._text_to_symbol(img.attrib['alt'])
-                v += value.text_content().strip()
+        cards = []
+        for component in doc.cssselect('td.cardComponentContainer'):
+            if not component.getchildren():
+                continue # do not parse empty components
+            labels = component.cssselect('div.label')
+            values = component.cssselect('div.value')
+            pairs = zip(labels, values)
+            card = Card()
+            for (label, value) in pairs:
+                l = label.text_content().strip().replace(' ', '_') \
+                    .replace(':', '').lower().replace('#', 'number')
 
-            setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
-        return [card]
+                if l == 'card_text':
+                    v = ' ; '.join(map(self._flatten,
+                                       value.cssselect('div.cardtextbox')))
+                else:
+                    v = u''
+                    if l == 'mana_cost':
+                        for img in value.cssselect('img'):
+                            v += self._text_to_symbol(img.attrib['alt'])
+                    v += value.text_content().strip()
+                setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
+            cards.append(card)
+        return cards
 
 
 
