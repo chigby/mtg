@@ -27,32 +27,42 @@ class WhenExtractingSingleCard(object):
         self.html = open('tests/_data/acorn_harvest.html')
         self.extractor = CardExtractor(self.html)
         self.extracted = self.extractor.extract()
+        self.card = self.extracted[0]
 
     def should_get_one_result(self):
         assert len(self.extracted) == 1
 
     def should_extract_name(self):
-        assert self.extracted[0].name == 'Acorn Harvest'
+        assert self.card.card_name == 'Acorn Harvest'
 
     def should_extract_mana_cost(self):
-        eq_(self.extracted[0].mana_cost, '3G')
+        eq_(self.card.mana_cost, '3G')
 
     def should_extract_types(self):
-        assert self.extracted[0].types == 'Sorcery'
+        assert self.card.types == 'Sorcery'
 
     def should_extract_text(self):
-        eq_(self.extracted[0].text, unicode('Put two 1/1 green Squirrel creature '
+        eq_(self.card.card_text, unicode('Put two 1/1 green Squirrel creature '
             'tokens onto the battlefield. ; Flashback\xe2\x80\x94{1}{G}, Pay 3 life.'
             ' (You may cast this card from your graveyard for its flashback '
             'cost. Then exile it.)', 'utf-8'))
 
-#u'Put two 1/1 green Squirrel creature tokens onto the battlefield. ;
-#Flashback\xe2\x80\x94{1}{G}, Pay 3 life. (You may cast this card from
-#your graveyard for its flashback cost. Then exile it.)'
+    def should_extract_rarity(self):
+        eq_(self.card.rarity, 'Common')
 
-#u'Put two 1/1 green Squirrel creature tokens onto the battlefield. ;
-#Flashback\u2014{1}{G}, Pay 3 life. (You may cast this card from your
-#graveyard for its flashback cost. Then exile it.)'
+    def should_extract_expansion(self):
+        eq_(self.card.expansion, 'Torment')
+
+    def should_extract_artist(self):
+        eq_(self.card.artist, 'Edward P. Beard, Jr.')
+
+    def should_extract_converted_mana_cost(self):
+        eq_(self.card.converted_mana_cost, '4')
+
+    def should_extract_card_number(self):
+        eq_(self.card.card_number, '118')
+
+
 
 # class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 

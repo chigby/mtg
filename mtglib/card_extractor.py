@@ -49,28 +49,19 @@ class CardExtractor(object):
         pairs = zip(labels, values)
         card = Card()
         for (label, value) in pairs:
+            print label.text_content()
             l = label.text_content().strip().replace(' ', '_') \
-                .replace(':', '').lower().replace('card_', '')
-
-            if l == 'text':
+                .replace(':', '').lower().replace('#', 'number')
+            print l
+            if l == 'card_text':
                 v = ' ; '.join(map(self._flatten,
                                    value.cssselect('div.cardtextbox')))
-
-                # print type(v)
-                # print v.decode('raw_unicode_escape')
-                # print type(v)
-                # print repr(v)
-
             else:
                 v = u''
-                for img in value.cssselect('img'):
-                    v += self._text_to_symbol(img.attrib['alt'])
+                if l == 'mana_cost':
+                    for img in value.cssselect('img'):
+                        v += self._text_to_symbol(img.attrib['alt'])
                 v += value.text_content().strip()
-
-            # if l == 'text':
-            #     for child in value.getchildren():
-            #         v += '\n\n' + child.text_content()
-
 
             setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
         return [card]
