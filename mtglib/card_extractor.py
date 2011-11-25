@@ -23,10 +23,13 @@ class CardExtractor(object):
         return newlist
 
     def _text_to_symbol(self, text):
+        if ' or ' in text:
+            return '({0})'.format('/'.join(l[:1] for l in text.replace(' or ', '/')
+                            .split('/')).lower())
         return text[:1]
 
     def _textbox_manasymbol(self, text):
-        return '{{{0}}}'.format(text[:1])
+        return '{{{0}}}'.format(self._text_to_symbol(text))
 
     def _flatten(self, element):
         """Recursively enter and extract text from all child
@@ -38,6 +41,19 @@ class CardExtractor(object):
             result.append(self._flatten(sel))
             result.append(sel.tail or '')
         return ''.join(result)
+
+    def extract_many(self):
+        doc = parse(self.html).getroot()
+        cards = []
+        for c in doc.cssselect('div.cardInfo'):
+            card = Card()
+            card.name = c.cssselect('span.cardTitle')[0].text_content().strip()
+            for img in c.cssselect('span.manaCost img'):
+                setattr(card, 'mana_cost',
+                        self._text_to_symbol(img.attrib['alt']))
+            #card.mana_cost =
+            cards.append(card)
+        return cards
 
     def extract(self, get_card_urls=False):
         if not self.html:

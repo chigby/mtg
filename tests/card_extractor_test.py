@@ -83,7 +83,20 @@ class WhenExtractingSingleDualFacedPlaneswalker(object):
         eq_(self.cards[1].color_indicator, 'Black, Green')
 
 
+class WhenExtractingMultipleCards(object):
 
+    def setup(self):
+        self.html = open('tests/_data/hex.html')
+        self.cards = CardExtractor(self.html).extract_many()
+
+    def should_get_nine_results(self):
+        eq_(len(self.cards), 9)
+
+    def should_extract_name(self):
+        eq_(self.cards[0].name, 'Elvish Hexhunter')
+
+    def should_extract_mana_cost(self):
+        eq_(self.cards[0].mana_cost, '(g/w)')
 
 # class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 
