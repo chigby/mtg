@@ -96,7 +96,7 @@ class WhenExtractingMultipleCards(object):
         eq_(self.cards[0].name, 'Elvish Hexhunter')
 
     def should_extract_mana_cost(self):
-        eq_(self.cards[0].mana_cost, '(g/w)')
+        eq_(self.cards[0].mana_cost, '(G/W)')
 
 # class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 

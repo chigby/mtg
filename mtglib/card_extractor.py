@@ -25,7 +25,7 @@ class CardExtractor(object):
     def _text_to_symbol(self, text):
         if ' or ' in text:
             return '({0})'.format('/'.join(
-                    l[:1] for l in text.split(' or ')).lower())
+                    l[:1] for l in text.split(' or ')))
         return text[:1]
 
     def _textbox_manasymbol(self, text):
