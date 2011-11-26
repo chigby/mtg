@@ -23,10 +23,12 @@ class CardExtractor(object):
         return newlist
 
     def _text_to_symbol(self, text):
+        if text in ('White', 'Blue', 'Black', 'Red', 'Green', 'Tap'):
+            return text[:1]
         if ' or ' in text:
             return '({0})'.format('/'.join(
                     l[:1] for l in text.split(' or ')))
-        return text[:1]
+        return text
 
     def _textbox_manasymbol(self, text):
         symbol = '{{{0}}}'.format(self._text_to_symbol(text))
@@ -47,22 +49,26 @@ class CardExtractor(object):
     def extract_many(self):
         doc = parse(self.html).getroot()
         cards = []
-        for c in doc.cssselect('div.cardInfo'):
-            card = Card()
-            card.name = c.cssselect('span.cardTitle')[0].text_content().strip()
-            for img in c.cssselect('span.manaCost img'):
-                setattr(card, 'mana_cost',
-                        self._text_to_symbol(img.attrib['alt']))
-            regex = '\([^/]+/[^)]+\)'
-            typeline = c.cssselect('span.typeLine')[0].text_content()
-            m = re.search(regex, typeline)
-            if m:
-                card.pow_tgh = m.group(0)
-                card.types = re.sub(regex, '', typeline).strip()
-            else:
-                card.types = typeline.strip()
-            card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
-            card.card_text = self._flatten(c.cssselect('div.rulesText')[0]).strip()
+        for item in doc.cssselect('tr.cardItem'):
+            for c in item.cssselect('div.cardInfo'):
+                card = Card()
+                card.name = c.cssselect('span.cardTitle')[0].text_content().strip()
+                for img in c.cssselect('span.manaCost img'):
+                    setattr(card, 'mana_cost',
+                            self._text_to_symbol(img.attrib['alt']))
+                regex = '\([^/]+/[^)]+\)'
+                typeline = c.cssselect('span.typeLine')[0].text_content()
+                m = re.search(regex, typeline)
+                if m:
+                    card.pow_tgh = m.group(0)
+                    card.types = re.sub(regex, '', typeline).strip()
+                else:
+                    card.types = typeline.strip()
+                card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
+                card.card_text = self._flatten(c.cssselect('div.rulesText')[0]).strip()
+
+            for img in item.cssselect('td.rightCol img'):
+                setattr(card, 'set_rarity', img.attrib['alt'])
             cards.append(card)
         return cards
 
