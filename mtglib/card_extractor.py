@@ -22,25 +22,12 @@ class CardExtractor(object):
                 newlist.append(tuple(val))
         return newlist
 
-    def _text_to_symbol(self, text):
-        if text in ('White', 'Blue', 'Black', 'Red', 'Green', 'Tap'):
-            return text[:1]
-        if ' or ' in text:
-            return '({0})'.format('/'.join(
-                    l[:1] for l in text.split(' or ')))
-        return text
-
-    def _textbox_manasymbol(self, text):
-        symbol = '{{{0}}}'.format(self._text_to_symbol(text))
-        if '/' in symbol: return symbol.lower()
-        else: return symbol
-
     def _flatten(self, element):
         """Recursively enter and extract text from all child
         elements."""
         result = [ (element.text or '') ]
         if element.attrib.get('alt'):
-            result.append(self._textbox_manasymbol(element.attrib.get('alt')))
+            result.append(Symbol(element.attrib.get('alt')).textbox)
         for sel in element:
             result.append(self._flatten(sel))
             result.append(sel.tail or '')
@@ -54,8 +41,7 @@ class CardExtractor(object):
                 card = Card()
                 card.name = c.cssselect('span.cardTitle')[0].text_content().strip()
                 for img in c.cssselect('span.manaCost img'):
-                    setattr(card, 'mana_cost',
-                            self._text_to_symbol(img.attrib['alt']))
+                    setattr(card, 'mana_cost', Symbol(img.attrib['alt']).short)
                 regex = '\([^/]+/[^)]+\)'
                 typeline = c.cssselect('span.typeLine')[0].text_content()
                 m = re.search(regex, typeline)
@@ -67,8 +53,9 @@ class CardExtractor(object):
                 card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
                 card.card_text = self._flatten(c.cssselect('div.rulesText')[0]).strip()
 
-            for img in item.cssselect('td.rightCol img'):
-                setattr(card, 'set_rarity', img.attrib['alt'])
+            set_rarity = ', '.join([img.attrib['alt'] for img in
+                                    item.cssselect('td.rightCol img')])
+            setattr(card, 'set_rarity', set_rarity)
             cards.append(card)
         return cards
 
@@ -96,7 +83,7 @@ class CardExtractor(object):
                     v = u''
                     if l == 'mana_cost':
                         for img in value.cssselect('img'):
-                            v += self._text_to_symbol(img.attrib['alt'])
+                            v += Symbol(img.attrib['alt']).short
                     v += value.text_content().strip()
                 setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
             cards.append(card)
@@ -140,6 +127,39 @@ class CardExtractor(object):
         #         card.url = card_urls.pop(0)
         #     cards.append(card)
         # return cards
+
+class Symbol(object):
+
+    def __init__(self, text):
+        self.text = text
+        self.specials = {'Untap': 'Q',
+                         'Blue': 'U',
+                         'Snow': 'S}i',
+                         'Variable Colorless': 'X'}
+
+    @property
+    def short(self):
+        if self.text in self.specials.keys():
+            return self.specials[self.text]
+        elif ' or ' in self.text:
+            return '({0})'.format('/'.join(
+                    Symbol(l).short for l in self.text.split(' or ')))
+        elif 'Phyrexian' in self.text:
+            return self.phyrexian
+        elif self.text.isdigit():
+            return self.text
+        return self.text[:1]
+
+    @property
+    def phyrexian(self):
+        return '({0}/P)'.format(
+            Symbol(self.text.replace('Phyrexian ', '')).short)
+
+    @property
+    def textbox(self):
+        base = '{{{0}}}'.format(self.short)
+        if '/' in base: return base.lower()
+        else: return base
 
 
 class SingleCardExtractor(object):

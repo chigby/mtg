@@ -7,7 +7,8 @@ from nose.tools import assert_raises, eq_
 
 import mtglib.card_extractor as mod
 from mtglib.gatherer_request import CardRequest
-from mtglib.card_extractor import CardExtractor, SingleCardExtractor, Card
+from mtglib.card_extractor import CardExtractor, SingleCardExtractor, Card, \
+    Symbol
 
 class WhenInstantiatingCardExtractor(object):
 
@@ -110,6 +111,49 @@ class WhenExtractingMultipleCards(object):
 
     def should_extract_card_expansion(self):
         eq_(self.cards[0].set_rarity, 'Shadowmoor (Common)')
+
+    def should_extract_multiple_card_expansions(self):
+        eq_(self.cards[1].set_rarity, 'Magic: The Gathering-Commander (Rare), '
+            'Ravnica: City of Guilds (Rare)')
+
+
+class DescribeSymbols(object):
+
+    def should_abbreviate_color_names(self):
+        eq_(Symbol('Green').short, 'G')
+
+    def should_abbreviate_color_names(self):
+        eq_(Symbol('Blue').short, 'U')
+
+    def should_abbreviate_tap(self):
+        eq_(Symbol('Tap').short, 'T')
+
+    def should_abbreviate_untap(self):
+        eq_(Symbol('Untap').short, 'Q')
+
+    def should_abbreviate_hybrid_mana(self):
+        eq_(Symbol('Blue or Black').short, '(U/B)')
+
+    def should_format_for_textboxes(self):
+        eq_(Symbol('Green').textbox, '{G}')
+
+    def should_downcase_hybrid_mana_in_textbox(self):
+        eq_(Symbol('Blue or Black').textbox, '{(u/b)}')
+
+    def should_abbreviate_phyrexian_mana(self):
+        eq_(Symbol('Phyrexian Black').short, '(B/P)')
+
+    def should_downcase_phyrexian_mana_in_textbox(self):
+        eq_(Symbol('Phyrexian Blue').textbox, '{(u/p)}')
+
+    def should_preserve_all_numerals(self):
+        eq_(Symbol('12').short, '12')
+
+    def should_format_show_mana(self):
+        eq_(Symbol('Snow').textbox, '{S}i}')
+
+    def should_format_x(self):
+        eq_(Symbol('Variable Colorless').short, 'X')
 
 # class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 
