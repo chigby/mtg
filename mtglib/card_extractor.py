@@ -14,14 +14,6 @@ class CardExtractor(object):
     def __init__(self, html):
         self.html = html
 
-    def _group(self, lst, n):
-        newlist = []
-        for i in range(0, len(lst), n):
-            val = lst[i:i+n]
-            if len(val) == n:
-                newlist.append(tuple(val))
-        return newlist
-
     def _flatten(self, element):
         """Recursively enter and extract text from all child
         elements."""
