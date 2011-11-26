@@ -11,8 +11,8 @@ __all__ = ['CardExtractor', 'SingleCardExtractor', 'Card']
 class CardExtractor(object):
     """Extracts card information from Gatherer HTML."""
 
-    def __init__(self, html):
-        self.html = html
+    def __init__(self, card_source):
+        self.card_source = card_source
 
     def _flatten(self, element):
         """Recursively enter and extract text from all child
@@ -26,7 +26,7 @@ class CardExtractor(object):
         return ''.join(result)
 
     def extract_many(self):
-        doc = parse(self.html).getroot()
+        doc = parse(self.card_source).getroot()
         cards = []
         for item in doc.cssselect('tr.cardItem'):
             for c in item.cssselect('div.cardInfo'):
@@ -52,10 +52,7 @@ class CardExtractor(object):
         return cards
 
     def extract(self):
-        if not self.html:
-            return False
-
-        doc = parse(self.html).getroot()
+        doc = parse(self.card_source).getroot()
         cards = []
         for component in doc.cssselect('td.cardComponentContainer'):
             if not component.getchildren():

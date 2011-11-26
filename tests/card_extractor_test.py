@@ -18,15 +18,14 @@ class WhenInstantiatingCardExtractor(object):
     def should_be_instance_of_card_extractor(self):
         assert isinstance(self.extractor, CardExtractor)
 
-    def should_accept_html(self):
-        assert hasattr(self.extractor, 'html')
+    def should_accept_card_source(self):
+        assert hasattr(self.extractor, 'card_source')
 
 
 class WhenExtractingSingleCard(object):
 
     def setup(self):
-        self.html = open('tests/_data/acorn_harvest.html')
-        self.extractor = CardExtractor(self.html)
+        self.extractor = CardExtractor(open('tests/_data/acorn_harvest.html'))
         self.extracted = self.extractor.extract()
         self.card = self.extracted[0]
 
@@ -67,8 +66,7 @@ class WhenExtractingSingleCard(object):
 class WhenExtractingSingleCardWithManySets(object):
 
     def setup(self):
-        self.html = open('tests/_data/blazing_torch.html')
-        self.extractor = CardExtractor(self.html)
+        self.extractor = CardExtractor(open('tests/_data/blazing_torch.html'))
         self.extracted = self.extractor.extract()
         self.card = self.extracted[0]
 
@@ -79,8 +77,8 @@ class WhenExtractingSingleCardWithManySets(object):
 class WhenExtractingSingleDualFacedPlaneswalker(object):
 
     def setup(self):
-        self.html = open('tests/_data/garruk_relentless.html')
-        self.cards = CardExtractor(self.html).extract()
+        extractor = CardExtractor(open('tests/_data/garruk_relentless.html'))
+        self.cards = extractor.extract()
 
     def should_get_two_results(self):
         eq_(len(self.cards), 2)
