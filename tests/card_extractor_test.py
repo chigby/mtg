@@ -64,6 +64,18 @@ class WhenExtractingSingleCard(object):
         eq_(self.card.card_number, '118')
 
 
+class WhenExtractingSingleCardWithManySets(object):
+
+    def setup(self):
+        self.html = open('tests/_data/blazing_torch.html')
+        self.extractor = CardExtractor(self.html)
+        self.extracted = self.extractor.extract()
+        self.card = self.extracted[0]
+
+    def should_extract_all_sets(self):
+        eq_(self.card.all_sets, 'Zendikar (Uncommon), Innistrad (Common)')
+
+
 class WhenExtractingSingleDualFacedPlaneswalker(object):
 
     def setup(self):

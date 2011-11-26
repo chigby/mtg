@@ -84,49 +84,15 @@ class CardExtractor(object):
                     if l == 'mana_cost':
                         for img in value.cssselect('img'):
                             v += Symbol(img.attrib['alt']).short
+                    if l == 'all_sets':
+                        v += ', '.join([img.attrib['alt'] for img in
+                                        value.cssselect('img')])
+
                     v += value.text_content().strip()
                 setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
             cards.append(card)
         return cards
 
-
-
-        # soup = BeautifulSoup.BeautifulSoup(self.html)
-        # if not soup.table:
-        #     return []
-        # for tag in soup.findAll('br'):
-        #     tag.replaceWith('||')
-
-        # td_tags = soup.table.findAll('td')
-
-        # # Get rulings hrefs here.
-        # if get_card_urls:
-        #     a_tags = soup.table.findAll('a')
-        #     card_urls = [tag['href'] for tag in a_tags]
-
-        # content_lists = [tag.contents for tag in td_tags]
-        # unified_content = []
-        # cards = []
-        # for lst in content_lists:
-        #     unified_content.append(''.join([item.string or u'' for item in lst]))
-
-        # unified_content = [item for item in unified_content if item != u'\n||\n']
-        # unified_content = self._group(unified_content, 2)
-
-        # blocks  = []
-        # block = []
-        # for u in unified_content:
-        #     block.append(u)
-        #     if 'Set/Rarity' in u[0]:
-        #         blocks.append(block)
-        #         block = []
-
-        # for block in blocks:
-        #     card = Card.from_block(block)
-        #     if get_card_urls:
-        #         card.url = card_urls.pop(0)
-        #     cards.append(card)
-        # return cards
 
 class Symbol(object):
 
