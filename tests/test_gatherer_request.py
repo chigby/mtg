@@ -25,31 +25,31 @@ class WhenGettingUrl(unittest2.TestCase):
     def should_group_text_in_brackets(self):
         request = SearchRequest({'text': 'trample'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&text=+[trample]')
+               'output=standard&text=+[trample]')
         assert request.url == url
 
     def should_assume_exact_quote_if_spaces(self):
         request = SearchRequest({'text': 'first strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&text=+[%22first%20strike%22]')
+               'output=standard&text=+[%22first%20strike%22]')
         assert request.url == url
 
     def should_parse_logical_or(self):
         request = SearchRequest({'text': '|first,|strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&text=|[first]|[strike]')
+               'output=standard&text=|[first]|[strike]')
         assert request.url == url
 
     def should_parse_logical_or_for_sets(self):
         request = SearchRequest({'set': '|worldwake,|zendikar'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&set=|[worldwake]|[zendikar]')
+               'output=standard&set=|[worldwake]|[zendikar]')
         assert request.url == url
 
     def should_assume_logical_or_for_sets(self):
         request = SearchRequest({'set': 'worldwake,zendikar'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&set=|[worldwake]|[zendikar]')
+               'output=standard&set=|[worldwake]|[zendikar]')
         assert request.url == url
 
     def should_parse_sharp_comparison_operators(self):
@@ -72,7 +72,7 @@ class WhenGettingUrl(unittest2.TestCase):
     def should_separate_name_words(self):
         request = SearchRequest({'name': 'sengir,vampire'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&name=+[sengir]+[vampire]')
+               'output=standard&name=+[sengir]+[vampire]')
         self.assertEqual(request.url, url)
 
     def should_allow_color_exclusion_with_logical_or(self):
@@ -95,7 +95,7 @@ class WhenGettingUrl(unittest2.TestCase):
         options = dict(set='eldrazi', type='instant', color='r,w', cmc='=1')
         request = SearchRequest(options)
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&color=|[r]|[w]&cmc=+=[1]'
+               'output=standard&color=|[r]|[w]&cmc=+=[1]'
                '&set=|[eldrazi]&type=+[instant]')
         self.assertEqual(request.url, url)
 
@@ -162,7 +162,7 @@ class WhenMakingSpecialRequest(unittest2.TestCase):
         request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
                               special=True)
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=spoiler&method=text&name=+[only]+[blood]+[ends]+[your]'
+               'output=standard&name=+[only]+[blood]+[ends]+[your]'
                '+[nightmares]&special=true')
         self.assertEqual(request.url, url)
 
