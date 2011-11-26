@@ -1,5 +1,5 @@
 import unittest2
-import httplib2 
+import httplib2
 import urllib
 from nose.tools import assert_raises
 from dingus import DingusTestCase, exception_raiser
@@ -12,10 +12,10 @@ class WhenInstantiatingSearchRequest(unittest2.TestCase):
 
     def setUp(self):
         self.request = SearchRequest({'text': 'first strike'})
-        
+
     def should_be_instance_of_card_request(self):
         assert isinstance(self.request, SearchRequest)
-        
+
     def should_store_options(self):
         assert self.request.options == {'text': 'first strike'}
 
@@ -27,7 +27,7 @@ class WhenGettingUrl(unittest2.TestCase):
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
                'output=spoiler&method=text&text=+[trample]')
         assert request.url == url
-                                                                                
+
     def should_assume_exact_quote_if_spaces(self):
         request = SearchRequest({'text': 'first strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
@@ -68,7 +68,7 @@ class WhenGettingUrl(unittest2.TestCase):
         request = SearchRequest({'power': '<=4', 'tough':'>=3'})
         assert 'power=+<=[4]' in request.url
         assert 'tough=+>=[3]' in request.url
-        
+
     def should_separate_name_words(self):
         request = SearchRequest({'name': 'sengir,vampire'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
@@ -90,7 +90,7 @@ class WhenGettingUrl(unittest2.TestCase):
     def should_assume_or_when_comma_separated_color(self):
         request = SearchRequest({'color': 'w,u'})
         assert 'color=|[w]|[u]' in request.url
-        
+
     def should_combine_multiple_terms(self):
         options = dict(set='eldrazi', type='instant', color='r,w', cmc='=1')
         request = SearchRequest(options)
@@ -107,25 +107,25 @@ class WhenGettingUrl(unittest2.TestCase):
     def should_recognize_creature_type_as_subtype(self):
         options = dict(type='dryad')
         request = SearchRequest(options)
-        assert 'subtype=+[dryad]' in request.url    
+        assert 'subtype=+[dryad]' in request.url
         assert '&type=+[dryad]' not in request.url
-    
+
     def should_separate_type_and_subtypes(self):
         options = dict(type='land,dryad')
         request = SearchRequest(options)
-        assert 'subtype=+[dryad]' in request.url    
+        assert 'subtype=+[dryad]' in request.url
         assert '&type=+[land]' in request.url
 
     def should_separate_type_and_subtypes_artifacts(self):
         options = dict(type='artifact,bird')
         request = SearchRequest(options)
-        assert 'subtype=+[bird]' in request.url    
+        assert 'subtype=+[bird]' in request.url
         assert '&type=+[artifact]' in request.url
 
     def should_ignore_case_on_types(self):
         options = dict(type='ARTIFACT,Bird')
         request = SearchRequest(options)
-        assert 'subtype=+[bird]' in request.url    
+        assert 'subtype=+[bird]' in request.url
         assert '&type=+[artifact]' in request.url
 
     def should_separate_many_types(self):
@@ -145,13 +145,13 @@ class WhenGettingUrl(unittest2.TestCase):
         request = SearchRequest(options)
         assert 'subtype=+[eldrazi]' in request.url
         assert '&type=|[instant]|[creature]' in request.url
-    
+
 class WhenMakingSpecialRequest(unittest2.TestCase):
 
     def setUp(self):
         self.request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
                               special=True)
-        
+
     def should_have_special(self):
         assert self.request.special == True
 
@@ -173,7 +173,7 @@ class WhenSendingRequest(DingusTestCase(SearchRequest, exclude=['urllib', 'param
         self.request = SearchRequest({'text': '"first strike"'})
         self.http = mod.httplib2.Http()
         self.http.request.return_value = ({'set-cookie':'cookiedata'}, 'foo')
-        
+
     def should_send_settings_request(self):
         self.request.send()
         http_args = self.http.calls('request')[0].args
@@ -195,7 +195,7 @@ class WhenSendingRequest(DingusTestCase(SearchRequest, exclude=['urllib', 'param
         assert self.request.send() == 'foo'
 
 class WhenCannotConnect(DingusTestCase(SearchRequest)):
-    
+
     def setup(self):
         super(WhenCannotConnect, self).setup()
         self.request = SearchRequest({'text': '"first strike"'})
