@@ -10,7 +10,7 @@ from mtglib.gatherer_request import CardRequest
 from mtglib.card_extractor import CardExtractor, SingleCardExtractor, Card, \
     Symbol
 
-class WhenInstantiatingCardExtractor(object):
+class DescribeCardExtractor(object):
 
     def setUp(self):
         self.extractor = CardExtractor('html')
@@ -20,6 +20,10 @@ class WhenInstantiatingCardExtractor(object):
 
     def should_accept_card_source(self):
         assert hasattr(self.extractor, 'card_source')
+
+    def should_have_cards(self):
+        self.extractor = CardExtractor(open('tests/_data/acorn_harvest.html'))
+        assert self.extractor.cards
 
 
 class WhenExtractingSingleCard(object):
@@ -164,3 +168,6 @@ class DescribeSymbols(object):
 
     def should_format_x(self):
         eq_(Symbol('Variable Colorless').short, 'X')
+
+    def should_format_hybrid_colorless_mana(self):
+        eq_(Symbol('Two or White').short, '(2/W)')

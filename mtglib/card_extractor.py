@@ -13,6 +13,7 @@ class CardExtractor(object):
 
     def __init__(self, card_source):
         self.card_source = card_source
+        self._document = None
 
     def _flatten(self, element):
         """Recursively enter and extract text from all child
@@ -25,10 +26,26 @@ class CardExtractor(object):
             result.append(sel.tail or '')
         return ''.join(result)
 
+    @property
+    def document(self):
+        if getattr(self, '_document') is None:
+            self._document = parse(self.card_source).getroot()
+        return self._document
+
+    @property
+    def cards(self):
+        print 'doing card search'
+        if 'Card Search' in self.document.cssselect('title')[0].text_content():
+            print 'many'
+            return self.extract_many()
+        else:
+            print 'one'
+            return self.extract()
+
     def extract_many(self):
-        doc = parse(self.card_source).getroot()
         cards = []
-        for item in doc.cssselect('tr.cardItem'):
+
+        for item in self.document.cssselect('tr.cardItem'):
             for c in item.cssselect('div.cardInfo'):
                 card = Card()
                 card.name = c.cssselect('span.cardTitle')[0].text_content().strip()
@@ -52,9 +69,9 @@ class CardExtractor(object):
         return cards
 
     def extract(self):
-        doc = parse(self.card_source).getroot()
         cards = []
-        for component in doc.cssselect('td.cardComponentContainer'):
+
+        for component in self.document.cssselect('td.cardComponentContainer'):
             if not component.getchildren():
                 continue # do not parse empty components
             labels = component.cssselect('div.label')
@@ -90,7 +107,8 @@ class Symbol(object):
         self.specials = {'Untap': 'Q',
                          'Blue': 'U',
                          'Snow': 'S}i',
-                         'Variable Colorless': 'X'}
+                         'Variable Colorless': 'X',
+                         'Two': '2'}
 
     @property
     def short(self):
@@ -165,18 +183,17 @@ class SingleCardExtractor(object):
 class Card(object):
 
     def __init__(self):
-        self.name = ''
-        self.cost = ''
-        self.type = ''
-        self.rules_text = ''
+        self.card_name = ''
+        self.mana_cost = ''
+        self.types = ''
+        self.card_text = ''
         self.set_rarity = ''
         self.loyalty = ''
         self.pow_tgh = ''
-        self.url = ''
         self.ruling_data = []
         self.flavor_text = ''
-        self.card_template = (u"{0.name} {0.cost}\n"
-                              u"{0.type}\nText: {0.number} {0.rules_text}\n"
+        self.card_template = (u"{0.card_name} {0.mana_cost}\n"
+                              u"{0.types}\nText: {0.number} {0.card_text}\n"
                               u"{0.flavor}{0.set_rarity}{0.rulings}")
 
     @classmethod
@@ -198,15 +215,15 @@ class Card(object):
         return self.card_template.format(self)
 
     def _format_fields(self, reminders):
-        self.type = self.type.replace('  ', ' ')
+        self.types = self.types.replace('  ', ' ')
         self.set_rarity = textwrap.fill(self.set_rarity)
-        self._format_rules_text(reminders)
+        self._format_card_text(reminders)
 
-    def _format_rules_text(self, reminders):
+    def _format_card_text(self, reminders):
         if not reminders:
-            self.rules_text = self.replace_reminders(self.rules_text)
-        self.rules_text = self.rules_text.replace(self.name, '~this~')
-        self.rules_text = self.formatted_wrap(self.rules_text)
+            self.card_text = self.replace_reminders(self.card_text)
+        self.card_text = self.card_text.replace(self.card_name, '~this~')
+        self.card_text = self.formatted_wrap(self.card_text)
 
     @property
     def number(self):
