@@ -101,6 +101,13 @@ class WhenExtractingMultipleCards(object):
     def should_extract_types(self):
         eq_(self.cards[0].types, unicode('Creature  — Elf Shaman', 'utf-8'))
 
+    def should_extract_power_toughness_block(self):
+        eq_(self.cards[0].pow_tgh, '(1/1)')
+
+    def should_extract_card_text(self):
+        eq_(self.cards[0].card_text, '{(g/w)}, {T}, Sacrifice Elvish Hexhunter'
+            ': Destroy target enchantment.')
+
 # class WhenExtractingCardsWithBlankLines(DingusTestCase(CardExtractor)):
 
 #     def setup(self):

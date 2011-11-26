@@ -29,7 +29,9 @@ class CardExtractor(object):
         return text[:1]
 
     def _textbox_manasymbol(self, text):
-        return '{{{0}}}'.format(self._text_to_symbol(text))
+        symbol = '{{{0}}}'.format(self._text_to_symbol(text))
+        if '/' in symbol: return symbol.lower()
+        else: return symbol
 
     def _flatten(self, element):
         """Recursively enter and extract text from all child
@@ -60,6 +62,7 @@ class CardExtractor(object):
             else:
                 card.types = typeline.strip()
             card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
+            card.card_text = self._flatten(c.cssselect('div.rulesText')[0]).strip()
             cards.append(card)
         return cards
 
