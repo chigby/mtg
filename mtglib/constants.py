@@ -1,5 +1,5 @@
 base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-            '?output=spoiler&method=text&')
+            '?output=standard&')
 settings_url = 'http://gatherer.wizards.com/Pages/Settings.aspx'
 settings_header =  {'Content-type': 'application/x-www-form-urlencoded'}
 params = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'

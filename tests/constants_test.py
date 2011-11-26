@@ -5,7 +5,7 @@ from mtglib.constants import settings_url, settings_header, params, base_url, \
 
 PARAMS = {'ctl00$ctl00$MainContent$SearchControls$CardSearchBoxParent'
           '$CardSearchBox':'Search Terms...',
-          'ctl00$ctl00$MainContent$SearchControls$SearchCardName':'on', 
+          'ctl00$ctl00$MainContent$SearchControls$SearchCardName':'on',
           'ctl00$ctl00$MainContent$SubContent$AutoComplete':
               'EnableAutoComplete',
           'ctl00$ctl00$MainContent$SubContent$CardLinkAction':'SameWindow',
@@ -31,7 +31,7 @@ class DescribeConstants(unittest2.TestCase):
 
     def should_have_base_url(self):
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-               '?output=spoiler&method=text&')
+               '?output=standard&')
         assert base_url == url
 
     def should_have_settings_url(self):
