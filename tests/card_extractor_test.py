@@ -126,6 +126,10 @@ class WhenExtractingMultipleCards(object):
         eq_(self.cards[0].card_text, '{(g/w)}, {T}, Sacrifice Elvish Hexhunter'
             ': Destroy target enchantment.')
 
+    def should_extract_multipart_card_text(self):
+        eq_(self.cards[7].card_text, 'First strike ; Sacrifice Vampire Hexmage'
+            ': Remove all counters from target permanent.')
+
     def should_extract_card_expansion(self):
         eq_(self.cards[0].set_rarity, 'Shadowmoor (Common)')
 

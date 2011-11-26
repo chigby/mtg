@@ -61,7 +61,8 @@ class CardExtractor(object):
                 else:
                     card.types = typeline.strip()
                 card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
-                card.card_text = self._flatten(c.cssselect('div.rulesText')[0]).strip()
+                card.card_text = ' ; '.join(map(
+                        self._flatten, c.cssselect('div.rulesText p')))
 
             set_rarity = ', '.join([img.attrib['alt'] for img in
                                     item.cssselect('td.rightCol img')])
