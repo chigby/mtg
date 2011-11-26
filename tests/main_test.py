@@ -11,7 +11,7 @@ sys.modules['mtg'] = mtg
 mod = mtg
 
 class DescribeOptionParsing(DingusTestCase(mtg.main)):
-    
+
     def setup(self):
         super(DescribeOptionParsing, self).setup()
 
@@ -20,9 +20,9 @@ class DescribeOptionParsing(DingusTestCase(mtg.main)):
         assert mod.OptionParser().calls('print_help')
 
 
-class DescribeMainProgram(DingusTestCase(mtg.main, exclude=['OptionParser', 
+class DescribeMainProgram(DingusTestCase(mtg.main, exclude=['OptionParser',
                                                             'card_flags'])):
-    
+
     def setup(self):
         super(DescribeMainProgram, self).setup()
 
@@ -63,29 +63,10 @@ class DescribeMainProgram(DingusTestCase(mtg.main, exclude=['OptionParser',
 
     def should_show_cards(self):
         mtg.main(['./mtg.py', 'sengir', 'vampire'])
-        for card in mod.CardExtractor().extract():
-            print card.calls()
+        for card in mod.CardExtractor().cards:
             assert card.calls('show')
-        
-    def should_show_cards_and_rulings(self):
-        mtg.main(['./mtg.py', 'sengir', 'vampire', '--rulings'])
-        assert mod.CardExtractor().calls('extract')[0].kwargs == \
-            {'get_card_urls': True}
-        for card in mod.CardExtractor().extract():
-            assert card.calls('show')[0].kwargs == {'rulings': True}
 
-    def should_show_cards_and_flavor(self):
-        mtg.main(['./mtg.py', 'natural', 'selection', '--flavor'])
-        assert mod.CardExtractor().calls('extract')[0].kwargs == \
-            {'get_card_urls': True}
-        for card in mod.CardExtractor().extract():
-            assert card.calls('show')[0].kwargs['flavor'] == True
-
-    def should_show_cards_and_rulings(self):
+    def should_show_cards_and_reminders(self):
         mtg.main(['./mtg.py', 'tarmogoyf', '--reminder'])
-        assert mod.CardExtractor().calls('extract')[0].kwargs == \
-            {'get_card_urls': None}
-        for card in mod.CardExtractor().extract():
-            assert card.calls('show')[0].kwargs == {'reminders': True, 
-                                                    'rulings': None, 
-                                                    'flavor':None}
+        for card in mod.CardExtractor().cards:
+            assert card.calls('show')[0].kwargs['reminders'] == True
