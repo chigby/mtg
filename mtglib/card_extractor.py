@@ -59,7 +59,7 @@ class CardExtractor(object):
             cards.append(card)
         return cards
 
-    def extract(self, get_card_urls=False):
+    def extract(self):
         if not self.html:
             return False
 
