@@ -141,19 +141,31 @@ class Symbol(object):
     def short(self):
         if self.text in self.specials.keys():
             return self.specials[self.text]
-        elif ' or ' in self.text:
-            return '({0})'.format('/'.join(
-                    Symbol(l).short for l in self.text.split(' or ')))
-        elif 'Phyrexian' in self.text:
+        elif self.is_hybrid:
+            return self.hybrid
+        elif self.is_phyrexian:
             return self.phyrexian
         elif self.text.isdigit():
             return self.text
         return self.text[:1]
 
     @property
+    def is_phyrexian(self):
+        return 'Phyrexian ' in self.text
+
+    @property
     def phyrexian(self):
         return '({0}/P)'.format(
             Symbol(self.text.replace('Phyrexian ', '')).short)
+
+    @property
+    def is_hybrid(self):
+        return ' or ' in self.text
+
+    @property
+    def hybrid(self):
+        return '({0})'.format('/'.join(
+                Symbol(l).short for l in self.text.split(' or ')))
 
     @property
     def textbox(self):
