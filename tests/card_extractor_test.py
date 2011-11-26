@@ -108,10 +108,13 @@ class WhenExtractingMultipleCards(object):
         eq_(len(self.cards), 9)
 
     def should_extract_name(self):
-        eq_(self.cards[0].name, 'Elvish Hexhunter')
+        eq_(self.cards[0].card_name, 'Elvish Hexhunter')
 
     def should_extract_mana_cost(self):
         eq_(self.cards[0].mana_cost, '(G/W)')
+
+    def should_extract_multipart_mana_cost(self):
+        eq_(self.cards[1].mana_cost, '4BB')
 
     def should_extract_types(self):
         eq_(self.cards[0].types, unicode('Creature  — Elf Shaman', 'utf-8'))

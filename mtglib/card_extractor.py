@@ -48,9 +48,10 @@ class CardExtractor(object):
         for item in self.document.cssselect('tr.cardItem'):
             for c in item.cssselect('div.cardInfo'):
                 card = Card()
-                card.name = c.cssselect('span.cardTitle')[0].text_content().strip()
-                for img in c.cssselect('span.manaCost img'):
-                    setattr(card, 'mana_cost', Symbol(img.attrib['alt']).short)
+                card.card_name = c.cssselect('span.cardTitle')[0].text_content().strip()
+                mana_cost = ''.join([Symbol(img.attrib['alt']).short for
+                                    img in c.cssselect('span.manaCost img')])
+                card.mana_cost = mana_cost
                 regex = '\([^/]+/[^)]+\)'
                 typeline = c.cssselect('span.typeLine')[0].text_content()
                 m = re.search(regex, typeline)
