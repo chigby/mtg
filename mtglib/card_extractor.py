@@ -36,12 +36,9 @@ class CardExtractor(object):
 
     @property
     def cards(self):
-        print 'doing card search'
         if 'Card Search' in self.document.cssselect('title')[0].text_content():
-            print 'many'
             return self.extract_many()
         else:
-            print 'one'
             return self.extract()
 
     def extract_many(self):
