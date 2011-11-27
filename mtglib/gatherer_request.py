@@ -31,6 +31,7 @@ class UrlFragment(object):
         field = '%s=' % self._field
         frag = ('%s[%s]' * (len(value))) % \
             tuple(self._get_modifiers(self._field, value))
+
         if self._group:
             frag = '+{group}({frag})'.format(group=self._group, frag=frag[1:])
         return field + frag
@@ -57,14 +58,19 @@ class UrlFragment(object):
 
 class SearchRequest(object):
 
-    def __init__(self, options, special=False, exclude_other_colors=False):
-        self.options = options
+    def __init__(self, input_options, special=False,
+                 exclude_other_colors=False):
+        self.input_options = input_options
         self.special = special
         self.exclude_other_colors = exclude_other_colors
+        self.options = {}
+        for k, v in input_options.items():
+            self.options[k] = v
 
     def _get_url_fragments(self):
         fragments = []
         for opt, value in self.options.items():
+            print opt, value
             if opt == 'color' and self.exclude_other_colors:
                 group = '@'
             else:
@@ -103,12 +109,14 @@ class SearchRequest(object):
         if 'text' in self.options:
             if ' ' in self.options['text']:
                 self.options['text'] = '"{0}"'.format(self.options['text'])
-        if 'color' in self.options:
-            if ',' not in self.options['color']:
-                self.options['color'] = self._comma_join(self.options['color'])
+        if 'color' in self.input_options:
+            print self.options, self.input_options
+            if ',' not in self.input_options['color']:
+                self.options['color'] = self._comma_join(self.input_options['color'])
             else:
                 self.options['color'] = '|' + \
-                    ',|'.join(self.options['color'].split(','))
+                    ',|'.join(self.input_options['color'].split(','))
+        #print self.options is self.input_options
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
         return self._get_url_fragments()

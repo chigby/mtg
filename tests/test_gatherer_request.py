@@ -22,6 +22,10 @@ class WhenInstantiatingSearchRequest(unittest2.TestCase):
 
 class WhenGettingUrl(unittest2.TestCase):
 
+    def should_be_idempotent(self):
+        request = SearchRequest({'color': 'w,b'})
+        assert request.url == request.url
+
     def should_group_text_in_brackets(self):
         request = SearchRequest({'text': 'trample'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
@@ -91,13 +95,10 @@ class WhenGettingUrl(unittest2.TestCase):
         request = SearchRequest({'color': 'w,u'})
         assert 'color=|[w]|[u]' in request.url
 
-    def should_combine_multiple_terms(self):
-        options = dict(set='eldrazi', type='instant', color='r,w', cmc='=1')
-        request = SearchRequest(options)
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&color=|[r]|[w]&cmc=+=[1]'
-               '&set=|[eldrazi]&type=+[instant]')
-        self.assertEqual(request.url, url)
+    def should_correctly_handle_both_not_and_or(self):
+        request = SearchRequest({'color': '!b,r'})
+        print request.url
+        assert 'color=+![b]|[r]' in request.url
 
     def should_send_type(self):
         options = dict(type='land')
