@@ -97,6 +97,10 @@ class CardExtractor(object):
 
                     v += value.text_content().strip()
                 setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
+            for ruling in component.cssselect('tr.post'):
+                date, text = ruling.cssselect('td')
+                card.ruling_data.append((date.text_content(),
+                                         text.text_content()))
             cards.append(card)
         return cards
 

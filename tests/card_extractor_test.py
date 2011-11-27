@@ -152,6 +152,26 @@ class WhenExtractingFlavorText(object):
         assert 'Braids' not in self.cards[0].show()
 
 
+class WhenExtractingRulings(object):
+
+    def setup(self):
+        self.html = open('tests/_data/mirari.html')
+        self.cards = CardExtractor(self.html).extract()
+
+    def should_extract_all_rulings(self):
+        eq_(len(self.cards[0].ruling_data), 7)
+
+    def should_extract_ruling_date(self):
+        eq_(self.cards[0].ruling_data[0][0], '2004/10/4')
+
+    def should_extract_ruling_text(self):
+        eq_(self.cards[0].ruling_data[0][1], 'Everything about the original '
+            'spell is copied, including any decisions made on announcement, '
+            'such as whether it was kicked or its Buyback cost was paid. '
+            'Effects on the spell, such as Sleight of Mind or Flashback, are'
+            ' not copied. ')
+
+
 class DescribeSymbols(object):
 
     def should_abbreviate_color_names(self):
