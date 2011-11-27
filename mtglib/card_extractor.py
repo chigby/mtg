@@ -189,14 +189,19 @@ class Card(object):
         self.mana_cost = ''
         self.types = ''
         self.card_text = ''
-        self.set_rarity = ''
         self.loyalty = ''
         self.pow_tgh = ''
+        self.all_sets = ''
+        self.set_rarity = ''
         self.ruling_data = []
         self.flavor_text = ''
         self.card_template = (u"{0.card_name} {0.mana_cost}\n"
                               u"{0.types}\nText: {0.number} {0.card_text}\n"
-                              u"{0.flavor}{0.set_rarity}{0.rulings}")
+                              u"{0.flavor}{0.display_set}{0.rulings}")
+
+    @property
+    def display_set(self):
+        return textwrap.fill(self.all_sets or self.set_rarity)
 
     @classmethod
     def from_block(cls, block):
@@ -218,7 +223,6 @@ class Card(object):
 
     def _format_fields(self, reminders):
         self.types = self.types.replace('  ', ' ')
-        self.set_rarity = textwrap.fill(self.set_rarity)
         self._format_card_text(reminders)
 
     def _format_card_text(self, reminders):
@@ -240,7 +244,9 @@ class Card(object):
 
     @property
     def flavor(self):
-        return self.flavor_text and textwrap.fill(self.flavor_text) + '\n' or ''
+        if not self.flavor_text: return ''
+        flavor = self.flavor_text.replace(u'\u2014', u' \u2014')
+        return textwrap.fill(flavor) + '\n'
 
     @classmethod
     def formatted_wrap(cls, text):

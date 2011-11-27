@@ -138,6 +138,16 @@ class WhenExtractingMultipleCards(object):
             'Ravnica: City of Guilds (Rare)')
 
 
+class WhenExtractingFlavorText(object):
+
+    def setup(self):
+        self.html = open('tests/_data/mirari.html')
+        self.cards = CardExtractor(self.html).extract()
+
+    def should_format_flavor_text(self):
+        assert u' \u2014' in self.cards[0].show()
+
+
 class DescribeSymbols(object):
 
     def should_abbreviate_color_names(self):

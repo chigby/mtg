@@ -22,8 +22,9 @@ class DescribeCard(object):
     def should_have_rules_text(self):
         assert hasattr(self.card, 'card_text')
 
-    def should_have_set_rarity(self):
-        assert hasattr(self.card, 'set_rarity')
+    def should_prioritize_all_sets_for_display_sets(self):
+        self.card.all_sets = 'All sets'
+        assert self.card.display_set == self.card.all_sets
 
 
 class WhenPrintingCard(object):
