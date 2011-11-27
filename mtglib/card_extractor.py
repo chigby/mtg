@@ -24,7 +24,9 @@ class CardExtractor(object):
         for sel in element:
             result.append(self._flatten(sel))
             result.append(sel.tail or '')
-        return ''.join(result)
+
+        # prevent reminder text from getting too close to mana symbols
+        return ''.join(result).replace('}(', '} (')
 
     @property
     def document(self):
@@ -215,9 +217,8 @@ class Card(object):
         if rulings:
             self.ruling_data = \
                 SingleCardExtractor(CardRequest(self.url).send()).extract()
-        if flavor:
-            self.flavor_text = \
-                SingleCardExtractor(CardRequest(self.url).send()).extract_flavor()
+        if not flavor:
+            self.flavor_text = ''
 
         return self.card_template.format(self)
 

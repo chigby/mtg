@@ -145,7 +145,11 @@ class WhenExtractingFlavorText(object):
         self.cards = CardExtractor(self.html).extract()
 
     def should_format_flavor_text(self):
-        assert u' \u2014' in self.cards[0].show()
+        assert 'Braids' in self.cards[0].show(flavor=True)
+        assert u' \u2014' in self.cards[0].show(flavor=True)
+
+    def should_exclude_flavor_text_by_default(self):
+        assert 'Braids' not in self.cards[0].show()
 
 
 class DescribeSymbols(object):
