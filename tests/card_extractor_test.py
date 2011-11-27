@@ -7,8 +7,7 @@ from nose.tools import assert_raises, eq_
 
 import mtglib.card_extractor as mod
 from mtglib.gatherer_request import CardRequest
-from mtglib.card_extractor import CardExtractor, SingleCardExtractor, Card, \
-    Symbol
+from mtglib.card_extractor import CardExtractor, Card, Symbol
 
 class DescribeCardExtractor(object):
 

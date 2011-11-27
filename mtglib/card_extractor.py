@@ -6,7 +6,7 @@ from lxml.html import parse
 
 from mtglib.gatherer_request import CardRequest
 
-__all__ = ['CardExtractor', 'SingleCardExtractor', 'Card']
+__all__ = ['CardExtractor', 'Card']
 
 class CardExtractor(object):
     """Extracts card information from Gatherer HTML."""
@@ -152,39 +152,6 @@ class Symbol(object):
         else: return base
 
 
-class SingleCardExtractor(object):
-
-    def __init__(self, html):
-        self.html = html
-
-    def _parse_html(self):
-        if not self.html:
-            return False
-
-    def extract_flavor(self):
-        if not self.html:
-            return False
-        soup = BeautifulSoup.BeautifulSoup(self.html)
-        flavor_text = soup.findAll(attrs={'id': re.compile('FlavorText$')})
-        if flavor_text:
-            flavor_text = flavor_text[0].findAll('i')[0].contents[0]
-        else:
-            flavor_text = ''
-        return flavor_text
-
-    def extract(self):
-        if not self.html:
-            return False
-        soup = BeautifulSoup.BeautifulSoup(self.html)
-        for tag in soup.findAll('autocard'):
-            tag.replaceWith(tag.string)
-        rulings_text = soup.findAll(attrs={'id' : re.compile('rulingText$')})
-        rulings_date = soup.findAll(attrs={'id' : re.compile('rulingDate$')})
-        rulings_text = [''.join(tag.contents) for tag in rulings_text]
-        rulings_date = [''.join(tag.contents) for tag in rulings_date]
-        return zip(rulings_date, rulings_text)
-
-
 class Card(object):
 
     def __init__(self):
@@ -215,9 +182,8 @@ class Card(object):
 
     def show(self, reminders=False, rulings=False, flavor=False):
         self._format_fields(reminders)
-        if rulings:
-            self.ruling_data = \
-                SingleCardExtractor(CardRequest(self.url).send()).extract()
+        if not rulings:
+            self.ruling_data = []
         if not flavor:
             self.flavor_text = ''
 
