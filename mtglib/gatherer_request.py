@@ -27,7 +27,7 @@ class UrlFragment(object):
         if not self._value:
             return ''
         sep = re.compile('[,]+')
-        value = sep.split(self.clean_value)
+        value = sep.split(self._value)
         field = '%s=' % self._field
         frag = ('%s[%s]' * (len(value))) % \
             tuple(self._get_modifiers(self._field, value))
@@ -52,10 +52,6 @@ class UrlFragment(object):
                 modifier_char = default_modifiers[opt]
             results.extend([modifier_char, item])
         return results
-
-    @property
-    def clean_value(self):
-        return self._value.replace('"', '%22').replace(' ', '%20')
 
 
 class SearchRequest(object):
@@ -108,8 +104,8 @@ class SearchRequest(object):
         if 'type' in self.options:
             self._extract_subtypes()
         if 'text' in self.options:
-            if ' ' in self.options['text']:
-                self.options['text'] = '"{0}"'.format(self.options['text'])
+            if ' ' in self.input_options['text']:
+                self.options['text'] = '"{0}"'.format(self.input_options['text'])
         if 'color' in self.input_options:
             if ',' not in self.input_options['color']:
                 self.options['color'] = self._comma_join(self.input_options['color'])

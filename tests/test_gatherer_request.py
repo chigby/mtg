@@ -22,8 +22,12 @@ class WhenInstantiatingSearchRequest(unittest2.TestCase):
 
 class WhenGettingUrl(unittest2.TestCase):
 
-    def should_be_idempotent(self):
+    def should_be_idempotent_for_color(self):
         request = SearchRequest({'color': 'w,b'})
+        assert request.url == request.url
+
+    def should_be_idempotent_for_text(self):
+        request = SearchRequest({'text': 'destroy all creatures'})
         assert request.url == request.url
 
     def should_group_text_in_brackets(self):
@@ -35,7 +39,7 @@ class WhenGettingUrl(unittest2.TestCase):
     def should_assume_exact_quote_if_spaces(self):
         request = SearchRequest({'text': 'first strike'})
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&text=+[%22first%20strike%22]')
+               'output=standard&text=+["first strike"]')
         assert request.url == url
 
     def should_parse_logical_or(self):
