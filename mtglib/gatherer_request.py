@@ -45,6 +45,8 @@ class UrlFragment(object):
                 modifier_char = '+' + matches.group(0)
                 if modifier_char == '+|':
                     modifier_char = '|'
+                if '|!' in modifier_char:
+                    modifier_char = modifier_char.replace('|!', '!')
                 item = modifiers.sub('', item)
             else:
                 modifier_char = default_modifiers[opt]
@@ -70,7 +72,6 @@ class SearchRequest(object):
     def _get_url_fragments(self):
         fragments = []
         for opt, value in self.options.items():
-            print opt, value
             if opt == 'color' and self.exclude_other_colors:
                 group = '@'
             else:
@@ -110,13 +111,11 @@ class SearchRequest(object):
             if ' ' in self.options['text']:
                 self.options['text'] = '"{0}"'.format(self.options['text'])
         if 'color' in self.input_options:
-            print self.options, self.input_options
             if ',' not in self.input_options['color']:
                 self.options['color'] = self._comma_join(self.input_options['color'])
             else:
                 self.options['color'] = '|' + \
                     ',|'.join(self.input_options['color'].split(','))
-        #print self.options is self.input_options
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
         return self._get_url_fragments()
