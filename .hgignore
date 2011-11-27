@@ -6,5 +6,6 @@ syntax: glob
 *~
 build/*
 dist/*
+src/*
 .ropeproject/*
 mtg.egg-info/*
