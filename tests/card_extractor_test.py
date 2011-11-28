@@ -74,7 +74,7 @@ class WhenExtractingSingleCreature(object):
         self.card = self.extracted[0]
 
     def should_extract_power_and_toughness(self):
-        '6/6' in self.card.show()
+        assert '(6/6)' in self.card.show()
 
 
 class WhenExtractingSingleCardWithManySets(object):

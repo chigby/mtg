@@ -194,6 +194,8 @@ class Card(object):
     def _format_fields(self, reminders):
         self.types = self.types.replace('  ', ' ')
         self.pow_tgh = self.pow_tgh.replace(' ', '')
+        if self.pow_tgh and not self.pow_tgh.startswith('('):
+            self.pow_tgh = '({0})'.format(self.pow_tgh)
         self._format_card_text(reminders)
 
     def _format_card_text(self, reminders):
