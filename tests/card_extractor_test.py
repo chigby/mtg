@@ -66,6 +66,17 @@ class WhenExtractingSingleCard(object):
         eq_(self.card.card_number, '118')
 
 
+class WhenExtractingSingleCreature(object):
+
+    def setup(self):
+        self.ex = CardExtractor(open('tests/_data/personal_incarnation.html'))
+        self.extracted = self.ex.extract()
+        self.card = self.extracted[0]
+
+    def should_extract_power_and_toughness(self):
+        '6/6' in self.card.show()
+
+
 class WhenExtractingSingleCardWithManySets(object):
 
     def setup(self):

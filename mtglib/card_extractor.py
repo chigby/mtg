@@ -80,8 +80,10 @@ class CardExtractor(object):
             pairs = zip(labels, values)
             card = Card()
             for (label, value) in pairs:
+
                 l = label.text_content().strip().replace(' ', '_') \
                     .replace(':', '').lower().replace('#', 'number')
+                if l == 'p/t': l = 'pow_tgh'
 
                 if l == 'card_text':
                     v = ' ; '.join(map(self._flatten,
@@ -191,6 +193,7 @@ class Card(object):
 
     def _format_fields(self, reminders):
         self.types = self.types.replace('  ', ' ')
+        self.pow_tgh = self.pow_tgh.replace(' ', '')
         self._format_card_text(reminders)
 
     def _format_card_text(self, reminders):
