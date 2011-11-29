@@ -112,6 +112,9 @@ class SearchRequest(object):
             else:
                 self.options['color'] = '|' + \
                     ',|'.join(self.input_options['color'].split(','))
+            # sometimes we have !, -- which is not allowed
+            self.options['color'] = self.options['color'].replace('!,', '!')
+
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
         return self._get_url_fragments()

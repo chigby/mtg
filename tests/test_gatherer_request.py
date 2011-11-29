@@ -99,6 +99,11 @@ class WhenGettingUrl(unittest2.TestCase):
         request = SearchRequest({'color': 'w,u'})
         assert 'color=|[w]|[u]' in request.url
 
+    def should_correctly_handle_not(self):
+        request = SearchRequest({'color': '!b'})
+        print request.url
+        assert 'color=+![b]' in request.url
+
     def should_correctly_handle_both_not_and_or(self):
         request = SearchRequest({'color': '!b,r'})
         print request.url
