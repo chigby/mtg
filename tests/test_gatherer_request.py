@@ -6,7 +6,6 @@ from dingus import DingusTestCase, exception_raiser
 
 import mtglib.gatherer_request as mod
 from mtglib.gatherer_request import SearchRequest, CardRequest
-from mtglib.constants import settings_url, settings_header, params
 
 class WhenInstantiatingSearchRequest(unittest2.TestCase):
 
@@ -156,6 +155,7 @@ class WhenGettingUrl(unittest2.TestCase):
         assert 'subtype=+[eldrazi]' in request.url
         assert '&type=|[instant]|[creature]' in request.url
 
+
 class WhenMakingSpecialRequest(unittest2.TestCase):
 
     def setUp(self):
@@ -176,46 +176,6 @@ class WhenMakingSpecialRequest(unittest2.TestCase):
                '+[nightmares]&special=true')
         self.assertEqual(request.url, url)
 
-class WhenSendingRequest(DingusTestCase(SearchRequest, exclude=['urllib', 'params', 'settings_url', 'settings_header'])):
-
-    def setup(self):
-        super(WhenSendingRequest, self).setup()
-        self.request = SearchRequest({'text': '"first strike"'})
-        self.http = mod.httplib2.Http()
-        self.http.request.return_value = ({'set-cookie':'cookiedata'}, 'foo')
-
-    def should_send_settings_request(self):
-        self.request.send()
-        http_args = self.http.calls('request')[0].args
-        http_kwargs = self.http.calls('request')[0].kwargs
-        assert http_args[0] == settings_url
-        assert http_args[1] == 'POST'
-        assert http_kwargs['headers'] == settings_header
-        assert http_kwargs['body'] == urllib.urlencode(params)
-
-    def should_send_card_request(self):
-        self.request.send()
-        http_args = self.http.calls('request')[1].args
-        http_kwargs = self.http.calls('request')[1].kwargs
-        assert http_args[0] == self.request.url
-        assert http_args[1] == 'GET'
-        assert http_kwargs['headers'] == {'Cookie': 'cookiedata'}
-
-    def should_return_content(self):
-        assert self.request.send() == 'foo'
-
-class WhenCannotConnect(DingusTestCase(SearchRequest)):
-
-    def setup(self):
-        super(WhenCannotConnect, self).setup()
-        self.request = SearchRequest({'text': '"first strike"'})
-        self.http = mod.httplib2.Http()
-
-    def should_fail_if_cannot_connect(self):
-        # needed since httplib2 is a dingus
-        mod.httplib2.ServerNotFoundError = httplib2.ServerNotFoundError
-        self.http.request = exception_raiser(httplib2.ServerNotFoundError)
-        assert self.request.send() == False
 
 class DescribeCardRequest(DingusTestCase(CardRequest)):
 

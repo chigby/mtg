@@ -4,8 +4,7 @@ import httplib2
 import logging
 import urllib, urllib2
 
-from constants import settings_url, settings_header, params, base_url, \
-    default_modifiers, types
+from constants import base_url, default_modifiers, types
 
 __all__ = ['SearchRequest', 'CardRequest']
 
@@ -126,24 +125,6 @@ class SearchRequest(object):
     @property
     def url(self):
         return (base_url + '&'.join((self.url_fragments)) + self.special_fragment)
-
-    def send(self):
-        http = httplib2.Http()
-        try:
-            response, content = http.request(settings_url, 'POST',
-                                             headers=settings_header,
-                                             body=urllib.urlencode(params))
-        except httplib2.ServerNotFoundError as ex:
-            print(ex)
-            return False
-        card_header = headers = {'Cookie': response['set-cookie']}
-
-        # Possibly log this url.
-        print self.url
-        response, content = http.request(self.url, 'GET', headers=headers)
-        print response
-        print content
-        return content
 
 
 class CardRequest(object):
