@@ -1,6 +1,5 @@
 """Request to the Gatherer site"""
 import re
-import httplib2
 import logging
 import urllib, urllib2
 

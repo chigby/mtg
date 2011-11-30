@@ -1,7 +1,6 @@
 import re
 import textwrap
 
-import BeautifulSoup
 from lxml.html import parse
 
 __all__ = ['CardExtractor', 'Card']
