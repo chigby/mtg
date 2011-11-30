@@ -5,7 +5,7 @@ from nose.tools import assert_raises
 from dingus import DingusTestCase, exception_raiser
 
 import mtglib.gatherer_request as mod
-from mtglib.gatherer_request import SearchRequest, CardRequest
+from mtglib.gatherer_request import SearchRequest
 
 class WhenInstantiatingSearchRequest(unittest2.TestCase):
 
@@ -175,27 +175,3 @@ class WhenMakingSpecialRequest(unittest2.TestCase):
                'output=standard&name=+[only]+[blood]+[ends]+[your]'
                '+[nightmares]&special=true')
         self.assertEqual(request.url, url)
-
-
-class DescribeCardRequest(DingusTestCase(CardRequest)):
-
-    def should_accept_url(self):
-        request = CardRequest('http://www.com')
-        assert request.url == 'http://www.com'
-
-    def should_open_url(self):
-        request = CardRequest('http://www.com')
-        request.send()
-        assert mod.urllib2.calls('urlopen', 'http://www.com').once()
-
-    def should_read_from_url(self):
-        request = CardRequest('http://www.com')
-        request.send()
-        assert mod.urllib2.urlopen().calls('read')
-
-    def should_fix_relative_urls(self):
-        request = CardRequest('../Card/Details.aspx?multiverseid=212635')
-        fixed_url = ('http://gatherer.wizards.com/Pages/Card/Details.aspx'
-                     '?multiverseid=212635')
-        request.send()
-        assert mod.urllib2.calls('urlopen', fixed_url)

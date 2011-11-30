@@ -124,17 +124,5 @@ class SearchRequest(object):
 
     @property
     def url(self):
-        return (base_url + '&'.join((self.url_fragments)) + self.special_fragment)
-
-
-class CardRequest(object):
-
-    def __init__(self, url):
-        self.url = url
-
-    def send(self):
-        base_url = 'http://gatherer.wizards.com/Pages'
-        if '..' in self.url:
-            self.url = self.url.replace('..', base_url)
-        socket = urllib2.urlopen(self.url)
-        return socket.read()
+        return (base_url + '&'.join((self.url_fragments)) +
+                self.special_fragment)

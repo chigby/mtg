@@ -4,8 +4,6 @@ import textwrap
 import BeautifulSoup
 from lxml.html import parse
 
-from mtglib.gatherer_request import CardRequest
-
 __all__ = ['CardExtractor', 'Card']
 
 class CardExtractor(object):
