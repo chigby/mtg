@@ -60,9 +60,9 @@ class CardExtractor(object):
                 card.card_text = ' ; '.join(map(
                         self._flatten, c.cssselect('div.rulesText p')))
 
-            set_rarity = ', '.join([img.attrib['alt'] for img in
+            all_sets = ', '.join([img.attrib['alt'] for img in
                                     item.cssselect('td.rightCol img')])
-            setattr(card, 'set_rarity', set_rarity)
+            setattr(card, 'all_sets', all_sets)
             cards.append(card)
         return cards
 
@@ -161,7 +161,8 @@ class Card(object):
         self.loyalty = ''
         self.pow_tgh = ''
         self.all_sets = ''
-        self.set_rarity = ''
+        self.expansion = ''
+        self.rarity = ''
         self.ruling_data = []
         self.flavor_text = ''
         self.card_template = (u"{0.card_name} {0.mana_cost}\n"
@@ -171,6 +172,11 @@ class Card(object):
     @property
     def display_set(self):
         return textwrap.fill(self.all_sets or self.set_rarity)
+
+    @property
+    def set_rarity(self):
+        if self.expansion and self.rarity:
+            return '{0} ({1})'.format(self.expansion, self.rarity)
 
     @classmethod
     def from_block(cls, block):

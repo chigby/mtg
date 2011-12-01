@@ -64,6 +64,9 @@ class WhenExtractingSingleCard(object):
     def should_extract_card_number(self):
         eq_(self.card.card_number, '118')
 
+    def should_show_expansion(self):
+        assert 'Torment' in self.card.show()
+
 
 class WhenExtractingSingleCreature(object):
 
@@ -140,10 +143,10 @@ class WhenExtractingMultipleCards(object):
             ': Remove all counters from target permanent.')
 
     def should_extract_card_expansion(self):
-        eq_(self.cards[0].set_rarity, 'Shadowmoor (Common)')
+        eq_(self.cards[0].all_sets, 'Shadowmoor (Common)')
 
     def should_extract_multiple_card_expansions(self):
-        eq_(self.cards[1].set_rarity, 'Magic: The Gathering-Commander (Rare), '
+        eq_(self.cards[1].all_sets, 'Magic: The Gathering-Commander (Rare), '
             'Ravnica: City of Guilds (Rare)')
 
 
