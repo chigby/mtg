@@ -80,7 +80,7 @@ def main(args):
 
 
     try:
-    cards = CardExtractor(request.url).cards
+        cards = CardExtractor(request.url).cards
     except KeyboardInterrupt:
         return 0
 
