@@ -14,7 +14,7 @@ setup(
     description = 'Console-based access to the Gatherer Magic Card Database.',
     author = mtglib.__author__,
     author_email = 'cameron.higbynaquin@gmail.com',
-    url = 'http://bitbucket.org/procyon/mtg/',
+    url = 'https://github.com/chigby/mtg',
     keywords = ['mtg', 'magic', 'gatherer'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
