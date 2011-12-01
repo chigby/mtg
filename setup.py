@@ -9,7 +9,7 @@ setup(
     packages = ['mtglib'],
     package_dir = {'mtglib': 'mtglib'},
     scripts = ['bin/mtg'],
-    requires = ['httplib2', 'beautifulsoup'],
+    install_requires = ['lxml'],
     version = mtglib.__version__,
     description = 'Console-based access to the Gatherer Magic Card Database.',
     author = mtglib.__author__,

@@ -78,18 +78,24 @@ def main(args):
     request = SearchRequest(card_options, special=options.special,
                             exclude_other_colors=options.exclude)
 
+
     try:
-        cards = CardExtractor(request.send()) \
-            .extract(get_card_urls=options.rulings or options.flavor)
+    cards = CardExtractor(request.url).cards
     except KeyboardInterrupt:
         return 0
+
     if not cards:
         return 0
     for card in cards:
         print separator
         print card.show(rulings=options.rulings, reminders=options.reminder,
                         flavor=options.flavor)
-    print '\n{0} results found.'.format(len(cards))
+    num_results = len(cards)
+    if num_results < 25:
+        print '\n{0} results found.'.format(num_results)
+    else:
+        print ('\n{0}+ results found.  First 25 displayed, narrow search for '
+               'more.'.format(num_results))
     return 0
 
 if __name__ == '__main__':

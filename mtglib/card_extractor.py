@@ -1,116 +1,182 @@
 import re
 import textwrap
 
-import BeautifulSoup
+from lxml.html import parse
 
-from mtglib.gatherer_request import CardRequest
-
-__all__ = ['CardExtractor', 'SingleCardExtractor', 'Card']
+__all__ = ['CardExtractor', 'Card']
 
 class CardExtractor(object):
     """Extracts card information from Gatherer HTML."""
 
-    def __init__(self, html):
-        self.html = html
+    def __init__(self, card_source):
+        self.card_source = card_source
+        self._document = None
 
-    def _group(self, lst, n):
-        newlist = []
-        for i in range(0, len(lst), n):
-            val = lst[i:i+n]
-            if len(val) == n:
-                newlist.append(tuple(val))
-        return newlist
+    def _flatten(self, element):
+        """Recursively enter and extract text from all child
+        elements."""
+        result = [ (element.text or '') ]
+        if element.attrib.get('alt'):
+            result.append(Symbol(element.attrib.get('alt')).textbox)
+        for sel in element:
+            result.append(self._flatten(sel))
+            result.append(sel.tail or '')
 
-    def extract(self, get_card_urls=False):
-        if not self.html:
-            return False
-        soup = BeautifulSoup.BeautifulSoup(self.html)
-        if not soup.table:
-            return []
-        for tag in soup.findAll('br'):
-            tag.replaceWith('||')
+        # prevent reminder text from getting too close to mana symbols
+        return ''.join(result).replace('}(', '} (')
 
-        td_tags = soup.table.findAll('td')
+    @property
+    def document(self):
+        if getattr(self, '_document') is None:
+            self._document = parse(self.card_source).getroot()
+        return self._document
 
-        # Get rulings hrefs here.
-        if get_card_urls:
-            a_tags = soup.table.findAll('a')
-            card_urls = [tag['href'] for tag in a_tags]
+    @property
+    def cards(self):
+        if 'Card Search' in self.document.cssselect('title')[0].text_content():
+            return self.extract_many()
+        else:
+            return self.extract()
 
-        content_lists = [tag.contents for tag in td_tags]
-        unified_content = []
+    def extract_many(self):
         cards = []
-        for lst in content_lists:
-            unified_content.append(''.join([item.string or u'' for item in lst]))
 
-        unified_content = [item for item in unified_content if item != u'\n||\n']
-        unified_content = self._group(unified_content, 2)
+        for item in self.document.cssselect('tr.cardItem'):
+            for c in item.cssselect('div.cardInfo'):
+                card = Card()
+                card.card_name = c.cssselect('span.cardTitle')[0].text_content().strip()
+                mana_cost = ''.join([Symbol(img.attrib['alt']).short for
+                                    img in c.cssselect('span.manaCost img')])
+                card.mana_cost = mana_cost
+                regex = '\([^/]+/[^)]+\)'
+                typeline = c.cssselect('span.typeLine')[0].text_content()
+                m = re.search(regex, typeline)
+                if m:
+                    card.pow_tgh = m.group(0)
+                    card.types = re.sub(regex, '', typeline).strip()
+                else:
+                    card.types = typeline.strip()
+                card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
+                card.card_text = ' ; '.join(map(
+                        self._flatten, c.cssselect('div.rulesText p')))
 
-        blocks  = []
-        block = []
-        for u in unified_content:
-            block.append(u)
-            if 'Set/Rarity' in u[0]:
-                blocks.append(block)
-                block = []
+            all_sets = ', '.join([img.attrib['alt'] for img in
+                                    item.cssselect('td.rightCol img')])
+            setattr(card, 'all_sets', all_sets)
+            cards.append(card)
+        return cards
 
-        for block in blocks:
-            card = Card.from_block(block)
-            if get_card_urls:
-                card.url = card_urls.pop(0)
+    def extract(self):
+        cards = []
+
+        for component in self.document.cssselect('td.cardComponentContainer'):
+            if not component.getchildren():
+                continue # do not parse empty components
+            labels = component.cssselect('div.label')
+            values = component.cssselect('div.value')
+            pairs = zip(labels, values)
+            card = Card()
+            for (label, value) in pairs:
+
+                l = label.text_content().strip().replace(' ', '_') \
+                    .replace(':', '').lower().replace('#', 'number')
+                if l == 'p/t': l = 'pow_tgh'
+
+                if l == 'card_text':
+                    v = ' ; '.join(map(self._flatten,
+                                       value.cssselect('div.cardtextbox')))
+                else:
+                    v = u''
+                    if l == 'mana_cost':
+                        for img in value.cssselect('img'):
+                            v += Symbol(img.attrib['alt']).short
+                    if l == 'all_sets':
+                        v += ', '.join([img.attrib['alt'] for img in
+                                        value.cssselect('img')])
+
+                    v += value.text_content().strip()
+                setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
+            for ruling in component.cssselect('tr.post'):
+                date, text = ruling.cssselect('td')
+                card.ruling_data.append((date.text_content(),
+                                         text.text_content()))
             cards.append(card)
         return cards
 
 
-class SingleCardExtractor(object):
+class Symbol(object):
 
-    def __init__(self, html):
-        self.html = html
+    def __init__(self, text):
+        self.text = text
+        self.specials = {'Untap': 'Q',
+                         'Blue': 'U',
+                         'Snow': 'S}i',
+                         'Variable Colorless': 'X',
+                         'Two': '2'}
 
-    def _parse_html(self):
-        if not self.html:
-            return False
+    @property
+    def short(self):
+        if self.text in self.specials.keys():
+            return self.specials[self.text]
+        elif self.is_hybrid:
+            return self.hybrid
+        elif self.is_phyrexian:
+            return self.phyrexian
+        elif self.text.isdigit():
+            return self.text
+        return self.text[:1]
 
-    def extract_flavor(self):
-        if not self.html:
-            return False
-        soup = BeautifulSoup.BeautifulSoup(self.html)
-        flavor_text = soup.findAll(attrs={'id': re.compile('FlavorText$')})
-        if flavor_text:
-            flavor_text = flavor_text[0].findAll('i')[0].contents[0]
-        else:
-            flavor_text = ''
-        return flavor_text
+    @property
+    def is_phyrexian(self):
+        return 'Phyrexian ' in self.text
 
-    def extract(self):
-        if not self.html:
-            return False
-        soup = BeautifulSoup.BeautifulSoup(self.html)
-        for tag in soup.findAll('autocard'):
-            tag.replaceWith(tag.string)
-        rulings_text = soup.findAll(attrs={'id' : re.compile('rulingText$')})
-        rulings_date = soup.findAll(attrs={'id' : re.compile('rulingDate$')})
-        rulings_text = [''.join(tag.contents) for tag in rulings_text]
-        rulings_date = [''.join(tag.contents) for tag in rulings_date]
-        return zip(rulings_date, rulings_text)
+    @property
+    def phyrexian(self):
+        return '({0}/P)'.format(
+            Symbol(self.text.replace('Phyrexian ', '')).short)
+
+    @property
+    def is_hybrid(self):
+        return ' or ' in self.text
+
+    @property
+    def hybrid(self):
+        return '({0})'.format('/'.join(
+                Symbol(l).short for l in self.text.split(' or ')))
+
+    @property
+    def textbox(self):
+        base = '{{{0}}}'.format(self.short)
+        if '/' in base: return base.lower()
+        else: return base
 
 
 class Card(object):
 
     def __init__(self):
-        self.name = ''
-        self.cost = ''
-        self.type = ''
-        self.rules_text = ''
-        self.set_rarity = ''
+        self.card_name = ''
+        self.mana_cost = ''
+        self.types = ''
+        self.card_text = ''
         self.loyalty = ''
         self.pow_tgh = ''
-        self.url = ''
+        self.all_sets = ''
+        self.expansion = ''
+        self.rarity = ''
         self.ruling_data = []
         self.flavor_text = ''
-        self.card_template = (u"{0.name} {0.cost}\n"
-                              u"{0.type}\nText: {0.number} {0.rules_text}\n"
-                              u"{0.flavor}{0.set_rarity}{0.rulings}")
+        self.card_template = (u"{0.card_name} {0.mana_cost}\n"
+                              u"{0.types}\nText: {0.number} {0.card_text}\n"
+                              u"{0.flavor}{0.display_set}{0.rulings}")
+
+    @property
+    def display_set(self):
+        return textwrap.fill(self.all_sets or self.set_rarity)
+
+    @property
+    def set_rarity(self):
+        if self.expansion and self.rarity:
+            return '{0} ({1})'.format(self.expansion, self.rarity)
 
     @classmethod
     def from_block(cls, block):
@@ -121,25 +187,25 @@ class Card(object):
 
     def show(self, reminders=False, rulings=False, flavor=False):
         self._format_fields(reminders)
-        if rulings:
-            self.ruling_data = \
-                SingleCardExtractor(CardRequest(self.url).send()).extract()
-        if flavor:
-            self.flavor_text = \
-                SingleCardExtractor(CardRequest(self.url).send()).extract_flavor()
+        if not rulings:
+            self.ruling_data = []
+        if not flavor:
+            self.flavor_text = ''
 
         return self.card_template.format(self)
 
     def _format_fields(self, reminders):
-        self.type = self.type.replace('  ', ' ')
-        self.set_rarity = textwrap.fill(self.set_rarity)
-        self._format_rules_text(reminders)
+        self.types = self.types.replace('  ', ' ')
+        self.pow_tgh = self.pow_tgh.replace(' ', '')
+        if self.pow_tgh and not self.pow_tgh.startswith('('):
+            self.pow_tgh = '({0})'.format(self.pow_tgh)
+        self._format_card_text(reminders)
 
-    def _format_rules_text(self, reminders):
+    def _format_card_text(self, reminders):
         if not reminders:
-            self.rules_text = self.replace_reminders(self.rules_text)
-        self.rules_text = self.rules_text.replace(self.name, '~this~')
-        self.rules_text = self.formatted_wrap(self.rules_text)
+            self.card_text = self.replace_reminders(self.card_text)
+        self.card_text = self.card_text.replace(self.card_name, '~this~')
+        self.card_text = self.formatted_wrap(self.card_text)
 
     @property
     def number(self):
@@ -154,7 +220,9 @@ class Card(object):
 
     @property
     def flavor(self):
-        return self.flavor_text and textwrap.fill(self.flavor_text) + '\n' or ''
+        if not self.flavor_text: return ''
+        flavor = self.flavor_text.replace(u'\u2014', u' \u2014')
+        return textwrap.fill(flavor) + '\n'
 
     @classmethod
     def formatted_wrap(cls, text):

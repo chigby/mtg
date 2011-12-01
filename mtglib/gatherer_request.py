@@ -1,11 +1,9 @@
 """Request to the Gatherer site"""
 import re
-import httplib2
 import logging
 import urllib, urllib2
 
-from constants import settings_url, settings_header, params, base_url, \
-    default_modifiers, types
+from constants import base_url, default_modifiers, types
 
 __all__ = ['SearchRequest', 'CardRequest']
 
@@ -27,10 +25,11 @@ class UrlFragment(object):
         if not self._value:
             return ''
         sep = re.compile('[,]+')
-        value = sep.split(self.clean_value)
+        value = sep.split(self._value)
         field = '%s=' % self._field
         frag = ('%s[%s]' * (len(value))) % \
             tuple(self._get_modifiers(self._field, value))
+
         if self._group:
             frag = '+{group}({frag})'.format(group=self._group, frag=frag[1:])
         return field + frag
@@ -44,23 +43,25 @@ class UrlFragment(object):
                 modifier_char = '+' + matches.group(0)
                 if modifier_char == '+|':
                     modifier_char = '|'
+                if '|!' in modifier_char:
+                    modifier_char = modifier_char.replace('|!', '!')
                 item = modifiers.sub('', item)
             else:
                 modifier_char = default_modifiers[opt]
             results.extend([modifier_char, item])
         return results
 
-    @property
-    def clean_value(self):
-        return self._value.replace('"', '%22').replace(' ', '%20')
-
 
 class SearchRequest(object):
 
-    def __init__(self, options, special=False, exclude_other_colors=False):
-        self.options = options
+    def __init__(self, input_options, special=False,
+                 exclude_other_colors=False):
+        self.input_options = input_options
         self.special = special
         self.exclude_other_colors = exclude_other_colors
+        self.options = {}
+        for k, v in input_options.items():
+            self.options[k] = v
 
     def _get_url_fragments(self):
         fragments = []
@@ -101,14 +102,17 @@ class SearchRequest(object):
         if 'type' in self.options:
             self._extract_subtypes()
         if 'text' in self.options:
-            if ' ' in self.options['text']:
-                self.options['text'] = '"{0}"'.format(self.options['text'])
-        if 'color' in self.options:
-            if ',' not in self.options['color']:
-                self.options['color'] = self._comma_join(self.options['color'])
+            if ' ' in self.input_options['text']:
+                self.options['text'] = '"{0}"'.format(self.input_options['text'])
+        if 'color' in self.input_options:
+            if ',' not in self.input_options['color']:
+                self.options['color'] = self._comma_join(self.input_options['color'])
             else:
                 self.options['color'] = '|' + \
-                    ',|'.join(self.options['color'].split(','))
+                    ',|'.join(self.input_options['color'].split(','))
+            # sometimes we have !, -- which is not allowed
+            self.options['color'] = self.options['color'].replace('!,', '!')
+
         for attr in ['cmc', 'power', 'tough']:
             self._parse_comparisons(attr)
         return self._get_url_fragments()
@@ -119,32 +123,5 @@ class SearchRequest(object):
 
     @property
     def url(self):
-        return (base_url + '&'.join((self.url_fragments)) + self.special_fragment)
-
-    def send(self):
-        http = httplib2.Http()
-        try:
-            response, content = http.request(settings_url, 'POST',
-                                             headers=settings_header,
-                                             body=urllib.urlencode(params))
-        except httplib2.ServerNotFoundError as ex:
-            print(ex)
-            return False
-        card_header = headers = {'Cookie': response['set-cookie']}
-
-        # Possibly log this url.
-        response, content = http.request(self.url, 'GET', headers=headers)
-        return content
-
-
-class CardRequest(object):
-
-    def __init__(self, url):
-        self.url = url
-
-    def send(self):
-        base_url = 'http://gatherer.wizards.com/Pages'
-        if '..' in self.url:
-            self.url = self.url.replace('..', base_url)
-        socket = urllib2.urlopen(self.url)
-        return socket.read()
+        return (base_url + '&'.join((self.url_fragments)) +
+                self.special_fragment)
