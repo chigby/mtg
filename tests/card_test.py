@@ -92,3 +92,14 @@ class WhenRemovingReminderText(unittest2.TestCase):
                          'end of turn. If ~this~ was kicked, that creature '
                          'gains lifelink until end of turn.')
         assert Card.replace_reminders(text) == replaced_text
+
+    def should_handle_quotation_marks(self):
+        text = ('Change the text of target permanent by replacing all '
+                'instances of one color word or basic land type with another '
+                'until end of turn. (For example, you may change "nonred '
+                'creature" to "nongreen creature" or "plainswalk" to '
+                '"swampwalk.")')
+        repl = ('Change the text of target permanent by replacing all '
+                'instances of one color word or basic land type with another '
+                'until end of turn.')
+        assert Card.replace_reminders(text) == repl

@@ -232,7 +232,7 @@ class Card(object):
     def replace_reminders(cls, text):
         """Remove reminder text from cards (complete sentences enclosed in
         parentheses)."""
-        return re.sub(r'(\A|\ )\(.*?\.\)', '', text)
+        return re.sub(r'(\A|\ )\(.*?\.\"?\)', '', text)
 
     @classmethod
     def prettify_text(cls, text):
