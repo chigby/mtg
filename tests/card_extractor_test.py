@@ -25,14 +25,14 @@ class DescribeCardExtractor(object):
         assert hasattr(self.extractor, 'card_source')
 
     def should_have_cards(self):
-        self.extractor = CardExtractor(open('tests/_data/acorn_harvest.html'))
+        self.extractor = CardExtractor(card_html('acorn_harvest'))
         assert self.extractor.cards
 
 
 class WhenExtractingSingleCard(object):
 
     def setup(self):
-        self.extractor = CardExtractor(open('tests/_data/acorn_harvest.html'))
+        self.extractor = CardExtractor(card_html('acorn_harvest'))
         self.extracted = self.extractor.extract()
         self.card = self.extracted[0]
 
@@ -76,7 +76,7 @@ class WhenExtractingSingleCard(object):
 class WhenExtractingSingleCreature(object):
 
     def setup(self):
-        self.ex = CardExtractor(open('tests/_data/personal_incarnation.html'))
+        self.ex = CardExtractor(card_html('personal_incarnation'))
         self.extracted = self.ex.extract()
         self.card = self.extracted[0]
 
@@ -87,7 +87,7 @@ class WhenExtractingSingleCreature(object):
 class WhenExtractingSingleCardWithManySets(object):
 
     def setup(self):
-        self.extractor = CardExtractor(open('tests/_data/blazing_torch.html'))
+        self.extractor = CardExtractor(card_html('blazing_torch'))
         self.extracted = self.extractor.extract()
         self.card = self.extracted[0]
 
@@ -98,7 +98,7 @@ class WhenExtractingSingleCardWithManySets(object):
 class WhenExtractingSingleDualFacedPlaneswalker(object):
 
     def setup(self):
-        extractor = CardExtractor(open('tests/_data/garruk_relentless.html'))
+        extractor = CardExtractor(card_html('garruk_relentless'))
         self.cards = extractor.extract()
 
     def should_get_two_results(self):
@@ -135,7 +135,7 @@ class WhenExtractingManyCardsWithPlaneswalkers(object):
 class WhenExtractingMultipleCards(object):
 
     def setup(self):
-        self.html = open('tests/_data/hex.html')
+        self.html = card_html('hex')
         self.cards = CardExtractor(self.html).extract_many()
 
     def should_get_nine_results(self):
@@ -175,7 +175,7 @@ class WhenExtractingMultipleCards(object):
 class WhenExtractingFlavorText(object):
 
     def setup(self):
-        self.html = open('tests/_data/mirari.html')
+        self.html = card_html('mirari')
         self.cards = CardExtractor(self.html).extract()
 
     def should_format_flavor_text(self):
@@ -189,7 +189,7 @@ class WhenExtractingFlavorText(object):
 class WhenExtractingRulings(object):
 
     def setup(self):
-        self.html = open('tests/_data/mirari.html')
+        self.html = card_html('mirari')
         self.cards = CardExtractor(self.html).extract()
 
     def should_extract_all_rulings(self):
