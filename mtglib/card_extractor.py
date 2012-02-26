@@ -48,11 +48,15 @@ class CardExtractor(object):
                 mana_cost = ''.join([Symbol(img.attrib['alt']).short for
                                     img in c.cssselect('span.manaCost img')])
                 card.mana_cost = mana_cost
-                regex = '\([^/]+/[^)]+\)'
+                regex = '\([^/]+/*[^)]*\)'
                 typeline = c.cssselect('span.typeLine')[0].text_content()
                 m = re.search(regex, typeline)
                 if m:
-                    card.pow_tgh = m.group(0)
+                    number = m.group(0)
+                    if '/' in number:
+                        card.pow_tgh = number
+                    else:
+                        card.loyalty = number
                     card.types = re.sub(regex, '', typeline).strip()
                 else:
                     card.types = typeline.strip()

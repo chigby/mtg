@@ -8,6 +8,11 @@ from nose.tools import assert_raises, eq_
 import mtglib.card_extractor as mod
 from mtglib.card_extractor import CardExtractor, Card, Symbol
 
+
+def card_html(name):
+    return open('tests/_data/{name}.html'.format(name=name))
+
+
 class DescribeCardExtractor(object):
 
     def setUp(self):
@@ -108,6 +113,23 @@ class WhenExtractingSingleDualFacedPlaneswalker(object):
 
     def should_extract_color_indicator(self):
         eq_(self.cards[1].color_indicator, 'Black, Green')
+
+
+class WhenExtractingManyCardsWithPlaneswalkers(object):
+
+    def setup(self):
+        extractor = CardExtractor(card_html('sorin'))
+        self.cards = extractor.extract_many()
+        self.sorin_markov = self.cards[0]
+
+    def should_get_four_results(self):
+        eq_(len(self.cards), 4)
+
+    def should_extract_loyalty(self):
+        eq_(self.sorin_markov.loyalty, u'(4)')
+
+    def should_extract_type(self):
+        eq_(self.sorin_markov.types, u'Planeswalker  — Sorin')
 
 
 class WhenExtractingMultipleCards(object):
