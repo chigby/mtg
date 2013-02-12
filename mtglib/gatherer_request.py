@@ -1,7 +1,6 @@
 """Request to the Gatherer site"""
 import re
-import collections
-import urllib, urllib2
+from collections import Iterable
 
 from constants import base_url, TYPES, COLORS
 
@@ -10,7 +9,7 @@ __all__ = ['SearchRequest', 'CardRequest']
 
 def flatten(l):
     for el in l:
-        if isinstance(el, collections.Iterable) and not isinstance(el, basestring):
+        if isinstance(el, Iterable) and not isinstance(el, basestring):
             for sub in flatten(el):
                 yield sub
         else:
