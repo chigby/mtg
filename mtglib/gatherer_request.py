@@ -6,7 +6,7 @@ from constants import base_url, TYPES, COLORS
 
 __all__ = ['SearchRequest', 'CardRequest']
 
-
+# linearize nested lists
 def flatten(l):
     for el in l:
         if isinstance(el, Iterable) and not isinstance(el, basestring):
@@ -15,7 +15,7 @@ def flatten(l):
         else:
             yield el
 
-
+# flatten a nested list of SearchKeywords and mark as boolean OR.
 def or_(l, r):
     lst = list(flatten([l, r]))
     for keyword in lst:
@@ -24,6 +24,7 @@ def or_(l, r):
 
 
 class SearchKeyword(object):
+    """Represents a word of phrase and its associated search operators."""
 
     def __init__(self, term, boolean='and', comparison=None):
         self.term = term
@@ -54,7 +55,7 @@ class SearchKeyword(object):
         else:
             return ''
 
-    def boolean_char(self):
+    def render_boolean(self):
         if self.boolean == 'and':
             return '+'
         elif self.boolean == 'not':
@@ -64,12 +65,13 @@ class SearchKeyword(object):
         else: return ''
 
     def url_fragment(self):
-        return '{1}{2}[{0}]'.format(self.render_term(), self.boolean_char(),
+        return '{1}{2}[{0}]'.format(self.render_term(), self.render_boolean(),
                                     self.render_comparison())
 
 
 
 class SearchFilter(object):
+    """Atomic search structure: card attribute and search words."""
 
     def __init__(self, name, keywords=[]):
         self.name = name
@@ -94,6 +96,7 @@ class SearchFilter(object):
 
 
 class Lexer(object):
+    """Class for applying a grammar to user input."""
 
     def __init__(self, rules):
         self.rules = rules
@@ -120,6 +123,7 @@ class Lexer(object):
 
 
 class ConditionParser(object):
+    """Rules for parsing user input."""
 
     def __init__(self, data):
         self.data = data
@@ -158,6 +162,13 @@ class ConditionParser(object):
         return conditions
 
     def expr(self, next, token):
+        """Top level parsing function.
+
+        An expression is <keyword> <OR> <expr>
+        or               <keyword> <SEP> <expr>
+        or               <keyword>
+
+        """
         lval = self.keyword(next, token, {})
         token = next()
         if token[0] == 'OR':
@@ -174,6 +185,12 @@ class ConditionParser(object):
         return op(lval, rval)
 
     def keyword(self, next, token, operators):
+        """Lowest level parsing function.
+
+        A keyword consists of zero or more prefix operators (NOT, or
+        COMPARISON) followed by a TEXT, COLOR, or NUMBER block.
+
+        """
         if token[0] == 'TEXT':
             return SearchKeyword(token[1], **operators)
         elif token[0] == 'NUMBER':
@@ -192,14 +209,20 @@ class ConditionParser(object):
         return self.keyword(next, token, operators)
 
     def parse(self, text):
+        """Parse the given text, return a list of Keywords."""
         token_stream = self.lexer.tokenize(text)
         return self.expr(token_stream.next, token_stream.next())
 
 
 class SearchRequest(object):
+    """A complete search request that can be sent to Gatherer.
 
-    def __init__(self, options, special=False,
-                 exclude_other_colors=False):
+    Takes user-supplied options, then formulates a URL from those
+    options.  This url will have the results of the search.
+
+    """
+
+    def __init__(self, options, special=False, exclude_other_colors=False):
         self.options = options
         self.special = special
         self.exclude_other_colors = exclude_other_colors
