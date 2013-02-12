@@ -83,6 +83,9 @@ def main(args):
         cards = CardExtractor(request.url).cards
     except KeyboardInterrupt:
         return 0
+    except SyntaxError as e:
+        print 'Could not parse options: {0}'.format(e.msg)
+        return 0
 
     if not cards:
         return 0

@@ -204,7 +204,11 @@ class ConditionParser(object):
         elif token[0] == 'NOT':
             operators['boolean'] = 'not'
         else:
-            raise SyntaxError('unexpected token {0}'.format(token))
+            if token[1] == None:
+                problem = 'end of input.'
+            else:
+                problem = 'token {0} in input'.format(token[1])
+            raise SyntaxError('Unexpected {0}'.format(problem))
         token = next()
         return self.keyword(next, token, operators)
 
