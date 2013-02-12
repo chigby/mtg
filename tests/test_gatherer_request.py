@@ -1,13 +1,11 @@
-import unittest2
-import httplib2
-import urllib
+import unittest
 from nose.tools import assert_raises
-from dingus import DingusTestCase, exception_raiser
 
-import mtglib.gatherer_request as mod
-from mtglib.gatherer_request import SearchRequest
+from mtglib.gatherer_request import SearchRequest, ConditionParser, \
+    SearchKeyword, SearchFilter
 
-class WhenInstantiatingSearchRequest(unittest2.TestCase):
+
+class WhenInstantiatingSearchRequest(unittest.TestCase):
 
     def setUp(self):
         self.request = SearchRequest({'text': 'first strike'})
@@ -19,144 +17,220 @@ class WhenInstantiatingSearchRequest(unittest2.TestCase):
         assert self.request.options == {'text': 'first strike'}
 
 
-class WhenGettingUrl(unittest2.TestCase):
+class WhenParsingSimpleTextInput(unittest.TestCase):
 
-    def should_be_idempotent_for_color(self):
-        request = SearchRequest({'color': 'w,b'})
-        assert request.url == request.url
+    def setUp(self):
+        parser = ConditionParser({'text': 'trample'})
+        self.conditions = parser.get_conditions()
 
-    def should_be_idempotent_for_text(self):
-        request = SearchRequest({'text': 'destroy all creatures'})
-        assert request.url == request.url
+    def should_assign_filter_name(self):
+        assert self.conditions[0].name == 'text'
+
+    def should_assume_boolean_and(self):
+        assert self.conditions[0].keywords[0].boolean == 'and'
+
+    def should_assume_no_comparison(self):
+        assert self.conditions[0].keywords[0].comparison is None
+
+
+class WhenParsingCommaSeparatedKeywords(unittest.TestCase):
+
+    def setUp(self):
+        parser = ConditionParser({'text': 'exile,graveyard'})
+        self.conditions = parser.get_conditions()
+
+    def should_consider_as_separate_keywords(self):
+        exile = SearchKeyword('exile', 'and')
+        graveyard = SearchKeyword('graveyard', 'and')
+        assert self.conditions[0].keywords == [exile, graveyard]
+
+    def should_understand_pipe_as_logical_or(self):
+        conditions = ConditionParser({'text': 'destroy|exile'}).get_conditions()
+        assert conditions[0].keywords == [SearchKeyword('destroy', 'or'),
+                                          SearchKeyword('exile', 'or')]
+
+    def should_understand_bang_as_logical_not(self):
+        conditions = ConditionParser({'text': 'return,!hand'}).get_conditions()
+        assert conditions[0].keywords == [SearchKeyword('return', 'and'),
+                                          SearchKeyword('hand', 'not')]
+
+
+class WhenParsingNumbers(unittest.TestCase):
+
+    def should_assume_equality_conditional(self):
+        parser = ConditionParser({'cmc': '5'})
+        cond = parser.get_conditions()
+        assert cond[0].name == 'cmc'
+        assert cond[0].keywords == [SearchKeyword(5, 'and', '=')]
+
+    def should_understand_less_than_conditional(self):
+        parser = ConditionParser({'power': '<5'})
+        cond = parser.get_conditions()
+        assert cond[0].name == 'power'
+        self.assertEqual(cond[0].keywords, [SearchKeyword(5, 'and', '<')])
+
+    def should_understand_multiple_conditionals(self):
+        parser = ConditionParser({'power': '<5,>0'})
+        cond = parser.get_conditions()
+        assert cond[0].name == 'power'
+        self.assertEqual(cond[0].keywords, [SearchKeyword(5, 'and', '<'),
+                                            SearchKeyword(0, 'and', '>')])
+
+    def should_understand_greater_than_conditional(self):
+        parser = ConditionParser({'tough': '>3'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '>')])
+
+    def should_understand_equality_conditional(self):
+        parser = ConditionParser({'tough': '=3'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '=')])
+
+    def should_understand_greater_than_or_equal_to(self):
+        parser = ConditionParser({'tough': '>=3'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '>=')])
+
+    def should_understand_less_than_or_equal_to(self):
+        parser = ConditionParser({'tough': '<=3'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '<=')])
+
+    def should_raise_error_for_non_numeric_input(self):
+        parser = ConditionParser({'tough': 'f'})
+        assert_raises(SyntaxError, parser.get_conditions)
+
+
+class WhenParsingColors(unittest.TestCase):
+
+    def should_assume_and_when_comma_separated(self):
+        parser = ConditionParser({'color': 'w,u,g'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword('W', 'and'),
+                                            SearchKeyword('U', 'and'),
+                                            SearchKeyword('G', 'and')])
+
+    def should_assume_and_when_adjacent(self):
+        parser = ConditionParser({'color': 'wbg'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword('W', 'and'),
+                                            SearchKeyword('B', 'and'),
+                                            SearchKeyword('G', 'and')])
+
+    def should_correctly_combine_not_and_and(self):
+        parser = ConditionParser({'color': '!b,r'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword('B', 'not'),
+                                            SearchKeyword('R', 'and')])
+
+    def should_raise_error_for_non_color_input(self):
+        parser = ConditionParser({'color': 'd'})
+        assert_raises(SyntaxError, parser.get_conditions)
+
+
+class WhenParsingPhrases(unittest.TestCase):
+
+    def setUp(self):
+        parser = ConditionParser({'text': 'first strike'})
+        self.keywords = parser.get_conditions()[0].keywords
+
+    def should_treat_space_separated_terms_as_single_phrase(self):
+        assert self.keywords.pop() == SearchKeyword('first strike', 'and')
+
+
+class WhenGettingUrl(unittest.TestCase):
 
     def should_group_text_in_brackets(self):
-        request = SearchRequest({'text': 'trample'})
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&text=+[trample]')
-        assert request.url == url
+        word = SearchKeyword('trample', 'and')
+        fl = SearchFilter('text', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'text=+["trample"]')
 
     def should_assume_exact_quote_if_spaces(self):
-        request = SearchRequest({'text': 'first strike'})
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&text=+["first strike"]')
-        assert request.url == url
+        word = SearchKeyword('first strike', 'and')
+        fl = SearchFilter('text', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'text=+["first strike"]')
 
     def should_parse_logical_or(self):
-        request = SearchRequest({'text': '|first,|strike'})
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&text=|[first]|[strike]')
-        assert request.url == url
+        first = SearchKeyword('first', 'or')
+        strike = SearchKeyword('strike', 'or')
+        fl = SearchFilter('text', keywords=[first, strike])
+        self.assertEqual(fl.url_fragment(), 'text=|["first"]|["strike"]')
 
-    def should_parse_logical_or_for_sets(self):
-        request = SearchRequest({'set': '|worldwake,|zendikar'})
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&set=|[worldwake]|[zendikar]')
-        assert request.url == url
+    def should_render_greater_than_comparison(self):
+        word = SearchKeyword(5, 'and', '>')
+        fl = SearchFilter('power', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'power=+>[5]')
 
-    def should_assume_logical_or_for_sets(self):
-        request = SearchRequest({'set': 'worldwake,zendikar'})
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&set=|[worldwake]|[zendikar]')
-        assert request.url == url
+    def should_render_less_then_comparison(self):
+        word = SearchKeyword(5, 'and', '<')
+        fl = SearchFilter('power', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'power=+<[5]')
 
-    def should_parse_sharp_comparison_operators(self):
-        request = SearchRequest({'cmc': '=5', 'power': '<4', 'tough':'>3'})
-        assert 'cmc=+=[5]' in request.url
-        assert 'power=+<[4]' in request.url
-        assert 'tough=+>[3]' in request.url
+    def should_render_greater_than_or_equal_to_comparison(self):
+        word = SearchKeyword(5, 'and', '>=')
+        fl = SearchFilter('power', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'power=+>=[5]')
 
-    def should_use_equality_as_default_comparison_operators(self):
-        request = SearchRequest({'cmc': '5', 'power': '4', 'tough':'3'})
-        assert 'cmc=+=[5]' in request.url
-        assert 'power=+=[4]' in request.url
-        assert 'tough=+=[3]' in request.url
+    def should_render_less_than_or_equal_to_comparison(self):
+        word = SearchKeyword(5, 'and', '<=')
+        fl = SearchFilter('power', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'power=+<=[5]')
 
-    def should_parse_comparison_operators(self):
-        request = SearchRequest({'power': '<=4', 'tough':'>=3'})
-        assert 'power=+<=[4]' in request.url
-        assert 'tough=+>=[3]' in request.url
+    def should_render_equality_comparison(self):
+        word = SearchKeyword(5, 'and', '=')
+        fl = SearchFilter('power', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'power=+=[5]')
 
-    def should_separate_name_words(self):
-        request = SearchRequest({'name': 'sengir,vampire'})
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&name=+[sengir]+[vampire]')
-        self.assertEqual(request.url, url)
+    def should_separate_and_words(self):
+        sengir = SearchKeyword('sengir', 'and')
+        vampire = SearchKeyword('vampire', 'and')
+        fl = SearchFilter('name', keywords=[sengir, vampire])
+        self.assertEqual(fl.url_fragment(), 'name=+["sengir"]+["vampire"]')
 
-    def should_allow_color_exclusion_with_logical_or(self):
-        request = SearchRequest({'color': 'w,u'}, exclude_other_colors=True)
-        assert '&color=+@([w]|[u])' in request.url
+    def should_group_url_keywords_if_excluding_others(self):
+        word = SearchKeyword('w', 'and')
+        fl = SearchFilter('color', keywords=[word])
+        fl.exclude_others = True
+        self.assertEqual(fl.url_fragment(), 'color=+@(+["w"])')
 
-    def should_parse_not_operator(self):
-        request = SearchRequest({'text': '!graveyard'})
-        assert 'text=+![graveyard]' in request.url
+    def should_render_not_operator(self):
+        word = SearchKeyword('graveyard', 'not')
+        fl = SearchFilter('text', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'text=+!["graveyard"]')
 
-    def should_assume_and_when_color_has_no_comma(self):
-        request = SearchRequest({'color': 'wu'})
-        assert 'color=+[w]+[u]' in request.url
 
-    def should_assume_or_when_comma_separated_color(self):
-        request = SearchRequest({'color': 'w,u'})
-        assert 'color=|[w]|[u]' in request.url
-
-    def should_correctly_handle_not(self):
-        request = SearchRequest({'color': '!b'})
-        print request.url
-        assert 'color=+![b]' in request.url
-
-    def should_correctly_handle_both_not_and_or(self):
-        request = SearchRequest({'color': '!b,r'})
-        print request.url
-        assert 'color=+![b]|[r]' in request.url
-
-    def should_send_type(self):
-        options = dict(type='land')
-        request = SearchRequest(options)
-        assert 'type=+[land]' in request.url
+class WhenMakingSearchRequest(unittest.TestCase):
 
     def should_recognize_creature_type_as_subtype(self):
         options = dict(type='dryad')
         request = SearchRequest(options)
-        assert 'subtype=+[dryad]' in request.url
-        assert '&type=+[dryad]' not in request.url
+        fl = SearchFilter('subtype', keywords=[SearchKeyword('dryad', 'and')])
+        self.assertEqual(request.get_filters(), [fl])
 
     def should_separate_type_and_subtypes(self):
         options = dict(type='land,dryad')
         request = SearchRequest(options)
-        assert 'subtype=+[dryad]' in request.url
-        assert '&type=+[land]' in request.url
-
-    def should_separate_type_and_subtypes_artifacts(self):
-        options = dict(type='artifact,bird')
-        request = SearchRequest(options)
-        assert 'subtype=+[bird]' in request.url
-        assert '&type=+[artifact]' in request.url
-
-    def should_ignore_case_on_types(self):
-        options = dict(type='ARTIFACT,Bird')
-        request = SearchRequest(options)
-        assert 'subtype=+[bird]' in request.url
-        assert '&type=+[artifact]' in request.url
-
-    def should_separate_many_types(self):
-        options = dict(type='creature,land,dryad,forest')
-        request = SearchRequest(options)
-        assert 'subtype=+[dryad]+[forest]' in request.url
-        assert '&type=+[creature]+[land]' in request.url
+        subt = SearchFilter('subtype', keywords=[SearchKeyword('dryad', 'and')])
+        type_ = SearchFilter('type', keywords=[SearchKeyword('land', 'and')])
+        self.assertEqual(request.get_filters(), [type_, subt])
 
     def should_separate_many_types_with_not_modifier(self):
         options = dict(type='legendary,artifact,!equipment,!creature')
         request = SearchRequest(options)
-        assert 'subtype=+![equipment]' in request.url
-        assert '&type=+[legendary]+[artifact]+![creature]' in request.url
+        type_keywords = [SearchKeyword('legendary', 'and'),
+                         SearchKeyword('artifact', 'and'),
+                         SearchKeyword('creature', 'not')]
+        subtype_keywords = [SearchKeyword('equipment', 'not')]
+        subt = SearchFilter('subtype', keywords=subtype_keywords)
+        type_ = SearchFilter('type', keywords=type_keywords)
+        self.assertEqual(request.get_filters(), [type_, subt])
 
-    def should_separate_many_types_with_or_modifier(self):
-        options = dict(type='eldrazi,|instant,|creature')
-        request = SearchRequest(options)
-        assert 'subtype=+[eldrazi]' in request.url
-        assert '&type=|[instant]|[creature]' in request.url
+    def should_allow_color_exclusion(self):
+        request = SearchRequest({'color': 'wu'}, exclude_other_colors=True)
+        self.assertTrue(request.get_filters()[0].exclude_others)
 
 
-class WhenMakingSpecialRequest(unittest2.TestCase):
+class WhenMakingSpecialRequest(unittest.TestCase):
 
     def setUp(self):
         self.request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
@@ -171,7 +245,4 @@ class WhenMakingSpecialRequest(unittest2.TestCase):
     def should_include_special_option_in_url(self):
         request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
                               special=True)
-        url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx?'
-               'output=standard&name=+[only]+[blood]+[ends]+[your]'
-               '+[nightmares]&special=true')
-        self.assertEqual(request.url, url)
+        assert request.special_fragment in request.url

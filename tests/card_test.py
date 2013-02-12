@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 from dingus import DingusTestCase, Dingus
 
@@ -44,7 +44,7 @@ class WhenPrintingCard(object):
         assert self.card.types in self.card.show()
 
 
-class WhenRemovingReminderText(unittest2.TestCase):
+class WhenRemovingReminderText(unittest.TestCase):
     """When Removing Reminder Text"""
 
     def should_delete_reminder_text(self):
