@@ -4,13 +4,11 @@ base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
 card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc', 'power',
               'tough', 'rarity', 'name', 'block']
 
-default_modifiers = dict(text='+', color='+', type='+', subtype='+', set='|',
-                         cmc='+', power='+', tough='+', rarity='+', name='+',
-                         block='+')
-
-types = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
+TYPES = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
          'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow',
          'sorcery', 'tribal', 'vanguard', 'world']
+
+COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
 separator = '\n------------------------------'
 
