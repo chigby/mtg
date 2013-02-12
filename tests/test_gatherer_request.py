@@ -140,14 +140,6 @@ class WhenParsingPhrases(unittest.TestCase):
 
 class WhenGettingUrl(unittest.TestCase):
 
-    def should_be_idempotent_for_color(self):
-        request = SearchRequest({'color': 'w,b'})
-        assert request.url == request.url
-
-    def should_be_idempotent_for_text(self):
-        request = SearchRequest({'text': 'destroy all creatures'})
-        assert request.url == request.url
-
     def should_group_text_in_brackets(self):
         word = SearchKeyword('trample', 'and')
         fl = SearchFilter('text', keywords=[word])
