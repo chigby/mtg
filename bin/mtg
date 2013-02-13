@@ -5,79 +5,60 @@ Console-based access to the Gatherer Magic Card Database.
 Usage: %prog [options] [cardname]
 """
 
-import logging
 import sys
-from logging import handlers, Formatter
-from optparse import OptionParser
+import argparse
+
+from mtglib import __version__
 from mtglib.gatherer_request import SearchRequest
 from mtglib.card_extractor import CardExtractor, Card
 from mtglib.constants import card_flags, separator, readme
 
-def main(args):
 
-    # create logger
-    logger = logging.getLogger('mtg')
-    logger.setLevel(logging.INFO)
+def main():
+    parser = argparse.ArgumentParser(description='Search for magic cards')
+    search = parser.add_argument_group('search', 'Card search options')
+    display = parser.add_argument_group('display', 'Display options')
 
-    # create console handler and set level to debug
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-
-    # create formatter
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-
-    # add formatter to ch
-    ch.setFormatter(formatter)
-
-    # add ch to logger
-    logger.addHandler(ch)
-    logger.debug('Starting main program')
-
-    parser = OptionParser(usage=readme)
-    parser.add_option("-t", "--text", dest="text",
+    search.add_argument("-t", "--text",
                       help="containing rules text TEXT", metavar="TEXT")
-    parser.add_option('--color', dest='color', help='cards matching COLOR (w, u, b, r, g, c)')
-    parser.add_option('--type', dest='type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
-    parser.add_option('--power', dest='power',
-                      help='cards with power POWER (uses <, >, =)')
-    parser.add_option('--tough', dest='tough',
-                      help='cards with toughness TOUGHNESS (uses <, >, =)')
-    parser.add_option('--block', dest='block',
-                      help='cards from block BLOCK')
-    parser.add_option('--set', dest='set',
-                      help='cards matching expansion set SET (e.g. unlimited)')
-    parser.add_option('--rarity', dest='rarity',
-                      help='cards matching rarity RARITY (c, u, r, m)')
-    parser.add_option('--cmc', dest='cmc', help='cards with converted mana '
-                      'cost CMC (uses <, >, =)')
-    parser.add_option('-r', '--reminder', dest='reminder', action='store_true',
-                      help='show reminder text')
-    parser.add_option('--hidesets', dest='hidesets', action='store_true',
-                      help='hide which sets the card was in')
-    parser.add_option('--rulings', dest='rulings', action='store_true',
-                      help='show rulings for the card')
-    parser.add_option('--special', dest='special', action='store_true',
-                      help='include special cards (e.g. planes, schemes)')
-    parser.add_option('--flavor', dest='flavor', action='store_true',
-                      help='show flavor text')
-    parser.add_option('-x', '--exclude-other-colors', dest='exclude',
-                      action='store_true', help='exclude colors not explicity specified')
-    logger.debug(args)
-    if len(args) < 2:
-        parser.print_help()
-        return 0
+    search.add_argument('--color', help='cards matching COLOR (w, u, b, r, g, c)')
+    search.add_argument('--type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
+    search.add_argument('--power',
+                        help='cards with power POWER (uses <, >, =)')
+    search.add_argument('--tough',
+                        help='cards with toughness TOUGHNESS (uses <, >, =)')
+    search.add_argument('--block',
+                        help='cards from block BLOCK')
+    search.add_argument('--set',
+                        help='cards matching expansion set SET (e.g. unlimited)')
+    search.add_argument('--rarity',
+                        help='cards matching rarity RARITY (c, u, r, m)')
+    search.add_argument('--cmc', help='cards with converted mana '
+                        'cost CMC (uses <, >, =)')
+    display.add_argument('-r', '--reminder', action='store_true',
+                         help='show reminder text')
+    display.add_argument('--hidesets', action='store_true',
+                        help='hide which sets the card was in')
+    display.add_argument('--rulings', action='store_true',
+                        help='show rulings for the card')
+    search.add_argument('--special', action='store_true',
+                        help='include special cards (e.g. planes, schemes)')
+    display.add_argument('--flavor', action='store_true',
+                        help='show flavor text')
+    search.add_argument('-x', '--exclude-other-colors', action='store_true',
+                        help='exclude colors not explicity specified')
+    search.add_argument('name', nargs='*', help='name of card (optional)')
+    parser.add_argument('--version', action='version', version=__version__)
 
-    (options, args) = parser.parse_args(args[1:])
-    options.name =  ','.join(args)
+    args = parser.parse_args()
+    if args.name: args.name =  ','.join(args.name)
+    if not (args.text or args.color or args.type or args.power or args.tough
+            or args.block or args.set or args.rarity or args.cmc or args.name):
+        parser.error('Require at least one search option or card name.  '
+                     'Type "mtg --help" for more information.')
 
-    card_options = {}
-    for a, b in zip(card_flags, map(vars(options).get, card_flags)):
-        if b:
-            card_options[a] = b
-    logger.debug(card_options)
-    request = SearchRequest(card_options, special=options.special,
-                            exclude_other_colors=options.exclude)
-
+    request = SearchRequest(vars(args), special=args.special,
+                            exclude_other_colors=args.exclude_other_colors)
 
     try:
         cards = CardExtractor(request.url).cards
@@ -91,8 +72,8 @@ def main(args):
         return 0
     for card in cards:
         print separator
-        print card.show(rulings=options.rulings, reminders=options.reminder,
-                        flavor=options.flavor)
+        print card.show(rulings=args.rulings, reminders=args.reminder,
+                        flavor=args.flavor)
     num_results = len(cards)
     if num_results < 25:
         print '\n{0} result{1} found.'.format(num_results,
@@ -103,5 +84,4 @@ def main(args):
     return 0
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv))
-
+    sys.exit(main())
