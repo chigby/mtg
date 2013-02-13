@@ -150,6 +150,8 @@ class ConditionParser(object):
     def get_conditions(self):
         conditions = []
         for name, value in self.data.iteritems():
+            if not isinstance(value, basestring):
+                continue
             if name == 'color':
                 self.lexer = self.getlexer('color')
             elif name in ('cmc', 'power', 'tough'):

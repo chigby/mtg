@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
-#from setuptools import setup
+#from distutils.core import setup
+from setuptools import setup
+import sys
+
 import mtglib
 
 setup(
@@ -9,7 +11,7 @@ setup(
     packages = ['mtglib'],
     package_dir = {'mtglib': 'mtglib'},
     scripts = ['bin/mtg'],
-    install_requires = ['lxml'],
+    install_requires = ['lxml', 'argparse'] if float(sys.version[:3]) < 2.7 else ['lxml'],
     version = mtglib.__version__,
     description = 'Console-based access to the Gatherer Magic Card Database.',
     author = mtglib.__author__,
