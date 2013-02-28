@@ -3,7 +3,23 @@ import textwrap
 
 from lxml.html import parse
 
+from mtglib.card_renderer import Card
+
 __all__ = ['CardExtractor', 'Card']
+
+
+attribute_map = {
+    'card_#': 'collector_number',
+    'card_name': 'name',
+    'expansion': 'printings',
+    'all_sets': 'printings',
+    'card_text': 'rules_text'
+}
+
+
+def clean_dashes(text):
+    return text.replace(u'\xe2\x80\x94', u'\u2014').replace(u'  ', u' ')
+
 
 class CardExtractor(object):
     """Extracts card information from Gatherer HTML."""
@@ -38,37 +54,51 @@ class CardExtractor(object):
         else:
             return self.extract()
 
+    def text_field(self, container, css):
+        return container.cssselect(css)[0].text_content().strip()
+
+    def box_field(self, container, css, separator):
+        return separator.join(map(self._flatten, container.cssselect(css)))
+
+    def symbol_field(self, container, css):
+        symbols = container.cssselect(css)
+        return u''.join([Symbol(img.attrib['alt']).short for img in symbols])
+
     def extract_many(self):
         cards = []
 
         for item in self.document.cssselect('tr.cardItem'):
             for c in item.cssselect('div.cardInfo'):
                 card = Card()
-                card.card_name = c.cssselect('span.cardTitle')[0].text_content().strip()
-                mana_cost = ''.join([Symbol(img.attrib['alt']).short for
-                                    img in c.cssselect('span.manaCost img')])
-                card.mana_cost = mana_cost
-                regex = '\([^/]+/*[^)]*\)'
-                typeline = c.cssselect('span.typeLine')[0].text_content()
-                m = re.search(regex, typeline)
-                if m:
-                    number = m.group(0)
+                card.name = self.text_field(c, '.cardTitle')
+                card.mana_cost = self.symbol_field(c, '.manaCost img')
+                typeline = self.text_field(c, '.typeLine')
+                t = [l.strip() for l in typeline.split('\n') if l.strip()]
+                card.types = t.pop(0)
+                if t:
+                    number = t.pop(0).strip('()')
                     if '/' in number:
-                        card.pow_tgh = number
+                        card.power, card.toughness = number.split('/')
                     else:
                         card.loyalty = number
-                    card.types = re.sub(regex, '', typeline).strip()
-                else:
-                    card.types = typeline.strip()
-                card.types = card.types.replace(u'\xe2\x80\x94', u'\u2014')
-                card.card_text = ' ; '.join(map(
-                        self._flatten, c.cssselect('div.rulesText p')))
-
-            all_sets = ', '.join([img.attrib['alt'] for img in
-                                    item.cssselect('td.rightCol img')])
-            setattr(card, 'all_sets', all_sets)
+                card.types = clean_dashes(card.types)
+                card.rules_text = self.box_field(c, 'div.rulesText p', ' ; ')
+                card.printings = self.printings(item, 'td.rightCol img')
             cards.append(card)
         return cards
+
+    def pow_tgh(self, element):
+        matches = re.match(r'\s*(\S+)\s*/\s*(\S+)\s*', element.text_content())
+        if matches:
+            return matches.groups()
+
+    def printings(self, element, css):
+        printings = []
+        for img in element.cssselect(css):
+            matches = re.match('([^(]+) \(([^)]+)\)', img.attrib['alt'])
+            if matches:
+                printings.append(matches.groups())
+        return printings
 
     def extract(self):
         cards = []
@@ -80,26 +110,33 @@ class CardExtractor(object):
             values = component.cssselect('div.value')
             pairs = zip(labels, values)
             card = Card()
+            attributes = {}
             for (label, value) in pairs:
-
-                l = label.text_content().strip().replace(' ', '_') \
-                    .replace(':', '').lower().replace('#', 'number')
-                if l == 'p/t': l = 'pow_tgh'
-
-                if l == 'card_text':
-                    v = ' ; '.join(map(self._flatten,
-                                       value.cssselect('div.cardtextbox')))
+                attr = label.text_content().strip(': \n\r') \
+                    .replace(' ', '_').lower()
+                attr = attribute_map.get(attr) or attr
+                if attr == 'p/t':
+                    attributes['power'], attributes['toughness'] = \
+                        self.pow_tgh(value)
+                elif attr == 'rules_text':
+                    attributes[attr] = self.box_field(value,
+                                                      'div.cardtextbox', ' ; ')
+                elif attr == 'printings':
+                    attributes[attr] = self.printings(value, 'img')
+                elif attr == 'rarity':
+                    continue
+                elif attr == 'flavor_text':
+                    attributes[attr] = self.box_field(value,
+                                                      'div.cardtextbox', '\n')
+                elif attr == 'mana_cost':
+                    attributes[attr] = self.symbol_field(value, 'img')
                 else:
-                    v = u''
-                    if l == 'mana_cost':
-                        for img in value.cssselect('img'):
-                            v += Symbol(img.attrib['alt']).short
-                    if l == 'all_sets':
-                        v += ', '.join([img.attrib['alt'] for img in
-                                        value.cssselect('img')])
+                    attributes[attr] = value.text_content().strip()
 
-                    v += value.text_content().strip()
-                setattr(card, l, v.replace(u'\xe2\x80\x94', u'\u2014'))
+            for a, v in attributes.iteritems():
+                if isinstance(v, basestring):
+                    v = clean_dashes(v)
+                setattr(card, a, v)
             for ruling in component.cssselect('tr.post'):
                 date, text = ruling.cssselect('td')
                 card.ruling_data.append((date.text_content(),
@@ -153,97 +190,3 @@ class Symbol(object):
         base = '{{{0}}}'.format(self.short)
         if '/' in base: return base.lower()
         else: return base
-
-
-class Card(object):
-
-    def __init__(self):
-        self.card_name = ''
-        self.mana_cost = ''
-        self.types = ''
-        self.card_text = ''
-        self.loyalty = ''
-        self.pow_tgh = ''
-        self.all_sets = ''
-        self.expansion = ''
-        self.rarity = ''
-        self.ruling_data = []
-        self.flavor_text = ''
-        self.card_template = (u"{0.card_name} {0.mana_cost}\n"
-                              u"{0.types}\nText: {0.number} {0.card_text}\n"
-                              u"{0.flavor}{0.display_set}{0.rulings}")
-
-    @property
-    def display_set(self):
-        return textwrap.fill(self.all_sets or self.set_rarity)
-
-    @property
-    def set_rarity(self):
-        if self.expansion and self.rarity:
-            return '{0} ({1})'.format(self.expansion, self.rarity)
-
-    @classmethod
-    def from_block(cls, block):
-        card = cls()
-        for line in block:
-            setattr(card, Card.prettify_attr(line[0]), Card.prettify_text(line[1]))
-        return card
-
-    def show(self, reminders=False, rulings=False, flavor=False):
-        self._format_fields(reminders)
-        if not rulings:
-            self.ruling_data = []
-        if not flavor:
-            self.flavor_text = ''
-
-        return self.card_template.format(self)
-
-    def _format_fields(self, reminders):
-        self.types = self.types.replace('  ', ' ')
-        self.pow_tgh = self.pow_tgh.replace(' ', '')
-        if self.pow_tgh and not self.pow_tgh.startswith('('):
-            self.pow_tgh = '({0})'.format(self.pow_tgh)
-        self._format_card_text(reminders)
-
-    def _format_card_text(self, reminders):
-        if not reminders:
-            self.card_text = self.replace_reminders(self.card_text)
-        self.card_text = self.card_text.replace(self.card_name, '~this~')
-        self.card_text = self.formatted_wrap(self.card_text)
-
-    @property
-    def number(self):
-        return self.pow_tgh or self.loyalty
-
-    @property
-    def rulings(self):
-        if not self.ruling_data:
-            return ''
-        return u'\n' + u'\n'.join([textwrap.fill(u'{0}: {1}'.format(date, text))
-                                   for date, text in self.ruling_data])
-
-    @property
-    def flavor(self):
-        if not self.flavor_text: return ''
-        flavor = self.flavor_text.replace(u'\u2014', u' \u2014')
-        return textwrap.fill(flavor) + '\n'
-
-    @classmethod
-    def formatted_wrap(cls, text):
-        return textwrap.fill(u'            {0}'.format(text)).strip()
-
-    @classmethod
-    def replace_reminders(cls, text):
-        """Remove reminder text from cards (complete sentences enclosed in
-        parentheses)."""
-        return re.sub(r'(\A|\ )\(.*?\.\"?\)', '', text)
-
-    @classmethod
-    def prettify_text(cls, text):
-        """Removes formatting and escape sequences from card text"""
-        return text.strip('\r\n ').replace('||', '').replace('\n', ' ; ')
-
-    @classmethod
-    def prettify_attr(cls, attr):
-        """Removes formatting and escape sequences card attrbutes"""
-        return attr.strip(':\r\n ').replace(' ', '_').replace('/', '_').lower()

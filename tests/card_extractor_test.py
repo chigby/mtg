@@ -2,10 +2,8 @@
 import re
 import textwrap
 
-from dingus import DingusTestCase, Dingus, returner
 from nose.tools import assert_raises, eq_
 
-import mtglib.card_extractor as mod
 from mtglib.card_extractor import CardExtractor, Card, Symbol
 
 
@@ -40,7 +38,7 @@ class WhenExtractingSingleCard(object):
         eq_(len(self.extracted), 1)
 
     def should_extract_name(self):
-        assert self.card.card_name == 'Acorn Harvest'
+        assert self.card.name == 'Acorn Harvest'
 
     def should_extract_mana_cost(self):
         eq_(self.card.mana_cost, '3G')
@@ -49,16 +47,17 @@ class WhenExtractingSingleCard(object):
         assert self.card.types == 'Sorcery'
 
     def should_extract_text(self):
-        eq_(self.card.card_text, unicode('Put two 1/1 green Squirrel creature '
+        eq_(self.card.rules_text, unicode('Put two 1/1 green Squirrel creature '
             'tokens onto the battlefield. ; Flashback\xe2\x80\x94{1}{G}, Pay 3 life.'
             ' (You may cast this card from your graveyard for its flashback '
             'cost. Then exile it.)', 'utf-8'))
 
-    def should_extract_rarity(self):
-        eq_(self.card.rarity, 'Common')
+    def should_not_extract_rarity(self):
+        assert not hasattr(self.card, 'rarity')
+        # eq_(self.card.rarity, 'Common')
 
     def should_extract_expansion(self):
-        eq_(self.card.expansion, 'Torment')
+        assert not hasattr(self.card, 'expansion')
 
     def should_extract_artist(self):
         eq_(self.card.artist, 'Edward P. Beard, Jr.')
@@ -66,11 +65,11 @@ class WhenExtractingSingleCard(object):
     def should_extract_converted_mana_cost(self):
         eq_(self.card.converted_mana_cost, '4')
 
-    def should_extract_card_number(self):
-        eq_(self.card.card_number, '118')
+    def should_extract_collector_number(self):
+        eq_(self.card.collector_number, '118')
 
-    def should_show_expansion(self):
-        assert 'Torment' in self.card.show()
+    def should_extract_expansion(self):
+        eq_(self.card.printings, [('Torment', 'Common')])
 
 
 class WhenExtractingSingleCreature(object):
@@ -80,8 +79,11 @@ class WhenExtractingSingleCreature(object):
         self.extracted = self.ex.extract()
         self.card = self.extracted[0]
 
-    def should_extract_power_and_toughness(self):
-        assert '(6/6)' in self.card.show()
+    def should_extract_power(self):
+        eq_(self.card.power, '6')
+
+    def should_extract_toughness(self):
+        eq_(self.card.toughness, '6')
 
 
 class WhenExtractingSingleCardWithManySets(object):
@@ -92,7 +94,8 @@ class WhenExtractingSingleCardWithManySets(object):
         self.card = self.extracted[0]
 
     def should_extract_all_sets(self):
-        eq_(self.card.all_sets, 'Zendikar (Uncommon), Innistrad (Common)')
+        eq_(self.card.printings,
+            [('Zendikar', 'Uncommon'), ('Innistrad', 'Common')])
 
 
 class WhenExtractingSingleDualFacedPlaneswalker(object):
@@ -105,8 +108,11 @@ class WhenExtractingSingleDualFacedPlaneswalker(object):
         eq_(len(self.cards), 2)
 
     def should_extract_names(self):
-        eq_(self.cards[0].card_name, 'Garruk Relentless')
-        eq_(self.cards[1].card_name, 'Garruk, the Veil-Cursed')
+        eq_(self.cards[0].name, 'Garruk Relentless')
+        eq_(self.cards[1].name, 'Garruk, the Veil-Cursed')
+
+    def should_extact_type(self):
+        eq_(self.cards[0].types, u'Planeswalker — Garruk')
 
     def should_extact_loyalty(self):
         eq_(self.cards[0].loyalty, '3')
@@ -126,10 +132,10 @@ class WhenExtractingManyCardsWithPlaneswalkers(object):
         eq_(len(self.cards), 4)
 
     def should_extract_loyalty(self):
-        eq_(self.sorin_markov.loyalty, u'(4)')
+        eq_(self.sorin_markov.loyalty, u'4')
 
     def should_extract_type(self):
-        eq_(self.sorin_markov.types, u'Planeswalker  — Sorin')
+        eq_(self.sorin_markov.types, u'Planeswalker — Sorin')
 
 
 class WhenExtractingMultipleCards(object):
@@ -142,7 +148,7 @@ class WhenExtractingMultipleCards(object):
         eq_(len(self.cards), 9)
 
     def should_extract_name(self):
-        eq_(self.cards[0].card_name, 'Elvish Hexhunter')
+        eq_(self.cards[0].name, 'Elvish Hexhunter')
 
     def should_extract_mana_cost(self):
         eq_(self.cards[0].mana_cost, '(G/W)')
@@ -151,25 +157,29 @@ class WhenExtractingMultipleCards(object):
         eq_(self.cards[1].mana_cost, '4BB')
 
     def should_extract_types(self):
-        eq_(self.cards[0].types, unicode('Creature  — Elf Shaman', 'utf-8'))
+        eq_(self.cards[0].types, unicode('Creature — Elf Shaman', 'utf-8'))
 
-    def should_extract_power_toughness_block(self):
-        eq_(self.cards[0].pow_tgh, '(1/1)')
+    def should_extract_power(self):
+        eq_(self.cards[0].power, '1')
 
-    def should_extract_card_text(self):
-        eq_(self.cards[0].card_text, '{(g/w)}, {T}, Sacrifice Elvish Hexhunter'
+    def should_extract_toughness(self):
+        eq_(self.cards[0].toughness, '1')
+
+    def should_extract_rules_text(self):
+        eq_(self.cards[0].rules_text, '{(g/w)}, {T}, Sacrifice Elvish Hexhunter'
             ': Destroy target enchantment.')
 
     def should_extract_multipart_card_text(self):
-        eq_(self.cards[7].card_text, 'First strike ; Sacrifice Vampire Hexmage'
+        eq_(self.cards[7].rules_text, 'First strike ; Sacrifice Vampire Hexmage'
             ': Remove all counters from target permanent.')
 
-    def should_extract_card_expansion(self):
-        eq_(self.cards[0].all_sets, 'Shadowmoor (Common)')
+    def should_extract_printings(self):
+        eq_(self.cards[0].printings, [('Shadowmoor', 'Common')])
 
     def should_extract_multiple_card_expansions(self):
-        eq_(self.cards[1].all_sets, 'Magic: The Gathering-Commander (Rare), '
-            'Ravnica: City of Guilds (Rare)')
+        eq_(self.cards[1].printings,
+            [('Magic: The Gathering-Commander', 'Rare'),
+             ('Ravnica: City of Guilds', 'Rare')])
 
 
 class WhenExtractingFlavorText(object):
@@ -179,11 +189,8 @@ class WhenExtractingFlavorText(object):
         self.cards = CardExtractor(self.html).extract()
 
     def should_format_flavor_text(self):
-        assert 'Braids' in self.cards[0].show(flavor=True)
-        assert u' \u2014' in self.cards[0].show(flavor=True)
-
-    def should_exclude_flavor_text_by_default(self):
-        assert 'Braids' not in self.cards[0].show()
+        eq_(self.cards[0].flavor_text,
+            u'"It offers you what you want, not what you need."\n—Braids, dementia summoner')
 
 
 class WhenExtractingRulings(object):
