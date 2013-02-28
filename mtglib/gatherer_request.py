@@ -256,5 +256,3 @@ class SearchRequest(object):
         return (base_url +
                 '&'.join([fl.url_fragment() for fl in self.get_filters()]) +
                 self.special_fragment)
-        return (base_url + '&'.join((self.url_fragments)) +
-                self.special_fragment)
