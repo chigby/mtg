@@ -4,6 +4,7 @@ import textwrap
 from lxml.html import parse
 
 from mtglib.card_renderer import Card
+from mtglib.functions import is_string
 
 __all__ = ['CardExtractor', 'Card']
 
@@ -133,8 +134,8 @@ class CardExtractor(object):
                 else:
                     attributes[attr] = value.text_content().strip()
 
-            for a, v in attributes.iteritems():
-                if isinstance(v, basestring):
+            for a, v in attributes.items():
+                if is_string(v):
                     v = clean_dashes(v)
                 setattr(card, a, v)
             for ruling in component.cssselect('tr.post'):

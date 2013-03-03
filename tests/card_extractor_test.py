@@ -47,10 +47,10 @@ class WhenExtractingSingleCard(object):
         assert self.card.types == 'Sorcery'
 
     def should_extract_text(self):
-        eq_(self.card.rules_text, unicode('Put two 1/1 green Squirrel creature '
-            'tokens onto the battlefield. ; Flashback\xe2\x80\x94{1}{G}, Pay 3 life.'
-            ' (You may cast this card from your graveyard for its flashback '
-            'cost. Then exile it.)', 'utf-8'))
+        eq_(self.card.rules_text, u'Put two 1/1 green Squirrel creature '
+            u'tokens onto the battlefield. ; Flashback—{1}{G}, Pay 3 life.'
+            u' (You may cast this card from your graveyard for its flashback '
+            u'cost. Then exile it.)')
 
     def should_not_extract_rarity(self):
         assert not hasattr(self.card, 'rarity')
@@ -157,7 +157,7 @@ class WhenExtractingMultipleCards(object):
         eq_(self.cards[1].mana_cost, '4BB')
 
     def should_extract_types(self):
-        eq_(self.cards[0].types, unicode('Creature — Elf Shaman', 'utf-8'))
+        eq_(self.cards[0].types, u'Creature — Elf Shaman')
 
     def should_extract_power(self):
         eq_(self.cards[0].power, '1')

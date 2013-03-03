@@ -2,14 +2,16 @@
 import re
 from collections import Iterable
 
-from constants import base_url, TYPES, COLORS
+from mtglib.constants import base_url, TYPES, COLORS
+from mtglib.functions import is_string
 
 __all__ = ['SearchRequest', 'CardRequest']
+
 
 # linearize nested lists
 def flatten(l):
     for el in l:
-        if isinstance(el, Iterable) and not isinstance(el, basestring):
+        if isinstance(el, Iterable) and not is_string(el):
             for sub in flatten(el):
                 yield sub
         else:
@@ -149,8 +151,8 @@ class ConditionParser(object):
 
     def get_conditions(self):
         conditions = []
-        for name, value in self.data.iteritems():
-            if not isinstance(value, basestring):
+        for name, value in self.data.items():
+            if not is_string(value):
                 continue
             if name == 'color':
                 self.lexer = self.getlexer('color')
@@ -163,7 +165,7 @@ class ConditionParser(object):
             conditions.append(fl)
         return conditions
 
-    def expr(self, next, token):
+    def expr(self, token_stream, token):
         """Top level parsing function.
 
         An expression is <keyword> <OR> <expr>
@@ -171,22 +173,22 @@ class ConditionParser(object):
         or               <keyword>
 
         """
-        lval = self.keyword(next, token, {})
-        token = next()
+        lval = self.keyword(token_stream, token, {})
+        token = next(token_stream)
         if token[0] == 'OR':
             op = or_
-            token = next()
+            token = next(token_stream)
         elif token[0] == 'TEXT' or token[0] == 'COLOR':# or token[0] == 'NUMBER':
             op = lambda l, r: list(flatten([l, r]))
         elif token[0] == 'SEPARATOR':
             op = lambda l, r: list(flatten([l, r]))
-            token = next()
+            token = next(token_stream)
         else:
             return [lval]
-        rval = self.expr(next, token)
+        rval = self.expr(token_stream, token)
         return op(lval, rval)
 
-    def keyword(self, next, token, operators):
+    def keyword(self, token_stream, token, operators):
         """Lowest level parsing function.
 
         A keyword consists of zero or more prefix operators (NOT, or
@@ -196,7 +198,7 @@ class ConditionParser(object):
         if token[0] == 'TEXT':
             return SearchKeyword(token[1], **operators)
         elif token[0] == 'NUMBER':
-            if not operators.has_key('comparison'):
+            if not 'comparison' in operators:
                 operators['comparison'] = '='
             return SearchKeyword(int(token[1]), **operators)
         elif token[0] == 'COLOR':
@@ -211,13 +213,13 @@ class ConditionParser(object):
             else:
                 problem = 'token {0} in input'.format(token[1])
             raise SyntaxError('Unexpected {0}'.format(problem))
-        token = next()
-        return self.keyword(next, token, operators)
+        token = next(token_stream)
+        return self.keyword(token_stream, token, operators)
 
     def parse(self, text):
         """Parse the given text, return a list of Keywords."""
         token_stream = self.lexer.tokenize(text)
-        return self.expr(token_stream.next, token_stream.next())
+        return self.expr(token_stream, next(token_stream))
 
 
 class SearchRequest(object):
