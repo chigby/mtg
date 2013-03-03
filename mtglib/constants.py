@@ -1,6 +1,8 @@
 base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
             '?output=standard&')
 
+random_url = 'http://gatherer.wizards.com/Pages/Card/Details.aspx?action=random'
+
 card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc', 'power',
               'tough', 'rarity', 'name', 'block']
 

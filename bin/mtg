@@ -12,7 +12,7 @@ from mtglib import __version__
 from mtglib.gatherer_request import SearchRequest
 from mtglib.card_extractor import CardExtractor
 from mtglib.card_renderer import CardRenderer
-from mtglib.constants import card_flags, separator, readme
+from mtglib.constants import card_flags, separator, readme, random_url
 
 
 def main():
@@ -50,19 +50,25 @@ def main():
                         help='exclude colors not explicity specified')
     search.add_argument('name', nargs='*', help='name of card (optional)')
     parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument('--random', action='store_true', help='display a random card')
 
     args = parser.parse_args()
     if args.name: args.name =  ','.join(args.name)
     if not (args.text or args.color or args.type or args.power or args.tough
-            or args.block or args.set or args.rarity or args.cmc or args.name):
+            or args.block or args.set or args.rarity or args.cmc or args.name
+            or args.random):
         parser.error('Require at least one search option or card name.  '
                      'Type "mtg --help" for more information.')
 
-    request = SearchRequest(vars(args), special=args.special,
-                            exclude_other_colors=args.exclude_other_colors)
+    if args.random:
+        url = random_url
+    else:
+        request = SearchRequest(vars(args), special=args.special,
+                                exclude_other_colors=args.exclude_other_colors)
+        url = request.url
 
     try:
-        cards = CardExtractor(request.url).cards
+        cards = CardExtractor(url).cards
     except KeyboardInterrupt:
         return 0
     except SyntaxError as e:
