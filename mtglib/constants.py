@@ -12,6 +12,24 @@ TYPES = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
 
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
+RARITIES = {
+    'c': 'C',
+    'common': 'C',
+    'u': 'U',
+    'uncommon': 'U',
+    'r': 'R',
+    'rare': 'R',
+    'mythic': 'M',
+    'l': 'L',
+    'land': 'L',
+    's': 'S',
+    'special': 'S',
+    'p': 'P',
+    'promo': 'P'
+}
+
+VALID_WORDS = { 'rarity': RARITIES, 'color': COLORS }
+
 separator = '\n------------------------------'
 
 readme = """Usage: %prog [options] [cardname]

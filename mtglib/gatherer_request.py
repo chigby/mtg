@@ -2,7 +2,7 @@
 import re
 from collections import Iterable
 
-from mtglib.constants import base_url, TYPES, COLORS
+from mtglib.constants import base_url, TYPES, VALID_WORDS
 from mtglib.functions import is_string
 
 __all__ = ['SearchRequest', 'CardRequest']
@@ -44,12 +44,10 @@ class SearchKeyword(object):
             self.term, self.boolean, self.comparison)
 
     def render_term(self):
-        if isinstance(self.term, int):
-            return self.term
-        elif self.term in COLORS.values():
-            return self.term
-        else:
+        if is_string(self.term) and ' ' in self.term:
             return '"{0}"'.format(self.term)
+        else:
+            return self.term
 
     def render_comparison(self):
         if self.comparison:
@@ -71,7 +69,6 @@ class SearchKeyword(object):
                                     self.render_comparison())
 
 
-
 class SearchFilter(object):
     """Atomic search structure: card attribute and search words."""
 
@@ -85,6 +82,33 @@ class SearchFilter(object):
 
     def __repr__(self):
         return str(self.__dict__)
+
+    def normalize_words(self, words):
+        valid_words = VALID_WORDS.get(self.name)
+        for word in words:
+            if valid_words.get(word.term.lower(), False):
+                word.term = valid_words.get(word.term.lower(), False)
+            else:
+                raise ValueError(
+                    '"{}" is not a valid {}'.format(word.term, self.name))
+        return words
+
+    def normalize_digits(self, words):
+        for word in words:
+            if not word.comparison:
+                word.comparison = '='
+            if word.term.isdigit():
+                word.term = int(word.term)
+            else:
+                raise ValueError('"{}" not a valid number'.format(word.term))
+        return words
+
+    def add_keywords(self, words):
+        if self.name == 'color' or self.name == 'rarity':
+            words = self.normalize_words(words)
+        elif self.name in ('cmc', 'power', 'tough'):
+            words = self.normalize_digits(words)
+        self.keywords.extend(words)
 
     def url_fragment(self):
         if self.exclude_others:
@@ -133,7 +157,7 @@ class ConditionParser(object):
         self.special_rules = {
             'freeform': ('[^<>=!\|,]+', 'TEXT'),
             'numeric': ('\d+', 'NUMBER'),
-            'color': ('[wubrgc]', 'COLOR')}
+            'single_character': ('[^<>=!\|,]', 'COLOR')}
 
         self.base_rules = [
             ('[<>=]+', 'COMPARISON'),
@@ -155,13 +179,11 @@ class ConditionParser(object):
             if not is_string(value):
                 continue
             if name == 'color':
-                self.lexer = self.getlexer('color')
-            elif name in ('cmc', 'power', 'tough'):
-                self.lexer = self.getlexer('numeric')
+                self.lexer = self.getlexer('single_character')
             else:
                 self.lexer = self.getlexer('freeform')
             fl = SearchFilter(name, keywords=[])
-            fl.keywords.extend(self.parse(value))
+            fl.add_keywords(self.parse(value))
             conditions.append(fl)
         return conditions
 
@@ -178,7 +200,7 @@ class ConditionParser(object):
         if token[0] == 'OR':
             op = or_
             token = next(token_stream)
-        elif token[0] == 'TEXT' or token[0] == 'COLOR':# or token[0] == 'NUMBER':
+        elif token[0] == 'TEXT' or token[0] == 'COLOR':
             op = lambda l, r: list(flatten([l, r]))
         elif token[0] == 'SEPARATOR':
             op = lambda l, r: list(flatten([l, r]))
@@ -195,14 +217,8 @@ class ConditionParser(object):
         COMPARISON) followed by a TEXT, COLOR, or NUMBER block.
 
         """
-        if token[0] == 'TEXT':
+        if token[0] == 'TEXT' or token[0] == 'COLOR':
             return SearchKeyword(token[1], **operators)
-        elif token[0] == 'NUMBER':
-            if not 'comparison' in operators:
-                operators['comparison'] = '='
-            return SearchKeyword(int(token[1]), **operators)
-        elif token[0] == 'COLOR':
-            return SearchKeyword(COLORS.get(token[1].lower()), **operators)
         elif token[0] == 'COMPARISON':
             operators['comparison'] = token[1]
         elif token[0] == 'NOT':

@@ -61,7 +61,7 @@ class WhenParsingNumbers(unittest.TestCase):
         parser = ConditionParser({'cmc': '5'})
         cond = parser.get_conditions()
         assert cond[0].name == 'cmc'
-        assert cond[0].keywords == [SearchKeyword(5, 'and', '=')]
+        self.assertEqual(cond[0].keywords, [SearchKeyword(5, 'and', '=')])
 
     def should_understand_less_than_conditional(self):
         parser = ConditionParser({'power': '<5'})
@@ -98,7 +98,7 @@ class WhenParsingNumbers(unittest.TestCase):
 
     def should_raise_error_for_non_numeric_input(self):
         parser = ConditionParser({'tough': 'f'})
-        assert_raises(SyntaxError, parser.get_conditions)
+        assert_raises(ValueError, parser.get_conditions)
 
 
 class WhenParsingColors(unittest.TestCase):
@@ -125,8 +125,23 @@ class WhenParsingColors(unittest.TestCase):
 
     def should_raise_error_for_non_color_input(self):
         parser = ConditionParser({'color': 'd'})
-        assert_raises(SyntaxError, parser.get_conditions)
+        assert_raises(ValueError, parser.get_conditions)
 
+class WhenParsingRarities(unittest.TestCase):
+
+    def should_upcase_keyword(self):
+        parser = ConditionParser({'rarity': 's'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword('S', 'and')])
+
+    def should_raise_error_if_invalid_rarity(self):
+        parser = ConditionParser({'rarity': 'd'})
+        assert_raises(ValueError, parser.get_conditions)
+
+    def should_accept_complete_words(self):
+        parser = ConditionParser({'rarity': 'special'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond[0].keywords, [SearchKeyword('S', 'and')])
 
 class WhenParsingPhrases(unittest.TestCase):
 
@@ -143,7 +158,7 @@ class WhenGettingUrl(unittest.TestCase):
     def should_group_text_in_brackets(self):
         word = SearchKeyword('trample', 'and')
         fl = SearchFilter('text', keywords=[word])
-        self.assertEqual(fl.url_fragment(), 'text=+["trample"]')
+        self.assertEqual(fl.url_fragment(), 'text=+[trample]')
 
     def should_assume_exact_quote_if_spaces(self):
         word = SearchKeyword('first strike', 'and')
@@ -154,7 +169,7 @@ class WhenGettingUrl(unittest.TestCase):
         first = SearchKeyword('first', 'or')
         strike = SearchKeyword('strike', 'or')
         fl = SearchFilter('text', keywords=[first, strike])
-        self.assertEqual(fl.url_fragment(), 'text=|["first"]|["strike"]')
+        self.assertEqual(fl.url_fragment(), 'text=|[first]|[strike]')
 
     def should_render_greater_than_comparison(self):
         word = SearchKeyword(5, 'and', '>')
@@ -185,18 +200,23 @@ class WhenGettingUrl(unittest.TestCase):
         sengir = SearchKeyword('sengir', 'and')
         vampire = SearchKeyword('vampire', 'and')
         fl = SearchFilter('name', keywords=[sengir, vampire])
-        self.assertEqual(fl.url_fragment(), 'name=+["sengir"]+["vampire"]')
+        self.assertEqual(fl.url_fragment(), 'name=+[sengir]+[vampire]')
 
     def should_group_url_keywords_if_excluding_others(self):
         word = SearchKeyword('w', 'and')
         fl = SearchFilter('color', keywords=[word])
         fl.exclude_others = True
-        self.assertEqual(fl.url_fragment(), 'color=+@(+["w"])')
+        self.assertEqual(fl.url_fragment(), 'color=+@(+[w])')
+
+    def should_not_quote_rarities(self):
+        word = SearchKeyword('M', 'and')
+        fl = SearchFilter('rarity', keywords=[word])
+        self.assertEqual(fl.url_fragment(), 'rarity=+[M]')
 
     def should_render_not_operator(self):
         word = SearchKeyword('graveyard', 'not')
         fl = SearchFilter('text', keywords=[word])
-        self.assertEqual(fl.url_fragment(), 'text=+!["graveyard"]')
+        self.assertEqual(fl.url_fragment(), 'text=+![graveyard]')
 
 
 class WhenMakingSearchRequest(unittest.TestCase):
