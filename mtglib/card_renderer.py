@@ -15,6 +15,7 @@ class Card(object):
         self.printings = []
         self.ruling_data = []
         self.flavor_text = ''
+        self.color_indicator = ''
 
 
 def remove_reminders(text):
@@ -74,6 +75,8 @@ class CardRenderer(object):
         lines = textwrap.wrap(rules_text_format.format(self.card, rules_text))
         if self.card.loyalty:
             lines.append(u'Loyalty: {0.loyalty}'.format(self.card))
+        if self.card.color_indicator:
+            lines.append(u'Color: {0.color_indicator}'.format(self.card))
         return lines
 
     def render_rulings(self):

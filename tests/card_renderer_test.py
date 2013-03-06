@@ -123,6 +123,16 @@ class DescribeCardRenderer(TestCase):
              u'Legendary Creature — Human Wizard',
              u'Text: (3/4) Rules Text (This is just an example.)'])
 
+    def should_print_color_indicator_if_present(self):
+        self.card.color_indicator = 'Green'
+        self.assertEqual(
+            CardRenderer(self.card).render(),
+            [u'Name 2UUU',
+             u'Legendary Creature — Human Wizard',
+             u'Text: (3/4) Rules Text (This is just an example.)',
+             u'Color: Green',
+             u'Time Spiral (Rare)'])
+
     def should_print_loyalty_on_planeswalkers(self):
         self.card.types = u'Planeswalker — Gideon'
         self.card.power = u''
