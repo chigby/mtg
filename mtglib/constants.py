@@ -20,6 +20,7 @@ RARITIES = {
     'r': 'R',
     'rare': 'R',
     'mythic': 'M',
+    'm': 'M',
     'l': 'L',
     'land': 'L',
     's': 'S',
