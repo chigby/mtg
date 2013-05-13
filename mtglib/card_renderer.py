@@ -4,7 +4,7 @@ import textwrap
 class Card(object):
 
     def __init__(self):
-        self. name = ''
+        self.name = ''
         self.mana_cost = ''
         self.types = ''
         self.rules_text = ''
