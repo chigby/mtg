@@ -47,7 +47,7 @@ Examples:
     determines the type of search.
 
     Search for angels that are white OR black:
-    $ mtg angel --color=w,b
+    $ mtg angel --color=w|b
 
     Search for angels that are white AND black (no comma separation
     forces multicolored matches).
@@ -75,7 +75,7 @@ Examples:
     $ mtg --type=goblin --rarity=m
 
     Limit by supertype and two possible subtypes:
-    $ mtg --type='snow,|construct,|goblin'
+    $ mtg --type='snow,construct|goblin'
 
     Limit by subtype and card type:
     $ mtg --type='elf,!creature'
@@ -100,7 +100,7 @@ Examples:
     $ mtg zendikon --color='!b'
     $ mtg --type='legendary,artifact,!equipment'
     $ mtg --text='win the game' --set='!unhinged,!unglued'
-    $ mtg guildmage --color=r,g
-    $ mtg --text='gain life' --set=zendikar,worldwake --color=u,b,r -x
-    $ mtg --text='counter target' --color=w,g -x
+    $ mtg guildmage --color=r|g
+    $ mtg --text='gain life' --set=zendikar --color="u|b|r" -x
+    $ mtg --text='counter target' --color="w|g" -x
 """
