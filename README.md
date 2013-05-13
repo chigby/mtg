@@ -19,9 +19,9 @@ best way to learn these is to read some examples.
 
 #### Simple Queries
 
-Search for cards by name.  Any positional arguments passed to mtg are
-assumed to be part of the card's name.  This lets you look up any card
-with:
+Search for cards by name.  Any positional arguments passed to `mtg`
+are assumed to be part of the card's name.  This lets you look up any
+card with:
 
 ```
 $ mtg ancestral recall
@@ -40,8 +40,8 @@ All other search filters are achieved with options.  For example, to find all wh
 $ mtg gideon --color=w
 ```
 
-To specify colors, use the one-letter abbrevations: w, u, b, r, g.
-You may also specify "c" for colorless:
+To specify colors, use the one-letter abbrevations: `w`, `u`, `b`,
+`r`, `g`.  You may also specify `c` for colorless:
 
 Filter by card text.  A string of comma separated terms searches cards
 containing all terms, not the exact phrase.  For example, to find all
@@ -98,7 +98,11 @@ or escape it with a backslash for mtg to properly interpret it.
 
 You can combine the _and_ and _or_ opreators by combining commas and
 pipes.  The following query will return all snow cards that are either
-mtg --type='snow,zombie|goblin|aurochs'
+zombies or goblins or aurochs:
+
+```
+$ mtg --type='snow,zombie|goblin|aurochs'
+```
 
 #### Multicolored Cards
 
