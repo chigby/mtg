@@ -46,7 +46,7 @@ def main():
                         help='include special cards (e.g. planes, schemes)')
     display.add_argument('--flavor', action='store_true',
                         help='show flavor text')
-    search.add_argument('-x', '--exclude-other-colors', action='store_true',
+    search.add_argument('-xc', '--exclude-other-colors', action='store_true',
                         help='exclude colors not explicity specified')
     search.add_argument('name', nargs='*', help='name of card (optional)')
     parser.add_argument('--version', action='version', version=__version__)
