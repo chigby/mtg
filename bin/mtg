@@ -20,8 +20,8 @@ def main():
     search = parser.add_argument_group('search', 'Card search options')
     display = parser.add_argument_group('display', 'Display options')
 
-    search.add_argument("-t", "--text",
-                      help="containing rules text TEXT", metavar="TEXT")
+    search.add_argument('-t', '--text',
+                      help='containing rules text TEXT', metavar='TEXT')
     search.add_argument('--color', help='cards matching COLOR (w, u, b, r, g, c)')
     search.add_argument('--type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
     search.add_argument('--power',
