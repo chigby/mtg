@@ -72,10 +72,10 @@ class SearchKeyword(object):
 class SearchFilter(object):
     """Atomic search structure: card attribute and search words."""
 
-    def __init__(self, name, keywords=[]):
+    def __init__(self, name, keywords=[], exclude_others=False):
         self.name = name
         self.keywords = keywords
-        self.exclude_others = False
+        self.exclude_others = exclude_others
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -246,22 +246,23 @@ class SearchRequest(object):
 
     """
 
-    def __init__(self, options, special=False, exclude_other_colors=False):
+    def __init__(self, options, special=False, exclude_others=[]):
         self.options = options
         self.special = special
-        self.exclude_other_colors = exclude_other_colors
+        self.exclude_others = exclude_others
 
     def get_filters(self):
         conditions = ConditionParser(self.options).get_conditions()
         for fl in conditions:
             if fl.name == 'type':
+                exclude = 'type' in self.exclude_others
                 type_words = [w for w in fl.keywords if w.term.lower() in TYPES]
                 subtype_words = [w for w in fl.keywords if w.term.lower() not in TYPES]
                 fl.keywords = type_words
+                fl.exclude_others = exclude
                 if subtype_words:
-                    conditions.append(SearchFilter('subtype',
-                                                   keywords=subtype_words))
-            if fl.name == 'color' and self.exclude_other_colors:
+                    conditions.append(SearchFilter('subtype', keywords=subtype_words, exclude_others=exclude))
+            if fl.name == 'color' and 'color' in self.exclude_others:
                 fl.exclude_others = True
         return [c for c in conditions if c.keywords]
 

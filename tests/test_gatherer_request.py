@@ -208,6 +208,12 @@ class WhenGettingUrl(unittest.TestCase):
         fl.exclude_others = True
         self.assertEqual(fl.url_fragment(), 'color=+@(+[w])')
 
+    def should_group_url_keywords_if_excluding_other_types(self):
+        word = SearchKeyword('goblin', 'and')
+        fl = SearchFilter('type', keywords=[word])
+        fl.exclude_others = True
+        self.assertEqual(fl.url_fragment(), 'type=+@(+[goblin])')
+
     def should_not_quote_rarities(self):
         word = SearchKeyword('M', 'and')
         fl = SearchFilter('rarity', keywords=[word])
@@ -246,8 +252,17 @@ class WhenMakingSearchRequest(unittest.TestCase):
         self.assertEqual(request.get_filters(), [type_, subt])
 
     def should_allow_color_exclusion(self):
-        request = SearchRequest({'color': 'wu'}, exclude_other_colors=True)
+        request = SearchRequest({'color': 'wu'}, exclude_others=['color'])
         self.assertTrue(request.get_filters()[0].exclude_others)
+
+    def should_allow_type_exclusion(self):
+        request = SearchRequest({'type': 'elemental'}, exclude_others=['type'])
+        self.assertTrue(request.get_filters()[0].exclude_others)
+
+    def should_allow_type_and_subtype_exclusion(self):
+        request = SearchRequest({'type': 'dryad,creature'}, exclude_others=['type'])
+        self.assertTrue(request.get_filters()[0].exclude_others)
+        self.assertTrue(request.get_filters()[1].exclude_others)
 
 
 class WhenMakingSpecialRequest(unittest.TestCase):

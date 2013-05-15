@@ -50,6 +50,8 @@ def main():
                         help='show flavor text')
     search.add_argument('-xc', '--exclude-other-colors', action='store_true',
                         help='exclude colors not explicity specified')
+    search.add_argument('-xt', '--exclude-other-types', action='store_true',
+                        help='exclude types not explicity specified')
     search.add_argument('name', nargs='*', help='name of card (optional)')
     parser.add_argument('--version', action='version', version=__version__)
     parser.add_argument('--random', action='store_true', help='display a random card')
@@ -61,12 +63,24 @@ def main():
             or args.random or args.format):
         parser.error('Require at least one search option or card name.  '
                      'Type "mtg --help" for more information.')
+    exclude_others = []
+    if args.exclude_other_colors:
+        if not args.color:
+            parser.error('Cannot exclude other colors if no color given in search query.\n'
+                         '--exclude-other-colors or -xc must be used with --color')
+        exclude_others.append('color')
+    if args.exclude_other_types:
+        if not args.color:
+            parser.error('Cannot exclude other colors if no color given in search query.\n'
+                         '--exclude-other-types or -xt must be used with --type')
+        exclude_others.append('type')
+
 
     if args.random:
         url = random_url
     else:
         request = SearchRequest(vars(args), special=args.special,
-                                exclude_other_colors=args.exclude_other_colors)
+                                exclude_others=exclude_others)
         url = request.url
 
     try:
