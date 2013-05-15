@@ -58,7 +58,7 @@ def main():
     if args.name: args.name =  ','.join(args.name)
     if not (args.text or args.color or args.type or args.power or args.tough
             or args.block or args.set or args.rarity or args.cmc or args.name
-            or args.random):
+            or args.random or args.format):
         parser.error('Require at least one search option or card name.  '
                      'Type "mtg --help" for more information.')
 
