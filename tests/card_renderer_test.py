@@ -157,6 +157,18 @@ class DescribeCardRenderer(TestCase):
              u'Text: Rules Text (This is just an example.)',
              u'Time Spiral (Rare)'])
 
+    def should_strip_semicolons(self):
+        self.card.rules_text = (u"({T}: Add {W} or {B} to your mana pool.) ; As Godless Shrine enters the battlefield, you may pay 2 life. If you don't, Godless Shrine enters the battlefield tapped.")
+        self.card.power = u''
+        self.card.toughness = u''
+        self.assertEqual(
+            CardRenderer(self.card, reminders=False).render(),
+            [u'Name 2UUU',
+             u'Legendary Creature — Human Wizard',
+             u'Text: As Godless Shrine enters the battlefield, you may pay 2 life. If',
+             u"you don't, Godless Shrine enters the battlefield tapped.",
+             u'Time Spiral (Rare)'])
+
 
 class WhenRemovingReminderText(TestCase):
     """When Removing Reminder Text"""
