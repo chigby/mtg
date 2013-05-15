@@ -30,6 +30,8 @@ def main():
                         help='cards with toughness TOUGHNESS (uses <, >, =)')
     search.add_argument('--block',
                         help='cards from block BLOCK')
+    search.add_argument('--format',
+                        help='cards from format FORMAT')
     search.add_argument('--set',
                         help='cards matching expansion set SET (e.g. unlimited)')
     search.add_argument('--rarity',

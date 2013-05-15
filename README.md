@@ -215,9 +215,9 @@ E.g., all mythic rare goblins:
 $ mtg --type=goblin --rarity=m
 ```
 
-Searched can be limited to sets or blocks using the full name of the
-set or an abbreviation, e.g. all alternate win conditions not from
-unhinged or unglued:
+Searched can be limited to sets, blocks, or formats using the full
+name of the set or an abbreviation, e.g. all alternate win conditions
+not from unhinged or unglued:
 
 ```
 $ mtg --text='win the game' --set='!unhinged,!unglued'
@@ -227,6 +227,12 @@ Or, all white commons from Innistrad:
 
 ```
 $ mtg --color=w --rarity=c --set=inn
+```
+
+Or, all green 1-drops in Standard:
+
+```
+$ mtg --color=g --type=creature --cmc=1 --format=standard
 ```
 
 #### Display options
