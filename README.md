@@ -215,7 +215,7 @@ E.g., all mythic rare goblins:
 $ mtg --type=goblin --rarity=m
 ```
 
-Searched can be limited to sets, blocks, or formats using the full
+Searches can be limited to sets, blocks, or formats using the full
 name of the set or an abbreviation, e.g. all alternate win conditions
 not from unhinged or unglued:
 
