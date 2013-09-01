@@ -272,6 +272,6 @@ class SearchRequest(object):
 
     @property
     def url(self):
-        return (base_url +
+        return base_url +
                 '&'.join([fl.url_fragment() for fl in self.get_filters()]) +
-                self.special_fragment) + '&action=advanced'
+                self.special_fragment + '&action=advanced'
