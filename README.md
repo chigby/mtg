@@ -156,9 +156,9 @@ would normally.  For example, to find all 4/4 goblins, use:
 $ mtg --type=goblin --power=4 --tough=4
 ```
 
-You can also use the inequality operators greater-than (>) and
-less-than (<).  Also allowed are greater-than-or-equal-to (>=) and
-less-than-or-equal-to (<=).  Note again most shells require you to
+You can also use the inequality operators greater-than (`>`) and
+less-than (`<`).  Also allowed are greater-than-or-equal-to (`>=`) and
+less-than-or-equal-to (`<=`).  Note again most shells require you to
 escape pointy bracket characters.  To find goblins even bigger than
 4/4, use:
 
