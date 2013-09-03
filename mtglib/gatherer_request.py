@@ -117,7 +117,7 @@ class SearchFilter(object):
             url_format = '{name}={keywords}'
         keywords = ''
         for word in self.keywords:
-             keywords += word.url_fragment()
+            keywords += word.url_fragment()
         return url_format.format(name=self.name, keywords=keywords)
 
 
