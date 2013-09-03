@@ -1,5 +1,5 @@
 base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-            '?output=standard&')
+            '?output=standard&action=advanced&')
 
 random_url = 'http://gatherer.wizards.com/Pages/Card/Details.aspx?action=random'
 
@@ -29,7 +29,7 @@ RARITIES = {
     'promo': 'P'
 }
 
-VALID_WORDS = { 'rarity': RARITIES, 'color': COLORS }
+VALID_WORDS = {'rarity': RARITIES, 'color': COLORS}
 
 separator = '\n------------------------------'
 

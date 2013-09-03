@@ -117,7 +117,7 @@ class SearchFilter(object):
             url_format = '{name}={keywords}'
         keywords = ''
         for word in self.keywords:
-             keywords += word.url_fragment()
+            keywords += word.url_fragment()
         return url_format.format(name=self.name, keywords=keywords)
 
 
@@ -272,6 +272,6 @@ class SearchRequest(object):
 
     @property
     def url(self):
-        return base_url +
+        return (base_url +
                 '&'.join([fl.url_fragment() for fl in self.get_filters()]) +
-                self.special_fragment + '&action=advanced'
+                self.special_fragment)
