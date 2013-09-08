@@ -6,7 +6,7 @@ class DescribeConstants(unittest.TestCase):
 
     def should_have_base_url(self):
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-               '?output=standard&')
+               '?output=standard&action=advanced&')
         assert base_url == url
 
     def should_have_card_flags(self):
