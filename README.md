@@ -253,3 +253,7 @@ $ mtg --type='basic,!snow' --hidesets
 ```
 
 `--rulings`: Show the card rulings.  Note: this only works if there is exactly 1 search result.  I'm (slowly) working on fixing this.
+
+### Contact
+
+I love hearing from users of this software.  Any comments, criticism, nit-picks, kudos, requests, or other feedback are welcome.  Feel free to open an issue or email me.
