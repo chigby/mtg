@@ -41,7 +41,7 @@ $ mtg gideon --color=w
 ```
 
 To specify colors, use the one-letter abbrevations: `w`, `u`, `b`,
-`r`, `g`.  You may also specify `c` for colorless:
+`r`, `g`.  You may also specify `c` for colorless.
 
 Filter by card text.  A string of comma separated terms searches cards
 containing all terms, not the exact phrase.  For example, to find all
@@ -96,7 +96,7 @@ $ mtg --type='nautilus|oyster'
 Note: many terminals require you to enclose a pipe character in quotes
 or escape it with a backslash for mtg to properly interpret it.
 
-You can combine the _and_ and _or_ opreators by combining commas and
+You can combine the _and_ and _or_ operators by combining commas and
 pipes.  The following query will return all snow cards that are either
 zombies or goblins or aurochs:
 
