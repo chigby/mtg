@@ -79,7 +79,7 @@ class CardExtractor(object):
                 if t:
                     number = t.pop(0).strip('()')
                     if '/' in number:
-                        card.power, card.toughness = number.split('/')
+                        card.power, card.toughness = self.split_pow_tgh(number)
                     else:
                         card.loyalty = number
                 card.types = clean_dashes(card.types)
@@ -87,6 +87,17 @@ class CardExtractor(object):
                 card.printings = self.printings(item, 'td.rightCol img')
             cards.append(card)
         return cards
+
+    def split_pow_tgh(self, text):
+        """Split a power/toughness string on the correct slash.
+
+        Correctly accounts for curly braces to denote fractions.
+        E.g., '2/2' --> ['2', '2']
+        '3{1/2}/3{1/2}' --> ['3{1/2}', '3{1/2']
+
+        """
+        return [n for n in re.split(r"/(?=([^{}]*{[^{}]*})*[^{}]*$)", text)
+                if n is not None][:2]
 
     def pow_tgh(self, element):
         matches = re.match(r'\s*(\S+)\s*/\s*(\S+)\s*', element.text_content())

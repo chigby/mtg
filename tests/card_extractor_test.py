@@ -138,6 +138,28 @@ class WhenExtractingManyCardsWithPlaneswalkers(object):
         eq_(self.sorin_markov.types, u'Planeswalker — Sorin')
 
 
+class WhenExtractingFractionalNumbers(object):
+
+    def setup(self):
+        extractor = CardExtractor(card_html('donkey'))
+        self.cards = extractor.extract_many()
+        self.assquatch = self.cards[0]
+        self.bad_ass = self.cards[1]
+        self.cheap_ass = self.cards[2]
+
+    def should_get_fractional_power_and_toughness(self):
+        eq_(self.assquatch.power, '3{1/2}')
+        eq_(self.assquatch.toughness, '3{1/2}')
+
+    def should_get_fractional_power(self):
+        eq_(self.bad_ass.power, '3{1/2}')
+        eq_(self.bad_ass.toughness, '1')
+
+    def should_get_fractional_toughness(self):
+        eq_(self.cheap_ass.power, '1')
+        eq_(self.cheap_ass.toughness, '3{1/2}')
+
+
 class WhenExtractingMultipleCards(object):
 
     def setup(self):
