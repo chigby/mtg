@@ -56,7 +56,7 @@ class DescribeCardRenderer(TestCase):
     def should_render_rulings(self):
         output = CardRenderer(self.card, rulings=True).render()
         for line in CardRenderer(self.card, rulings=True).render_rulings():
-            self.assertIn(line, output)
+            self.assertTrue(line in output)
 
     def should_format_rulings(self):
         self.assertEqual(
