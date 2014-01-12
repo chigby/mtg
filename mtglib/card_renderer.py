@@ -6,7 +6,8 @@ class Card(object):
     def __init__(self):
         self.name = ''
         self.mana_cost = ''
-        self.types = ''
+        self.types = []
+        self.subtypes = []
         self.rules_text = ''
         self.loyalty = ''
         self.power = ''
@@ -39,12 +40,10 @@ class CardRenderer(object):
         self.printings = printings
 
     def render(self):
-        card_format = [u'{0.name} {0.mana_cost}',
-                       u'{0.types}',
-                       ]
+        card_format = [u'{0.name} {0.mana_cost}']
 
         card_data = [line.format(self.card) for line in card_format]
-
+        card_data.extend(self.render_types())
         card_data.extend(self.render_rules_text())
         if self.flavor and self.card.flavor_text:
             card_data.extend(self.render_flavor_text())
@@ -84,3 +83,9 @@ class CardRenderer(object):
         for r in self.card.ruling_data:
             rulings.extend(textwrap.wrap(u'%s: %s' % r))
         return rulings
+
+    def render_types(self):
+        if not self.card.subtypes:
+            return [' '.join(self.card.types)]
+        return [u'{0} \u2014 {1}'.format(' '.join(self.card.types),
+                                        ' '.join(self.card.subtypes))]

@@ -9,7 +9,8 @@ class DescribeCardRenderer(TestCase):
         self.card = Card()
         self.card.name = u'Name'
         self.card.mana_cost = u'2UUU'
-        self.card.types = u'Legendary Creature — Human Wizard'
+        self.card.types = [u'Legendary', u'Creature']
+        self.card.subtypes = [u'Human', u'Wizard']
         self.card.power = 3
         self.card.toughness = 4
         self.card.rules_text = u'Rules Text (This is just an example.)'
@@ -134,7 +135,8 @@ class DescribeCardRenderer(TestCase):
              u'Time Spiral (Rare)'])
 
     def should_print_loyalty_on_planeswalkers(self):
-        self.card.types = u'Planeswalker — Gideon'
+        self.card.types = [u'Planeswalker']
+        self.card.subtypes = [u'Gideon']
         self.card.power = u''
         self.card.toughness = u''
         self.card.loyalty = 5
@@ -147,7 +149,8 @@ class DescribeCardRenderer(TestCase):
              u'Time Spiral (Rare)'])
 
     def should_not_print_numbers_on_instants(self):
-        self.card.types = u'Instant'
+        self.card.types = [u'Instant']
+        self.card.subtypes = []
         self.card.power = u''
         self.card.toughness = u''
         self.assertEqual(
