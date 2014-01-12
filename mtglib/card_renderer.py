@@ -1,5 +1,6 @@
 import re
 import textwrap
+import json
 
 class Card(object):
 
@@ -31,12 +32,13 @@ def remove_reminders(text):
 class CardRenderer(object):
 
     def __init__(self, card, rulings=False, reminders=True, flavor=False,
-                 printings=True):
+                 printings=True, json=False):
         self.card = card
         self.rulings = rulings
         self.reminders = reminders
         self.flavor = flavor
         self.printings = printings
+        self.json = json
 
     def render(self):
         card_format = [u'{0.name} {0.mana_cost}',
@@ -45,12 +47,27 @@ class CardRenderer(object):
 
         card_data = [line.format(self.card) for line in card_format]
 
+        if self.json:
+            return self.render_json()
+
         card_data.extend(self.render_rules_text())
         if self.flavor and self.card.flavor_text:
             card_data.extend(self.render_flavor_text())
         if self.printings: card_data.extend(self.render_printings())
         if self.rulings: card_data.extend(self.render_rulings())
+
         return card_data
+
+    def render_json(self):
+        json_data = {}
+        for field in dir(self.card):
+            if '__' in field:
+                continue
+            else:
+                json_data[field] = getattr(self.card, field)
+
+        j_string = json.dumps(json_data, sort_keys=True,indent=4, separators=(',', ': '))
+        return j_string.split('\n')
 
     def render_flavor_text(self):
         flavor_text = [u'* * *']
