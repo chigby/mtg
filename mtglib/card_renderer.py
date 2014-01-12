@@ -32,7 +32,7 @@ def remove_reminders(text):
 class CardRenderer(object):
 
     def __init__(self, card, rulings=False, reminders=True, flavor=False,
-                 printings=True, json=True):
+                 printings=True, json=False):
         self.card = card
         self.rulings = rulings
         self.reminders = reminders
