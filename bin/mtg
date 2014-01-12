@@ -52,6 +52,8 @@ def main():
                         help='exclude colors not explicity specified')
     search.add_argument('-xt', '--exclude-other-types', action='store_true',
                         help='exclude types not explicity specified')
+    search.add_argument('--json', action='store_true',
+                        help='output card in JSON format')
     search.add_argument('name', nargs='*', help='name of card (optional)')
     parser.add_argument('--version', action='version', version=__version__)
     parser.add_argument('--random', action='store_true', help='display a random card')
@@ -96,7 +98,7 @@ def main():
     for card in cards:
         print(separator)
         renderer = CardRenderer(card, rulings=args.rulings, reminders=args.reminder,
-                                flavor=args.flavor, printings=not args.hidesets)
+                                flavor=args.flavor, printings=not args.hidesets, json=args.json)
         for line in renderer.render(): print(line)
     num_results = len(cards)
     if num_results < 25:
