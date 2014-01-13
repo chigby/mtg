@@ -61,7 +61,7 @@ class CardRenderer(object):
     def render_json(self):
         json_data = {}
         for field in dir(self.card):
-            if '__' in field:
+            if '__' in field or not getattr(self.card, field):
                 continue
             else:
                 json_data[field] = getattr(self.card, field)
