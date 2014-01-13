@@ -11,7 +11,7 @@ import argparse
 from mtglib import __version__
 from mtglib.gatherer_request import SearchRequest
 from mtglib.card_extractor import CardExtractor
-from mtglib.card_renderer import CardRenderer
+from mtglib.card_renderer import CardList
 from mtglib.constants import card_flags, separator, readme, random_url
 
 
@@ -93,20 +93,9 @@ def main():
         print('Could not parse options: {0}'.format(e.msg))
         return 0
 
-    if not cards:
-        return 0
-    for card in cards:
-        print(separator)
-        renderer = CardRenderer(card, rulings=args.rulings, reminders=args.reminder,
-                                flavor=args.flavor, printings=not args.hidesets, json=args.json)
-        for line in renderer.render(): print(line)
-    num_results = len(cards)
-    if num_results < 25:
-        print('\n{0} result{1} found.'.format(num_results,
-                                              num_results != 1 and 's' or ''))
-    else:
-        print('\n{0}+ results found.  First 25 displayed, narrow search for '
-              'more.'.format(num_results))
+    cardlist = CardList(cards, rulings=args.rulings, reminders=args.reminder,
+                        flavor=args.flavor, printings=not args.hidesets, json=args.json)
+    for line in cardlist.render(): print(line)
     return 0
 
 if __name__ == '__main__':

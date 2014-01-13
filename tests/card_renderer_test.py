@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+import json
 from unittest import TestCase
 
-from mtglib.card_renderer import Card, CardRenderer, remove_reminders
+from nose.tools import eq_
+
+from mtglib.card_renderer import Card, CardRenderer, remove_reminders, CardList
+from mtglib.constants import separator
 
 class DescribeCardRenderer(TestCase):
 
@@ -237,3 +241,79 @@ class WhenRemovingReminderText(TestCase):
         text = (u'Super haste (This may attack the turn before you play it. (You may put this card into play from your hand, tapped and attacking, during your declare attackers step. If you do, you lose the game at the end of your next turn unless you pay this card\'s mana cost during that turn.))')
         repl = u'Super haste'
         self.assertEqual(remove_reminders(text), repl)
+
+
+class WhenRenderingCardLists(TestCase):
+
+    def setUp(self):
+        card1 = Card()
+        card1.name = u'Name'
+        card1.mana_cost = u'2UUU'
+        card1.types = [u'Legendary', u'Creature']
+        card1.subtypes = [u'Human', u'Wizard']
+        card1.power = 3
+        card1.toughness = 4
+        card1.rules_text = u'Rules Text (This is just an example.)'
+        card1.flavor_text = u'"Flavor text"'
+        card1.printings = [(u'Time Spiral', u'Rare')]
+        card1.ruling_data = [(u'9/25/2006', u'Ruling Text'),
+                             (u'9/25/2006', u'Ruling Two')]
+        card2 = Card()
+        card2.name = u'Worldspine Wurm'
+        card2.mana_cost = u'8GGG'
+        card2.types = [u'Creature']
+        card2.subtypes = [u'Wurm']
+        card2.power = 15
+        card2.toughness = 15
+        card2.rules_text = u'Trample ; When Worldspine Wurm dies, put three 5/5 green Wurm creature tokens with trample onto the battlefield. ; When Worldspine Wurm is put into a graveyard from anywhere, shuffle it into its owner\'s library.'
+        card2.printings = [(u'Return to Ravnica', u'Mythic Rare')]
+
+        self.cards = [card1, card2]
+
+    def should_render_all_cards(self):
+        self.assertEqual(CardList(self.cards).render(),
+            [separator,
+             u'Name 2UUU',
+             u'Legendary Creature — Human Wizard',
+             u'Text: (3/4) Rules Text (This is just an example.)',
+             u'Time Spiral (Rare)',
+             separator,
+             u'Worldspine Wurm 8GGG',
+             u'Creature — Wurm',
+             u'Text: (15/15) Trample ; When Worldspine Wurm dies, put three 5/5 green',
+             u'Wurm creature tokens with trample onto the battlefield. ; When',
+             u'Worldspine Wurm is put into a graveyard from anywhere, shuffle it into',
+             u'its owner\'s library.',
+             u'Return to Ravnica (Mythic Rare)',
+             u'\n2 results found.'])
+
+    def should_correctly_singularize_results(self):
+        cardlist = CardList([Card()])
+        self.assertEqual(cardlist.num_results(),
+                         '\n1 result found.')
+
+    def should_correctly_pluralize_results(self):
+        cardlist = CardList([Card(), Card(), Card()])
+        self.assertEqual(cardlist.num_results(),
+                         '\n3 results found.')
+
+    def should_give_message_if_no_results(self):
+        cardlist = CardList([])
+        self.assertEqual(cardlist.render(),
+                         ['No results found.'])
+
+    def should_give_message_if_lots_of_results(self):
+        cardlist = CardList([Card()] * 25)
+        self.assertEqual(
+            cardlist.num_results(),
+            '\n25+ results found.  First 25 displayed, narrow search for more.')
+
+    def should_render_json_lists(self):
+        cardlist = CardList(self.cards, json=True)
+        cards = json.loads(''.join(cardlist.render()))
+        self.assertTrue('name' in cards[0])
+
+    def should_remove_empty_json_keys(self):
+        cardlist = CardList(self.cards, json=True)
+        cards = json.loads(''.join(cardlist.render()))
+        self.assertTrue('loyalty' not in cards[0])

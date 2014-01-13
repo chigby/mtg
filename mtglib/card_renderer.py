@@ -2,6 +2,8 @@ import re
 import textwrap
 import json
 
+from mtglib.constants import separator
+
 class Card(object):
 
     def __init__(self):
@@ -28,6 +30,46 @@ def remove_reminders(text):
 
         """
         return re.sub(r'(\A|\ )\(.*?\.\"?\)+', '', text)
+
+
+class CardList(object):
+
+    def __init__(self, cards, rulings=False, reminders=True, flavor=False,
+                 printings=True, json=False):
+        self.cards = cards
+        self.json = json
+        self.renderer = CardRenderer(Card(), rulings, reminders, flavor,
+                                     printings)
+
+    def render(self):
+        if self.json:
+            return self.render_json().split('\n')
+        elif len(self.cards) < 1:
+            return ['No results found.']
+        else:
+            return self.render_human()
+
+    def num_results(self):
+        if len(self.cards) >= 25:
+            return ('\n{0}+ results found.  First 25 displayed, narrow search '
+                    'for more.'.format(len(self.cards)))
+        return '\n{0} result{1} found.'.format(
+            len(self.cards), len(self.cards) != 1 and 's' or '')
+
+    def render_human(self):
+        lines = []
+        for card in self.cards:
+            lines.append(separator)
+            self.renderer.card = card
+            lines.extend(self.renderer.render())
+        lines.append(self.num_results())
+        return lines
+
+    def render_json(self):
+        card_dicts = [dict((k,v) for k,v in c.__dict__.items() if v) for c in
+                      self.cards]
+        return json.dumps(card_dicts, sort_keys=True, indent=4,
+                          separators=(',', ': '))
 
 
 class CardRenderer(object):
