@@ -82,7 +82,7 @@ class CardExtractor(object):
                         card.power, card.toughness = self.split_pow_tgh(number)
                     else:
                         card.loyalty = number
-                card.types = clean_dashes(card.types)
+                card.types, card.subtypes = self.types(card.types)
                 card.rules_text = self.box_field(c, 'div.rulesText p', ' ; ')
                 card.printings = self.printings(item, 'td.rightCol img')
             cards.append(card)
@@ -103,6 +103,16 @@ class CardExtractor(object):
         matches = re.match(r'\s*(\S+)\s*/\s*(\S+)\s*', element.text_content())
         if matches:
             return matches.groups()
+
+    def types(self, text):
+        typeline = clean_dashes(text)
+        if u'\u2014' in typeline:
+            typeline, sub = typeline.split(u'\u2014')
+            sub = sub.strip().split(' ')
+        else:
+            sub = []
+        typ = typeline.strip().split(' ')
+        return typ, sub
 
     def printings(self, element, css):
         printings = []
@@ -142,6 +152,8 @@ class CardExtractor(object):
                                                       'div.cardtextbox', '\n')
                 elif attr == 'mana_cost':
                     attributes[attr] = self.symbol_field(value, 'img')
+                elif attr == 'types':
+                    attributes['types'], attributes['subtypes'] = self.types(value.text_content().strip())
                 else:
                     attributes[attr] = value.text_content().strip()
 

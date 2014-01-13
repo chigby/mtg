@@ -44,7 +44,7 @@ class WhenExtractingSingleCard(object):
         eq_(self.card.mana_cost, '3G')
 
     def should_extract_types(self):
-        assert self.card.types == 'Sorcery'
+        eq_(self.card.types, ['Sorcery'])
 
     def should_extract_text(self):
         eq_(self.card.rules_text, u'Put two 1/1 green Squirrel creature '
@@ -112,7 +112,8 @@ class WhenExtractingSingleDualFacedPlaneswalker(object):
         eq_(self.cards[1].name, 'Garruk, the Veil-Cursed')
 
     def should_extact_type(self):
-        eq_(self.cards[0].types, u'Planeswalker — Garruk')
+        eq_(self.cards[0].types, ['Planeswalker'])
+        eq_(self.cards[0].subtypes, ['Garruk'])
 
     def should_extact_loyalty(self):
         eq_(self.cards[0].loyalty, '3')
@@ -135,7 +136,8 @@ class WhenExtractingManyCardsWithPlaneswalkers(object):
         eq_(self.sorin_markov.loyalty, u'4')
 
     def should_extract_type(self):
-        eq_(self.sorin_markov.types, u'Planeswalker — Sorin')
+        eq_(self.sorin_markov.types, ['Planeswalker'])
+        eq_(self.sorin_markov.subtypes, ['Sorin'])
 
 
 class WhenExtractingFractionalNumbers(object):
@@ -179,7 +181,8 @@ class WhenExtractingMultipleCards(object):
         eq_(self.cards[1].mana_cost, '4BB')
 
     def should_extract_types(self):
-        eq_(self.cards[0].types, u'Creature — Elf Shaman')
+        eq_(self.cards[0].types, ['Creature'])
+        eq_(self.cards[0].subtypes, ['Elf', 'Shaman'])
 
     def should_extract_power(self):
         eq_(self.cards[0].power, '1')
