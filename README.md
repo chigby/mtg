@@ -254,6 +254,8 @@ $ mtg --type='basic,!snow' --hidesets
 
 `--rulings`: Show the card rulings.  Note: this only works if there is exactly 1 search result.  I'm (slowly) working on fixing this.
 
+`--json`: Enable JSON-formatted output.  Useful if you want to pipe the output into another program or perform some other post-processing on the results of your card search.
+
 ### Contact
 
 I love hearing from users of this software.  Any comments, criticism, nit-picks, kudos, requests, or other feedback are welcome.  Feel free to open an issue or email me.
