@@ -72,8 +72,8 @@ def main():
                          '--exclude-other-colors or -xc must be used with --color')
         exclude_others.append('color')
     if args.exclude_other_types:
-        if not args.color:
-            parser.error('Cannot exclude other colors if no color given in search query.\n'
+        if not args.type:
+            parser.error('Cannot exclude other types if no type given in search query.\n'
                          '--exclude-other-types or -xt must be used with --type')
         exclude_others.append('type')
 
