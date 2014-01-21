@@ -174,7 +174,7 @@ class ConditionParser(object):
         return self.lexers.get(text_type)
 
     def get_conditions(self):
-        conditions = []
+        conditions = {}
         for name, value in self.data.items():
             if not is_string(value):
                 continue
@@ -184,7 +184,7 @@ class ConditionParser(object):
                 self.lexer = self.getlexer('freeform')
             fl = SearchFilter(name, keywords=[])
             fl.add_keywords(self.parse(value))
-            conditions.append(fl)
+            conditions[fl.name] = fl
         return conditions
 
     def expr(self, token_stream, token):
@@ -246,25 +246,27 @@ class SearchRequest(object):
 
     """
 
-    def __init__(self, options, special=False, exclude_others=[]):
+    def __init__(self, options, special=False, exclude_others=set()):
         self.options = options
         self.special = special
         self.exclude_others = exclude_others
 
     def get_filters(self):
         conditions = ConditionParser(self.options).get_conditions()
-        for fl in conditions:
-            if fl.name == 'type':
-                exclude = 'type' in self.exclude_others
-                type_words = [w for w in fl.keywords if w.term.lower() in TYPES]
-                subtype_words = [w for w in fl.keywords if w.term.lower() not in TYPES]
-                fl.keywords = type_words
-                fl.exclude_others = exclude
-                if subtype_words:
-                    conditions.append(SearchFilter('subtype', keywords=subtype_words, exclude_others=exclude))
-            if fl.name == 'color' and 'color' in self.exclude_others:
-                fl.exclude_others = True
-        return [c for c in conditions if c.keywords]
+        if conditions.get('type', False):
+            keywords = conditions['type'].keywords
+            exclude = 'type' in self.exclude_others
+            type_words = [w for w in keywords if w.term.lower() in TYPES]
+            subtype_words = [w for w in keywords if w.term.lower() not in TYPES]
+
+            del conditions['type']
+            if type_words:
+                conditions['type'] = SearchFilter('type', keywords=type_words, exclude_others=exclude)
+            if subtype_words:
+                conditions['subtype'] = SearchFilter('subtype', keywords=subtype_words, exclude_others=exclude)
+        if conditions.get('color', False) and 'color' in self.exclude_others:
+            conditions['color'].exclude_others = True
+        return conditions
 
     @property
     def special_fragment(self):
@@ -273,5 +275,5 @@ class SearchRequest(object):
     @property
     def url(self):
         return (base_url +
-                '&'.join([fl.url_fragment() for fl in self.get_filters()]) +
+                '&'.join([fl.url_fragment() for fl in self.get_filters().values()]) +
                 self.special_fragment)

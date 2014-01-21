@@ -24,13 +24,13 @@ class WhenParsingSimpleTextInput(unittest.TestCase):
         self.conditions = parser.get_conditions()
 
     def should_assign_filter_name(self):
-        assert self.conditions[0].name == 'text'
+        assert self.conditions['text'].name == 'text'
 
     def should_assume_boolean_and(self):
-        assert self.conditions[0].keywords[0].boolean == 'and'
+        assert self.conditions['text'].keywords[0].boolean == 'and'
 
     def should_assume_no_comparison(self):
-        assert self.conditions[0].keywords[0].comparison is None
+        assert self.conditions['text'].keywords[0].comparison is None
 
 
 class WhenParsingCommaSeparatedKeywords(unittest.TestCase):
@@ -42,17 +42,17 @@ class WhenParsingCommaSeparatedKeywords(unittest.TestCase):
     def should_consider_as_separate_keywords(self):
         exile = SearchKeyword('exile', 'and')
         graveyard = SearchKeyword('graveyard', 'and')
-        assert self.conditions[0].keywords == [exile, graveyard]
+        assert self.conditions['text'].keywords == [exile, graveyard]
 
     def should_understand_pipe_as_logical_or(self):
         conditions = ConditionParser({'text': 'destroy|exile'}).get_conditions()
-        assert conditions[0].keywords == [SearchKeyword('destroy', 'or'),
-                                          SearchKeyword('exile', 'or')]
+        assert conditions['text'].keywords == [SearchKeyword('destroy', 'or'),
+                                               SearchKeyword('exile', 'or')]
 
     def should_understand_bang_as_logical_not(self):
         conditions = ConditionParser({'text': 'return,!hand'}).get_conditions()
-        assert conditions[0].keywords == [SearchKeyword('return', 'and'),
-                                          SearchKeyword('hand', 'not')]
+        assert conditions['text'].keywords == [SearchKeyword('return', 'and'),
+                                               SearchKeyword('hand', 'not')]
 
 
 class WhenParsingNumbers(unittest.TestCase):
@@ -60,41 +60,41 @@ class WhenParsingNumbers(unittest.TestCase):
     def should_assume_equality_conditional(self):
         parser = ConditionParser({'cmc': '5'})
         cond = parser.get_conditions()
-        assert cond[0].name == 'cmc'
-        self.assertEqual(cond[0].keywords, [SearchKeyword(5, 'and', '=')])
+        assert cond['cmc'].name == 'cmc'
+        self.assertEqual(cond['cmc'].keywords, [SearchKeyword(5, 'and', '=')])
 
     def should_understand_less_than_conditional(self):
         parser = ConditionParser({'power': '<5'})
         cond = parser.get_conditions()
-        assert cond[0].name == 'power'
-        self.assertEqual(cond[0].keywords, [SearchKeyword(5, 'and', '<')])
+        assert cond['power'].name == 'power'
+        self.assertEqual(cond['power'].keywords, [SearchKeyword(5, 'and', '<')])
 
     def should_understand_multiple_conditionals(self):
         parser = ConditionParser({'power': '<5,>0'})
         cond = parser.get_conditions()
-        assert cond[0].name == 'power'
-        self.assertEqual(cond[0].keywords, [SearchKeyword(5, 'and', '<'),
-                                            SearchKeyword(0, 'and', '>')])
+        assert cond['power'].name == 'power'
+        self.assertEqual(cond['power'].keywords, [SearchKeyword(5, 'and', '<'),
+                                                  SearchKeyword(0, 'and', '>')])
 
     def should_understand_greater_than_conditional(self):
         parser = ConditionParser({'tough': '>3'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '>')])
+        self.assertEqual(cond['tough'].keywords, [SearchKeyword(3, 'and', '>')])
 
     def should_understand_equality_conditional(self):
         parser = ConditionParser({'tough': '=3'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '=')])
+        self.assertEqual(cond['tough'].keywords, [SearchKeyword(3, 'and', '=')])
 
     def should_understand_greater_than_or_equal_to(self):
         parser = ConditionParser({'tough': '>=3'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '>=')])
+        self.assertEqual(cond['tough'].keywords, [SearchKeyword(3, 'and', '>=')])
 
     def should_understand_less_than_or_equal_to(self):
         parser = ConditionParser({'tough': '<=3'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword(3, 'and', '<=')])
+        self.assertEqual(cond['tough'].keywords, [SearchKeyword(3, 'and', '<=')])
 
     def should_raise_error_for_non_numeric_input(self):
         parser = ConditionParser({'tough': 'f'})
@@ -106,22 +106,22 @@ class WhenParsingColors(unittest.TestCase):
     def should_assume_and_when_comma_separated(self):
         parser = ConditionParser({'color': 'w,u,g'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword('W', 'and'),
-                                            SearchKeyword('U', 'and'),
-                                            SearchKeyword('G', 'and')])
+        self.assertEqual(cond['color'].keywords, [SearchKeyword('W', 'and'),
+                                                  SearchKeyword('U', 'and'),
+                                                  SearchKeyword('G', 'and')])
 
     def should_assume_and_when_adjacent(self):
         parser = ConditionParser({'color': 'wbg'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword('W', 'and'),
-                                            SearchKeyword('B', 'and'),
-                                            SearchKeyword('G', 'and')])
+        self.assertEqual(cond['color'].keywords, [SearchKeyword('W', 'and'),
+                                                  SearchKeyword('B', 'and'),
+                                                  SearchKeyword('G', 'and')])
 
     def should_correctly_combine_not_and_and(self):
         parser = ConditionParser({'color': '!b,r'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword('B', 'not'),
-                                            SearchKeyword('R', 'and')])
+        self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'not'),
+                                                  SearchKeyword('R', 'and')])
 
     def should_raise_error_for_non_color_input(self):
         parser = ConditionParser({'color': 'd'})
@@ -132,7 +132,7 @@ class WhenParsingRarities(unittest.TestCase):
     def should_upcase_keyword(self):
         parser = ConditionParser({'rarity': 's'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword('S', 'and')])
+        self.assertEqual(cond['rarity'].keywords, [SearchKeyword('S', 'and')])
 
     def should_raise_error_if_invalid_rarity(self):
         parser = ConditionParser({'rarity': 'd'})
@@ -141,16 +141,16 @@ class WhenParsingRarities(unittest.TestCase):
     def should_accept_complete_words(self):
         parser = ConditionParser({'rarity': 'special'})
         cond = parser.get_conditions()
-        self.assertEqual(cond[0].keywords, [SearchKeyword('S', 'and')])
+        self.assertEqual(cond['rarity'].keywords, [SearchKeyword('S', 'and')])
 
 class WhenParsingPhrases(unittest.TestCase):
 
     def setUp(self):
         parser = ConditionParser({'text': 'first strike'})
-        self.keywords = parser.get_conditions()[0].keywords
+        self.keywords = parser.get_conditions()['text'].keywords
 
     def should_treat_space_separated_terms_as_single_phrase(self):
-        assert self.keywords.pop() == SearchKeyword('first strike', 'and')
+        assert self.keywords[0] == SearchKeyword('first strike', 'and')
 
 
 class WhenGettingUrl(unittest.TestCase):
@@ -231,14 +231,15 @@ class WhenMakingSearchRequest(unittest.TestCase):
         options = dict(type='dryad')
         request = SearchRequest(options)
         fl = SearchFilter('subtype', keywords=[SearchKeyword('dryad', 'and')])
-        self.assertEqual(request.get_filters(), [fl])
+        self.assertEqual(request.get_filters(), {'subtype': fl})
 
     def should_separate_type_and_subtypes(self):
         options = dict(type='land,dryad')
         request = SearchRequest(options)
         subt = SearchFilter('subtype', keywords=[SearchKeyword('dryad', 'and')])
         type_ = SearchFilter('type', keywords=[SearchKeyword('land', 'and')])
-        self.assertEqual(request.get_filters(), [type_, subt])
+        self.assertEqual(request.get_filters(), {'type':type_,
+                                                 'subtype': subt})
 
     def should_separate_many_types_with_not_modifier(self):
         options = dict(type='legendary,artifact,!equipment,!creature')
@@ -249,20 +250,21 @@ class WhenMakingSearchRequest(unittest.TestCase):
         subtype_keywords = [SearchKeyword('equipment', 'not')]
         subt = SearchFilter('subtype', keywords=subtype_keywords)
         type_ = SearchFilter('type', keywords=type_keywords)
-        self.assertEqual(request.get_filters(), [type_, subt])
+        self.assertEqual(request.get_filters(), {'type': type_,
+                                                 'subtype': subt})
 
     def should_allow_color_exclusion(self):
         request = SearchRequest({'color': 'wu'}, exclude_others=['color'])
-        self.assertTrue(request.get_filters()[0].exclude_others)
+        self.assertTrue(request.get_filters()['color'].exclude_others)
 
     def should_allow_type_exclusion(self):
         request = SearchRequest({'type': 'elemental'}, exclude_others=['type'])
-        self.assertTrue(request.get_filters()[0].exclude_others)
+        self.assertTrue(request.get_filters()['subtype'].exclude_others)
 
     def should_allow_type_and_subtype_exclusion(self):
         request = SearchRequest({'type': 'dryad,creature'}, exclude_others=['type'])
-        self.assertTrue(request.get_filters()[0].exclude_others)
-        self.assertTrue(request.get_filters()[1].exclude_others)
+        self.assertTrue(request.get_filters()['type'].exclude_others)
+        self.assertTrue(request.get_filters()['subtype'].exclude_others)
 
 
 class WhenMakingSpecialRequest(unittest.TestCase):
