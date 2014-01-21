@@ -3,9 +3,6 @@ base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
 
 random_url = 'http://gatherer.wizards.com/Pages/Card/Details.aspx?action=random'
 
-card_flags = ['text', 'color', 'subtype', 'type', 'set', 'cmc', 'power',
-              'tough', 'rarity', 'name', 'block']
-
 TYPES = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
          'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow',
          'sorcery', 'tribal', 'vanguard', 'world']

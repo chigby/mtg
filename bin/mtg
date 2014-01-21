@@ -12,7 +12,7 @@ from mtglib import __version__
 from mtglib.gatherer_request import SearchRequest
 from mtglib.card_extractor import CardExtractor
 from mtglib.card_renderer import CardList
-from mtglib.constants import card_flags, separator, readme, random_url
+from mtglib.constants import separator, readme, random_url
 
 
 def main():
