@@ -3,9 +3,9 @@ base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
 
 random_url = 'http://gatherer.wizards.com/Pages/Card/Details.aspx?action=random'
 
-TYPES = ['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
-         'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow',
-         'sorcery', 'tribal', 'vanguard', 'world']
+TYPES = set(['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
+             'legendary', 'ongoing', 'plane', 'planeswalker', 'scheme', 'snow',
+             'sorcery', 'tribal', 'vanguard', 'world'])
 
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 

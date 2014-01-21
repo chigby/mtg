@@ -65,17 +65,17 @@ def main():
             or args.random or args.format):
         parser.error('Require at least one search option or card name.  '
                      'Type "mtg --help" for more information.')
-    exclude_others = []
+    exclude_others = set()
     if args.exclude_other_colors:
         if not args.color:
             parser.error('Cannot exclude other colors if no color given in search query.\n'
                          '--exclude-other-colors or -xc must be used with --color')
-        exclude_others.append('color')
+        exclude_others.add('color')
     if args.exclude_other_types:
         if not args.type:
             parser.error('Cannot exclude other types if no type given in search query.\n'
                          '--exclude-other-types or -xt must be used with --type')
-        exclude_others.append('type')
+        exclude_others.add('type')
 
 
     if args.random:
