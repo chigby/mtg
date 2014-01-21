@@ -93,7 +93,7 @@ class CardExtractor(object):
 
         Correctly accounts for curly braces to denote fractions.
         E.g., '2/2' --> ['2', '2']
-        '3{1/2}/3{1/2}' --> ['3{1/2}', '3{1/2']
+        '3{1/2}/3{1/2}' --> ['3{1/2}', '3{1/2}']
 
         """
         return [n for n in re.split(r"/(?=([^{}]*{[^{}]*})*[^{}]*$)", text)
