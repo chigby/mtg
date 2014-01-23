@@ -154,6 +154,11 @@ class CardExtractor(object):
                     attributes[attr] = self.symbol_field(value, 'img')
                 elif attr == 'types':
                     attributes['types'], attributes['subtypes'] = self.types(value.text_content().strip())
+                elif attr == 'community_rating':
+                    attributes['community_rating'] = self.text_field(
+                        value, 'span.textRatingValue')
+                    attributes['community_votes'] = self.text_field(
+                        value, 'span.totalVotesValue')
                 else:
                     attributes[attr] = value.text_content().strip()
 

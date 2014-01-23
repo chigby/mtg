@@ -71,6 +71,11 @@ class WhenExtractingSingleCard(object):
     def should_extract_expansion(self):
         eq_(self.card.printings, [('Torment', 'Common')])
 
+    def should_extract_community_rating(self):
+        eq_(self.card.community_rating, '3.330')
+
+    def should_extract_community_votes(self):
+        eq_(self.card.community_votes, '44')
 
 class WhenExtractingSingleCreature(object):
 
