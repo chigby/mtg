@@ -54,7 +54,6 @@ class WhenExtractingSingleCard(object):
 
     def should_not_extract_rarity(self):
         assert not hasattr(self.card, 'rarity')
-        # eq_(self.card.rarity, 'Common')
 
     def should_extract_expansion(self):
         assert not hasattr(self.card, 'expansion')
