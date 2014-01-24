@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import textwrap
 
@@ -182,7 +183,8 @@ class Symbol(object):
                          'Blue': 'U',
                          'Snow': 'S',
                          'Variable Colorless': 'X',
-                         'Two': '2'}
+                         'Two': '2',
+                         'Infinite': u'∞',
 
     @property
     def short(self):
@@ -216,6 +218,6 @@ class Symbol(object):
 
     @property
     def textbox(self):
-        base = '{{{0}}}'.format(self.short)
+        base = u'{{{0}}}'.format(self.short)
         if '/' in base: return base.lower()
         else: return base

@@ -282,3 +282,6 @@ class DescribeSymbols(object):
 
     def should_format_hybrid_colorless_mana(self):
         eq_(Symbol('Two or White').short, '(2/W)')
+
+    def should_format_infinite(self):
+        eq_(Symbol('Infinite').textbox, u'{∞}')
