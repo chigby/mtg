@@ -180,7 +180,7 @@ class Symbol(object):
         self.text = text
         self.specials = {'Untap': 'Q',
                          'Blue': 'U',
-                         'Snow': 'S}i',
+                         'Snow': 'S',
                          'Variable Colorless': 'X',
                          'Two': '2'}
 

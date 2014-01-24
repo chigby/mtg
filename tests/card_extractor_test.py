@@ -275,7 +275,7 @@ class DescribeSymbols(object):
         eq_(Symbol('12').short, '12')
 
     def should_format_show_mana(self):
-        eq_(Symbol('Snow').textbox, '{S}i}')
+        eq_(Symbol('Snow').textbox, '{S}')
 
     def should_format_x(self):
         eq_(Symbol('Variable Colorless').short, 'X')
