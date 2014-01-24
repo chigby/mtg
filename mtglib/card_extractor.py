@@ -185,6 +185,7 @@ class Symbol(object):
                          'Variable Colorless': 'X',
                          'Two': '2',
                          'Infinite': u'∞',
+                         '500': '(Half W)'}
 
     @property
     def short(self):
@@ -196,6 +197,8 @@ class Symbol(object):
             return self.phyrexian
         elif self.text.isdigit():
             return self.text
+        elif self.is_half:
+            return self.half
         return self.text[:1]
 
     @property
@@ -212,9 +215,17 @@ class Symbol(object):
         return ' or ' in self.text
 
     @property
+    def is_half(self):
+        return 'Half' in self.text
+
+    @property
     def hybrid(self):
         return '({0})'.format('/'.join(
                 Symbol(l).short for l in self.text.split(' or ')))
+
+    @property
+    def half(self):
+        return 'Half {0}'.format(Symbol(self.text.split(' ')[-1]).short)
 
     @property
     def textbox(self):

@@ -283,5 +283,13 @@ class DescribeSymbols(object):
     def should_format_hybrid_colorless_mana(self):
         eq_(Symbol('Two or White').short, '(2/W)')
 
+    def should_format_half_mana(self):
+        eq_(Symbol('Half a Red').textbox, '{Half R}')
+
     def should_format_infinite(self):
         eq_(Symbol('Infinite').textbox, u'{∞}')
+
+    def should_format_little_girl_mana_cost(self):
+        # As far as I can tell, this is a bug in Gatherer affecting
+        # one card: Little Girl.
+        eq_(Symbol('500').short, '(Half W)')
