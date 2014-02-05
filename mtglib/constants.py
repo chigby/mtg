@@ -1,5 +1,5 @@
 base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-            '?output=standard&action=advanced&')
+            '?output=spoiler&method=text&action=advanced&')
 
 random_url = 'http://gatherer.wizards.com/Pages/Card/Details.aspx?action=random'
 
@@ -8,6 +8,8 @@ TYPES = set(['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
              'sorcery', 'tribal', 'vanguard', 'world'])
 
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
+
+RARITY_NAMES = ['Mythic Rare', 'Common', 'Uncommon', 'Rare']
 
 RARITIES = {
     'c': 'C',

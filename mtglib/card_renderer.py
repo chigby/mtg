@@ -50,9 +50,6 @@ class CardList(object):
             return self.render_human()
 
     def num_results(self):
-        if len(self.cards) >= 25:
-            return ('\n{0}+ results found.  First 25 displayed, narrow search '
-                    'for more.'.format(len(self.cards)))
         return '\n{0} result{1} found.'.format(
             len(self.cards), len(self.cards) != 1 and 's' or '')
 
