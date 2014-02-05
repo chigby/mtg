@@ -302,12 +302,6 @@ class WhenRenderingCardLists(TestCase):
         self.assertEqual(cardlist.render(),
                          ['No results found.'])
 
-    def should_give_message_if_lots_of_results(self):
-        cardlist = CardList([Card()] * 25)
-        self.assertEqual(
-            cardlist.num_results(),
-            '\n25+ results found.  First 25 displayed, narrow search for more.')
-
     def should_render_json_lists(self):
         cardlist = CardList(self.cards, json=True)
         cards = json.loads(''.join(cardlist.render()))
