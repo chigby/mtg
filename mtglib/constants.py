@@ -9,6 +9,8 @@ TYPES = set(['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
 
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
+RARITY_NAMES = ['Mythic Rare', 'Common', 'Uncommon', 'Rare']
+
 RARITIES = {
     'c': 'C',
     'common': 'C',

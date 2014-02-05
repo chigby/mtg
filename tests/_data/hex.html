@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8" ?>
 
 
@@ -21,14 +20,34 @@
     pageTracker._trackPageview();
     } catch(err) {}
     </script>
-<link type="text/css" rel="stylesheet" media="screen" href="../../Styles/Styles.css" /><link href="/WebResource.axd?d=GRnNg3t4K46DgrIFhLf_9NAuUGNb9hPC5E3VRvvs03EEanuwjppIYb1ygZbulkgS4u5w9pKS9Yy4Yj6i6DYt9MPjPepf71AnWzo4xZTSDC41&amp;amp;t=634568784731759463" rel="icon" type="image/ico" /></head>
+<link type="text/css" rel="stylesheet" media="screen" href="../../Styles/Styles.css" /><link href="/WebResource.axd?d=or7PpBsqDI3hlaEEThlmVDRzePzSrFyHvCSdTElIIm8jbPXP5PySeVoGjKlN7Df_R8Yrdfm8DAtAevqXp4wu4Fffv7Dmtd4mn4Xjxa7bf43SyevX1NnB9KBh--rFBOmlJp3lTErOKCK5IJhfE-mweMernyA1&amp;amp;t=635161698994527989" rel="icon" type="image/ico" /></head>
 <body>
 
 
-    <form method="post" action="Default.aspx?name=+%5bhex%5d" id="aspnetForm">
+    <form method="post" action="Default.aspx?output=spoiler&amp;method=text&amp;name=+%5bhex%5d" id="aspnetForm">
 <div>
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
 <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEyMjI5ODM3NzhkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYDBTtjdGwwMCRjdGwwMCRjdGwwMCRNYWluQ29udGVudCRTZWFyY2hDb250cm9scyRTZWFyY2hDYXJkTmFtZQU8Y3RsMDAkY3RsMDAkY3RsMDAkTWFpbkNvbnRlbnQkU2VhcmNoQ29udHJvbHMkU2VhcmNoQ2FyZFR5cGVzBTtjdGwwMCRjdGwwMCRjdGwwMCRNYWluQ29udGVudCRTZWFyY2hDb250cm9scyRTZWFyY2hDYXJkVGV4dD0NS4S5r9zRScS2OJsvcAmvOCzV" />
 </div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=0pN9zG2E2AfP6GvjnZa0AilHYhYJFthuTCfFLE-_wX3h8YY80buTRyH-ZVuoDc6QmN3kXIxYDZjrLQ37MECWKoTKFcs1&amp;t=635046246587129082" type="text/javascript"></script>
 
 
 <script src="../../Scripts/Prototype.js" type="text/javascript"></script>
@@ -73,14 +92,17 @@ ClientIDs.CardSearchBoxParent = 'ctl00_ctl00_ctl00_MainContent_SearchControls_Ca
 ClientIDs.CardSearchBox = 'ctl00_ctl00_ctl00_MainContent_SearchControls_CardSearchBoxParent_CardSearchBox';
 ClientIDs.searchSubmitButton = 'ctl00_ctl00_ctl00_MainContent_SearchControls_searchSubmitButton';
 ClientIDs.SearchBoxResults = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchBoxResults';
-ClientIDs.SearchBoxResultsTitle = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchBoxResultsTitle';
 ClientIDs.SearchBoxResultsContent = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchBoxResultsContent';
 ClientIDs.AllResultsLink = 'ctl00_ctl00_ctl00_MainContent_SearchControls_AllResultsLink';
 ClientIDs.SearchSettings = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchSettings';
+ClientIDs.Label1 = 'ctl00_ctl00_ctl00_MainContent_SearchControls_Label1';
 ClientIDs.searchControlsContainer = 'ctl00_ctl00_ctl00_MainContent_SearchControls_searchControlsContainer';
 ClientIDs.SearchCardName = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchCardName';
+ClientIDs.Label2 = 'ctl00_ctl00_ctl00_MainContent_SearchControls_Label2';
 ClientIDs.SearchCardTypes = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchCardTypes';
+ClientIDs.Label3 = 'ctl00_ctl00_ctl00_MainContent_SearchControls_Label3';
 ClientIDs.SearchCardText = 'ctl00_ctl00_ctl00_MainContent_SearchControls_SearchCardText';
+ClientIDs.Label4 = 'ctl00_ctl00_ctl00_MainContent_SearchControls_Label4';
 ClientIDs.SubContent = 'ctl00_ctl00_ctl00_MainContent_SubContent';
 ClientIDs.SubContentHeader = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader';
 ClientIDs.searchTermDisplay = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay';
@@ -93,10 +115,12 @@ ClientIDs.filterSubmit = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_pr
 ClientIDs.ajaxIndicatorImage = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_ajaxIndicatorImage';
 ClientIDs.extraBreaks = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_extraBreaks';
 ClientIDs.searchResultsContainer = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_searchResultsContainer';
+ClientIDs.Literal1 = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_Literal1';
 ClientIDs.sortDisplay = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sortDisplay';
 ClientIDs.searchControls = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_searchControls';
 ClientIDs.sorter = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter';
 ClientIDs.currentSort = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_currentSort';
+ClientIDs.Literal2 = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_Literal2';
 ClientIDs.sortBy = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_sortBy';
 ClientIDs.sortOrder = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_sortOrder';
 ClientIDs.addSort = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_addSort';
@@ -107,20 +131,20 @@ ClientIDs.switchView = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl0
 ClientIDs.switchTextChecklist = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchTextChecklist';
 ClientIDs.switchVisualSpoiler = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchVisualSpoiler';
 ClientIDs.switchTextSpoiler = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchTextSpoiler';
-ClientIDs.Nicknames = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_Nicknames';
-ClientIDs.Nickname = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_Nickname';
-ClientIDs.listRepeater = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater';
-ClientIDs.cardImageLink = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImageLink';
-ClientIDs.cardImage = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImage';
-ClientIDs.cardTitle = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardTitle';
-ClientIDs.cardMana = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardMana';
-ClientIDs.cardCMC = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardCMC';
-ClientIDs.cardTypes = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardTypes';
-ClientIDs.cardBottomNumbers = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardBottomNumbers';
-ClientIDs.cardText = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardText';
-ClientIDs.cardSetCurrent = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardSetCurrent';
-ClientIDs.otherSetSection = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_otherSetSection';
-ClientIDs.cardSets = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardSets';
+ClientIDs.cardEntries = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries';
+ClientIDs.cardLink = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_cardLink';
+ClientIDs.name = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_name';
+ClientIDs.costRow = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_costRow';
+ClientIDs.cost = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_cost';
+ClientIDs.colorIndicatorRow = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_colorIndicatorRow';
+ClientIDs.colorIndicator = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_colorIndicator';
+ClientIDs.type = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_type';
+ClientIDs.ptLabel = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_ptLabel';
+ClientIDs.pt = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_pt';
+ClientIDs.rules = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_rules';
+ClientIDs.setRarity = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_setRarity';
+ClientIDs.Nicknames = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_Nicknames';
+ClientIDs.Nickname = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_Nickname';
 ClientIDs.DidYouMean = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_DidYouMean';
 ClientIDs.DidYouMeanText = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_DidYouMeanText';
 ClientIDs.DidYouMeanCandidates = 'ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_DidYouMeanCandidates';
@@ -141,20 +165,21 @@ Event.observe(window, 'load', RetrieveCurrentSearchConditions);
 //]]>
 </script>
 
+<script src="/WebResource.axd?d=dvIBXUpcJFgWihJiquKUTKBo6v2RN1IuGxgb6gi81V0vTC2VFdZU4PaN4DlN6Bkg6nZYmgYMgtOfclRGDRygofnlW001&amp;t=635046246587129082" type="text/javascript"></script>
 <div>
 
+	<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+	<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
 	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWCgK9gMDHDAKw+7DyCgKKqPSlCQLIiJiWCgLgiMDeAwKBjNExAu3S+MYMAp6/k60OAtqnqaUNAv+705EBvakLYBxjDyqD+LyQd+/nJkkfl9g=" />
 </div>
     <div style="width: 100%; height: 1px;">
     </div>
     <div id="ctl00_ctl00_ctl00_MainContainer" class="mainContainer">
         <div class="leftContainer">
-            <div id="ctl00_ctl00_ctl00_TopBannerAdvertisementCMS" class="topBanner"><body docname="mtg_gatherer_banner_advertisement" doclang="en" xmlPath="" useDate="11/20/2011">
-  <p>
-    <a href="http://www.wizards.com/Magic/Novels/Product.aspx?x=mtg/novels/product/pathoftheplaneswalker2">
-      <img src="http://media.wizards.com/images/magic/daily/ads/pathII_728.jpg" />
-    </a>
-  </p>
+            <div id="ctl00_ctl00_ctl00_TopBannerAdvertisementCMS" class="topBanner"><body docname="mtg_gatherer_banner_advertisement" doclang="en" xmlPath="" useDate="2/5/2014">
+  <a href="http://www.wizards.com/Magic/tcg/events.aspx?x=events/magic/fnm" target="_blank">
+    <img src="http://media.wizards.com/images/magic/daily/ads/FNM2013/EN_FNM_M14_Banner_12.jpg" />
+  </a>
 </body></div>
             <div class="background">
                 <div class="top">
@@ -205,13 +230,13 @@ Event.observe(window, 'load', RetrieveCurrentSearchConditions);
         <div class="smallGreyBorder">
             <b class="ct"><b></b></b>
             <div class="simpleRoundedBoxTitleGrey">
-                <span id="ctl00_ctl00_ctl00_MainContent_SearchControls_SearchBoxResultsTitle" class="boldtitle">Results </span>
+                Results
             </div>
             <div id="ctl00_ctl00_ctl00_MainContent_SearchControls_SearchBoxResultsContent" style="background-color: #b7b7b7;">
             </div>
             <div class="simpleRoundedBoxFooterGrey">
                 <span><a href="javascript:void(0);" id="ctl00_ctl00_ctl00_MainContent_SearchControls_AllResultsLink" class="autoCompleteAllResults">
-                    All Results</a></span></div>
+                    <span>All Results</span></a></span></div>
             <b class="cc"><b></b></b>
         </div>
     </div>
@@ -220,18 +245,18 @@ Event.observe(window, 'load', RetrieveCurrentSearchConditions);
     <div id="ctl00_ctl00_ctl00_MainContent_SearchControls_SearchSettings" class="searchsettingsdisplaytop">
         <div class="searchsettings">
             <a href="javascript:void(0);" onclick="SaveVisibleArea(event, this, ClientIDs.searchControlsContainer, 'searchControlsContainer', false); return ToggleSearchSettings(event, this);"
-                class="expandedNode"><b>using...</b></a>
+                class="expandedNode"><b><span id="ctl00_ctl00_ctl00_MainContent_SearchControls_Label1">using...</span></b></a>
             <div id="ctl00_ctl00_ctl00_MainContent_SearchControls_searchControlsContainer">
             <ul>
                 <li>
                     <input name="ctl00$ctl00$ctl00$MainContent$SearchControls$SearchCardName" type="checkbox" id="ctl00_ctl00_ctl00_MainContent_SearchControls_SearchCardName" checked="checked" onclick="UpdateSimpleSearchFields" />
-                    Name</li>
+                    <span id="ctl00_ctl00_ctl00_MainContent_SearchControls_Label2">Name</span></li>
                 <li>
                     <input name="ctl00$ctl00$ctl00$MainContent$SearchControls$SearchCardTypes" type="checkbox" id="ctl00_ctl00_ctl00_MainContent_SearchControls_SearchCardTypes" onclick="UpdateSimpleSearchFields" />
-                    Types</li>
+                    <span id="ctl00_ctl00_ctl00_MainContent_SearchControls_Label3">Types</span></li>
                 <li>
                     <input name="ctl00$ctl00$ctl00$MainContent$SearchControls$SearchCardText" type="checkbox" id="ctl00_ctl00_ctl00_MainContent_SearchControls_SearchCardText" onclick="UpdateSimpleSearchFields" />
-                    Text</li>
+                    <span id="ctl00_ctl00_ctl00_MainContent_SearchControls_Label4">Text</span></li>
             </ul>
             </div>
         </div>
@@ -247,14 +272,14 @@ Event.observe(window, 'load', RetrieveCurrentSearchConditions);
             <div class="simpleRoundedBoxTitleGreyTall">
                 <div class="contentTitle">
 
-Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay"><i>+hex</i>  (9)</span>
+Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searchTermDisplay"><i>+hex</i>  (10)</span>
 
                 </div>
 
 
                 <div class="pagingcontrols">
                     <div id="ctl00_ctl00_ctl00_MainContent_SubContent_topPagingControlsContainer" class="paging">
-                    <span style="visibility:hidden;">&nbsp;&gt;</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -262,17 +287,17 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
 <div class="filterList">
 <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_prevSearchContainer" class="smallGreyBorderBottom">
     <a class="expandedNode" href="javascript:void(0);" onclick="SaveVisibleArea(event, this, 'filterControls', 'filterControls', false); return ToggleFilterOptions(event, this);">
-    <b>Search Criteria</b>
+    <b><span>Search Criteria</span></b>
     </a>
     <div id="filterControls">
         <input name="ctl00$ctl00$ctl00$MainContent$SubContent$SubContent$previousSearch$encodedSerializedParameters" type="hidden" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_encodedSerializedParameters" />
 
         <div id="ajaxIndicator" class="indicator" style="display: none;">
             <img id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_ajaxIndicatorImage" src="../../Images/ajax_indicator.gif" alt="Updating..." style="border-width:0px;" />
-            Updating search parameters...
+            <span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_Label2">Updating search parameters...</span>
         </div>
 
-        <div id="displayFilters" class="filters">None yet.</div>
+        <div id="displayFilters" class="filters"><span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_previousSearch_Label1">None yet.</span></div>
     </div>
 </div>
 </div>
@@ -287,7 +312,7 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
 
 
 <div class="sorter">
-    <span class="sortField">Name (asc) <span><a class="remove" href="/Pages/Search/Default.aspx?name=+[hex]&amp;removesortkey=abc">x</a></span></span>
+    <span class="sortField">Name (asc) <span><a class="remove" href="/Pages/Search/Default.aspx?output=spoiler&amp;method=text&amp;name=+%5bhex%5d&amp;removesortkey=abc">x</a></span></span>
     <ul class="opts">
         <li>
             Additional Sort:
@@ -312,12 +337,12 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
         </li>
     </ul>
     <br />
-    <a href="/Pages/Advanced.aspx?action=advanced&name=+[hex]" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_loadPreviousLink" class="refineSearchLink">Refine Search</a>
+    <a href="/Pages/Advanced.aspx?action=advanced&name=+[hex]&output=spoiler&method=text" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_sorter_loadPreviousLink" class="refineSearchLink">Refine Search</a>
 </div>
 
 
 <div class="switcher">
-    <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchStandard" href="Default.aspx?output=standard&amp;name=+%5bhex%5d" style="text-decoration:underline;">Switch to Standard</a>
+    <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchStandard" href="Default.aspx?output=standard&amp;name=+%5bhex%5d">Switch to Standard</a>
 
     <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchView" href="Default.aspx?output=compact&amp;name=+%5bhex%5d">Switch to Compact</a>
 
@@ -325,7 +350,7 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
 
     <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchVisualSpoiler" href="Default.aspx?output=spoiler&amp;method=visual&amp;name=+%5bhex%5d">Switch to Visual Spoiler</a>
 
-    <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchTextSpoiler" href="Default.aspx?output=spoiler&amp;method=text&amp;name=+%5bhex%5d">Switch to Text Spoiler</a>
+    <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_switcher_switchTextSpoiler" href="Default.aspx?output=spoiler&amp;method=text&amp;name=+%5bhex%5d" style="text-decoration:underline;">Switch to Text Spoiler</a>
 </div>
 
         </div>
@@ -334,337 +359,575 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
         <b class="bb"><b></b></b>
     </div>
     <!-- End Options Container -->
-
-    <table class="cardItemTable" cellpadding="0" cellspacing="0">
-        <tr><td>
-
-                <table>
-                <tr class="cardItem evenItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=141958" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=141958&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardImage" width="95" height="132" alt="Elvish Hexhunter" border="0" />
-                        </a>
-                        <div class="clear"></div>
-                    </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=141958">Elvish Hexhunter</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=GW&amp;type=symbol" alt="Green or White" align="absbottom" /></span> (<span class="convertedManaCost">1</span>)
-                            <br />
-                            <span class="typeLine">
-                                Creature  — Elf Shaman
-                                (1/1)</span>
-                            <br />
-                            <div class="rulesText">
-                                <p><img src="/Handlers/Image.ashx?size=small&amp;name=GW&amp;type=symbol" alt="Green or White" align="absbottom" />, <img src="/Handlers/Image.ashx?size=small&amp;name=tap&amp;type=symbol" alt="Tap" align="absbottom" />, Sacrifice Elvish Hexhunter: Destroy target enchantment.</p></div>
-                        </div>
-                    </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl00_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=141958"><img title="Shadowmoor (Common)" src="../../Handlers/Image.ashx?type=symbol&amp;set=SHM&amp;size=small&amp;rarity=C" alt="Shadowmoor (Common)" style="border-width:0px;" /></a>
 </div>
-                        </div>
+<div class="textspoiler">
+    <table>
+
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=370634">Artificer's Hex</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl00_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        B
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Enchantment  — Aura
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
 
                     </td>
                 </tr>
-                </table>
-
-                <table>
-                <tr class="cardItem oddItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=247382" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=247382&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardImage" width="95" height="132" alt="Hex" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Rules Text:
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=247382">Hex</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=4&amp;type=symbol" alt="4" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /></span> (<span class="convertedManaCost">6</span>)
-                            <br />
-                            <span class="typeLine">
-                                Sorcery
-                                </span>
-                            <div class="rulesText">
-                                <p>Destroy six target creatures.</p></div>
-                        </div>
-                    </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=247382"><img title="Magic: The Gathering-Commander (Rare)" src="../../Handlers/Image.ashx?type=symbol&amp;set=CMD&amp;size=small&amp;rarity=R" alt="Magic: The Gathering-Commander (Rare)" style="border-width:0px;" /></a>
-</div>
-                        </div>
-                        <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_otherSetSection" class="otherSetSection">
-                            <div>
-                                <i>Other Versions</i></div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl01_cardSets" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=89059"><img title="Ravnica: City of Guilds (Rare)" src="../../Handlers/Image.ashx?type=symbol&amp;set=RAV&amp;size=small&amp;rarity=R" alt="Ravnica: City of Guilds (Rare)" style="border-width:0px;" /></a>
-</div>
-                        </div>
+                    <td>
+                        Enchant Equipment<br />
+At the beginning of your upkeep, if enchanted Equipment is attached to a creature, destroy that creature.
                     </td>
                 </tr>
-                </table>
-
-                <table>
-                <tr class="cardItem evenItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=218008" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl02_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=218008&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl02_cardImage" width="95" height="132" alt="Hex Parasite" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Set/Rarity:
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl02_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=218008">Hex Parasite</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=1&amp;type=symbol" alt="1" align="absbottom" /></span> (<span class="convertedManaCost">1</span>)
-                            <br />
-                            <span class="typeLine">
-                                Artifact Creature  — Insect
-                                (1/1)</span>
-                            <br />
-                            <div class="rulesText">
-                                <p><img src="/Handlers/Image.ashx?size=small&amp;name=X&amp;type=symbol" alt="Variable Colorless" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=BP&amp;type=symbol" alt="Phyrexian Black" align="absbottom" />: Remove up to X counters from target permanent. For each counter removed this way, Hex Parasite gets +1/+0 until end of turn. <i>(<img src="/Handlers/Image.ashx?size=small&amp;name=BP&amp;type=symbol" alt="Phyrexian Black" align="absbottom" /> can be paid with either <img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /> or 2 life.)</i></p></div>
-                        </div>
-                    </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl02_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=218008"><img title="New Phyrexia (Rare)" src="../../Handlers/Image.ashx?type=symbol&amp;set=NPH&amp;size=small&amp;rarity=R" alt="New Phyrexia (Rare)" style="border-width:0px;" /></a>
-</div>
-                        </div>
-
+                    <td>
+                        Magic 2014 Core Set Uncommon
                     </td>
                 </tr>
-                </table>
-
-                <table>
-                <tr class="cardItem oddItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=213807" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl03_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=213807&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl03_cardImage" width="95" height="132" alt="Hexplate Golem" border="0" />
-                        </a>
-                        <div class="clear"></div>
-                    </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl03_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=213807">Hexplate Golem</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=7&amp;type=symbol" alt="7" align="absbottom" /></span> (<span class="convertedManaCost">7</span>)
-                            <br />
-                            <span class="typeLine">
-                                Artifact Creature  — Golem
-                                (5/7)</span>
-                            <div class="rulesText">
-                                <p></p></div>
-                        </div>
-                    </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl03_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=213807"><img title="Mirrodin Besieged (Common)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MBS&amp;size=small&amp;rarity=C" alt="Mirrodin Besieged (Common)" style="border-width:0px;" /></a>
-</div>
-                        </div>
-
+                <tr>
+                    <td colspan="2">
+                        <br />
                     </td>
                 </tr>
-                </table>
 
-                <table>
-                <tr class="cardItem evenItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=3299" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl04_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=3299&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl04_cardImage" width="95" height="132" alt="Kaervek's Hex" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Name
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl04_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=3299">Kaervek's Hex</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=3&amp;type=symbol" alt="3" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /></span> (<span class="convertedManaCost">4</span>)
-                            <br />
-                            <span class="typeLine">
-                                Sorcery
-                                </span>
-                            <br />
-                            <div class="rulesText">
-                                <p>Kaervek's Hex deals 1 damage to each nonblack creature and an additional 1 damage to each green creature.</p></div>
-                        </div>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl01_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=141958">Elvish Hexhunter</a>
                     </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl04_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=3299"><img title="Mirage (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=MI&amp;size=small&amp;rarity=U" alt="Mirage (Uncommon)" style="border-width:0px;" /></a>
-</div>
-                        </div>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl01_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        (G/W)
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Creature  — Elf Shaman
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+                        (1/1)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        {(g/w)}, {T}, Sacrifice Elvish Hexhunter: Destroy target enchantment.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Shadowmoor Common
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl02_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=247382">Hex</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl02_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        4BB
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Sorcery
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
 
                     </td>
                 </tr>
-                </table>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        Destroy six target creatures.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Magic: The Gathering-Commander Rare, Ravnica: City of Guilds Rare
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
 
-                <table>
-                <tr class="cardItem oddItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=2470" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl05_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=2470&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl05_cardImage" width="95" height="132" alt="Lim-Dûl's Hex" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Name
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl05_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=2470">Lim-Dûl's Hex</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=1&amp;type=symbol" alt="1" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /></span> (<span class="convertedManaCost">2</span>)
-                            <br />
-                            <span class="typeLine">
-                                Enchantment
-                                </span>
-                            <div class="rulesText">
-                                <p>At the beginning of your upkeep, for each player, Lim-Dûl's Hex deals 1 damage to that player unless he or she pays <img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /> or <img src="/Handlers/Image.ashx?size=small&amp;name=3&amp;type=symbol" alt="3" align="absbottom" />.</p></div>
-                        </div>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl03_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=218008">Hex Parasite</a>
                     </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl05_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=2470"><img title="Ice Age (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=IA&amp;size=small&amp;rarity=U" alt="Ice Age (Uncommon)" style="border-width:0px;" /></a>
-</div>
-                        </div>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl03_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        1
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Artifact Creature  — Insect
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+                        (1/1)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        {X}{(b/p)}: Remove up to X counters from target permanent. For each counter removed this way, Hex Parasite gets +1/+0 until end of turn. ({(b/p)} can be paid with either {B} or 2 life.)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        New Phyrexia Rare
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl04_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=213807">Hexplate Golem</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl04_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        7
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Artifact Creature  — Golem
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+                        (5/7)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
 
                     </td>
                 </tr>
-                </table>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Mirrodin Besieged Common
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
 
-                <table>
-                <tr class="cardItem evenItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=195307" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl06_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=195307&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl06_cardImage" width="95" height="132" alt="Tomb Hex" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Name
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl06_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=195307">Tomb Hex</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=2&amp;type=symbol" alt="2" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /></span> (<span class="convertedManaCost">3</span>)
-                            <br />
-                            <span class="typeLine">
-                                Instant
-                                </span>
-                            <br />
-                            <div class="rulesText">
-                                <p>Target creature gets -2/-2 until end of turn.</p><p>Landfall — If you had a land enter the battlefield under your control this turn, that creature gets -4/-4 until end of turn instead.</p></div>
-                        </div>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl05_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=3299">Kaervek's Hex</a>
                     </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl06_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=195307"><img title="Worldwake (Common)" src="../../Handlers/Image.ashx?type=symbol&amp;set=WWK&amp;size=small&amp;rarity=C" alt="Worldwake (Common)" style="border-width:0px;" /></a>
-</div>
-                        </div>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl05_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        3B
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Sorcery
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
 
                     </td>
                 </tr>
-                </table>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        Kaervek's Hex deals 1 damage to each nonblack creature and an additional 1 damage to each green creature.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Mirage Uncommon
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
 
-                <table>
-                <tr class="cardItem oddItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=192232" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl07_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=192232&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl07_cardImage" width="95" height="132" alt="Vampire Hexmage" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Name
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl07_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=192232">Vampire Hexmage</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /><img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /></span> (<span class="convertedManaCost">2</span>)
-                            <br />
-                            <span class="typeLine">
-                                Creature  — Vampire Shaman
-                                (2/1)</span>
-                            <div class="rulesText">
-                                <p>First strike</p><p>Sacrifice Vampire Hexmage: Remove all counters from target permanent.</p></div>
-                        </div>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl06_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=2470">Lim-Dûl's Hex</a>
                     </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl07_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=192232"><img title="Zendikar (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=ZEN&amp;size=small&amp;rarity=U" alt="Zendikar (Uncommon)" style="border-width:0px;" /></a>
-</div>
-                        </div>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl06_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        1B
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Enchantment
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
 
                     </td>
                 </tr>
-                </table>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        At the beginning of your upkeep, for each player, Lim-Dûl's Hex deals 1 damage to that player unless he or she pays {B} or {3}.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Ice Age Uncommon
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
 
-                <table>
-                <tr class="cardItem evenItem">
-                    <td class="leftCol">
-                        <div class="clear"></div>
-                        <a href="../Card/Details.aspx?multiverseid=41150" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl08_cardImageLink" onclick="return CardLinkAction(event, this, 'SameWindow');">
-                            <img src="../../Handlers/Image.ashx?multiverseid=41150&amp;type=card" id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl08_cardImage" width="95" height="132" alt="Withering Hex" border="0" />
-                        </a>
-                        <div class="clear"></div>
+                <tr>
+                    <td>
+                        Name
                     </td>
-                    <td class="middleCol">
-                        <div class="clear"></div>
-                        <div class="cardInfo">
-                            <span class="cardTitle">
-                                <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl08_cardTitle" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=41150">Withering Hex</a></span> <span class="manaCost">
-                                    <img src="/Handlers/Image.ashx?size=small&amp;name=B&amp;type=symbol" alt="Black" align="absbottom" /></span> (<span class="convertedManaCost">1</span>)
-                            <br />
-                            <span class="typeLine">
-                                Enchantment  — Aura
-                                </span>
-                            <br />
-                            <div class="rulesText">
-                                <p>Enchant creature</p><p>Whenever a player cycles a card, put a plague counter on Withering Hex.</p><p>Enchanted creature gets -1/-1 for each plague counter on Withering Hex.</p></div>
-                        </div>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl07_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=195307">Tomb Hex</a>
                     </td>
-                    <td class="rightCol setVersions">
-                        <div class="clear"></div>
-                        <div>
-                            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_listRepeater_ctl08_cardSetCurrent" class="rightCol">
-	<a onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=41150"><img title="Onslaught (Uncommon)" src="../../Handlers/Image.ashx?type=symbol&amp;set=ONS&amp;size=small&amp;rarity=U" alt="Onslaught (Uncommon)" style="border-width:0px;" /></a>
-</div>
-                        </div>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl07_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        2B
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Instant
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
 
                     </td>
                 </tr>
-                </table>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        Target creature gets -2/-2 until end of turn.<br />
+Landfall — If you had a land enter the battlefield under your control this turn, that creature gets -4/-4 until end of turn instead.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Worldwake Common
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
 
-        </td></tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl08_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=192232">Vampire Hexmage</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl08_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        BB
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Creature  — Vampire Shaman
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+                        (2/1)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        First strike<br />
+Sacrifice Vampire Hexmage: Remove all counters from target permanent.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Zendikar Uncommon
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <a id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl09_cardLink" class="nameLink" onclick="return CardLinkAction(event, this, 'SameWindow');" href="../Card/Details.aspx?multiverseid=41150">Withering Hex</a>
+                    </td>
+                </tr>
+                <tr id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContent_ctl00_cardEntries_ctl09_costRow">
+	<td>
+                        Cost:
+                    </td>
+	<td>
+                        B
+                    </td>
+</tr>
+
+
+                <tr>
+                    <td>
+                        Type:
+                    </td>
+                    <td>
+                        Enchantment  — Aura
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pow/Tgh:
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rules Text:
+                    </td>
+                    <td>
+                        Enchant creature<br />
+Whenever a player cycles a card, put a plague counter on Withering Hex.<br />
+Enchanted creature gets -1/-1 for each plague counter on Withering Hex.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Set/Rarity:
+                    </td>
+                    <td>
+                        Onslaught Uncommon
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br />
+                    </td>
+                </tr>
+
     </table>
 </div>
 </div>
@@ -672,7 +935,8 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
 
 
             <div class="clear"></div>
-
+            <div id="ctl00_ctl00_ctl00_MainContent_SubContent_bottomPagingControlsContainer">
+            <div class="pagingControls"></div></div>
             <b class="dd"><b></b></b>
         </div>
     </div>
@@ -695,11 +959,11 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
             <div class="footer">
                 <a href="http://www.magicthegathering.com">magicthegathering.com</a>&nbsp;&nbsp;
                 <a href="http://www.wizards.com/magic/Digital/MagicOnline.aspx">Magic: The Gathering
-                    Online</a>&nbsp;&nbsp; <a href="../Settings.aspx">Settings</a>&nbsp;&nbsp;
-                <a href="../Language.aspx">Language</a>&nbsp;&nbsp; <a href="../Help.aspx">Help</a>&nbsp;|&nbsp;
-                    <a href="../Login.aspx?returnurl=%2fPages%2fSearch%2fDefault.aspx%3fname%3d%2b%255Bhex%255D">Login</a>
+                    Online</a>&nbsp;&nbsp; <a href="../Settings.aspx"><span>Settings</span></a>&nbsp;&nbsp;
+                <a href="../Language.aspx"><span id="ctl00_ctl00_ctl00_Label1">Language</span></a>&nbsp;&nbsp; <a href="../Help.aspx"><span id="ctl00_ctl00_ctl00_Label2">Help</span></a>&nbsp;|&nbsp;
+                    <a href="../Login.aspx?returnurl=%2fPages%2fSearch%2fDefault.aspx%3foutput%3dspoiler%26method%3dtext%26name%3d%2b%255bhex%255d">Login</a>
                 <div class="wizardsFooterSection">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &copy; 1995 - 2011 <a href="http://www.wizards.com">Wizards of the Coast</a> LLC,
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &copy; 1995 - 2014 <a href="http://www.wizards.com">Wizards of the Coast</a> LLC,
                     a subsidiary of Hasbro, Inc. All Rights Reserved.
                 </div>
                 <br />
@@ -710,6 +974,12 @@ Search:<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_searc
 
         </div>
     </div>
-    </form>
+
+
+<script type="text/javascript">
+//<![CDATA[
+WebForm_AutoFocus('ctl00_ctl00_ctl00_MainContent_SearchControls_CardSearchBoxParent_CardSearchBox');//]]>
+</script>
+</form>
 </body>
 </html>

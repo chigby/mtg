@@ -5,6 +5,7 @@ import textwrap
 from lxml.html import parse
 
 from mtglib.card_renderer import Card
+from mtglib.constants import RARITY_NAMES
 from mtglib.functions import is_string
 
 __all__ = ['CardExtractor', 'Card']
@@ -68,25 +69,29 @@ class CardExtractor(object):
 
     def extract_many(self):
         cards = []
+        p = [t for t in self.document.cssselect('td') if not t.get('colspan')]
+        card = Card()
+        for label, value in zip(p[0::2], p[1::2]):
+            attr = label.text_content().strip(': \n\r') \
+                                       .replace(' ', '_').lower()
+            if attr == 'name':
+                card.name = value.text_content().strip()
+            if attr == 'type':
+                card.types, card.subtypes = self.types(value.text_content().strip())
+            if attr == 'cost':
+                card.mana_cost = value.text_content().strip()
+            if attr == 'loyalty':
+                card.loyalty = value.text_content().strip(' \n()')
+            if attr == 'pow/tgh' and value.text_content().strip('\n() '):
+                card.power, card.toughness = self.split_pow_tgh(value.text_content().strip('\n() '))
+            if attr == 'rules_text':
+                card.rules_text = value.text_content().strip().replace('\n', ' ; ')
+            if attr == 'set/rarity':
+                card.printings = self.printings_text(value)
 
-        for item in self.document.cssselect('tr.cardItem'):
-            for c in item.cssselect('div.cardInfo'):
+                # kind of a hack, set/rarity is always last.
+                cards.append(card)
                 card = Card()
-                card.name = self.text_field(c, '.cardTitle')
-                card.mana_cost = self.symbol_field(c, '.manaCost img')
-                typeline = self.text_field(c, '.typeLine')
-                t = [l.strip() for l in typeline.split('\n') if l.strip()]
-                card.types = t.pop(0)
-                if t:
-                    number = t.pop(0).strip('()')
-                    if '/' in number:
-                        card.power, card.toughness = self.split_pow_tgh(number)
-                    else:
-                        card.loyalty = number
-                card.types, card.subtypes = self.types(card.types)
-                card.rules_text = self.box_field(c, 'div.rulesText p', ' ; ')
-                card.printings = self.printings(item, 'td.rightCol img')
-            cards.append(card)
         return cards
 
     def split_pow_tgh(self, text):
@@ -114,6 +119,15 @@ class CardExtractor(object):
             sub = []
         typ = typeline.strip().split(' ')
         return typ, sub
+
+    def printings_text(self, element):
+        printings = []
+        for t in element.text_content().strip('\n ').split(','):
+            for r in RARITY_NAMES:
+                if t.endswith(r):
+                    printings.append( (t.replace(' ' + r, '').strip(), r))
+                    break
+        return printings
 
     def printings(self, element, css):
         printings = []

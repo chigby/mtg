@@ -171,42 +171,45 @@ class WhenExtractingMultipleCards(object):
     def setup(self):
         self.html = card_html('hex')
         self.cards = CardExtractor(self.html).extract_many()
+        self.hexhunter = self.cards[1]
+        self.hex_ = self.cards[2]
+        self.hexmage = self.cards[8]
 
     def should_get_nine_results(self):
-        eq_(len(self.cards), 9)
+        eq_(len(self.cards), 10)
 
     def should_extract_name(self):
-        eq_(self.cards[0].name, 'Elvish Hexhunter')
+        eq_(self.hexhunter.name, 'Elvish Hexhunter')
 
     def should_extract_mana_cost(self):
-        eq_(self.cards[0].mana_cost, '(G/W)')
+        eq_(self.hexhunter.mana_cost, '(G/W)')
 
     def should_extract_multipart_mana_cost(self):
-        eq_(self.cards[1].mana_cost, '4BB')
+        eq_(self.hex_.mana_cost, '4BB')
 
     def should_extract_types(self):
-        eq_(self.cards[0].types, ['Creature'])
-        eq_(self.cards[0].subtypes, ['Elf', 'Shaman'])
+        eq_(self.hexhunter.types, ['Creature'])
+        eq_(self.hexhunter.subtypes, ['Elf', 'Shaman'])
 
     def should_extract_power(self):
-        eq_(self.cards[0].power, '1')
+        eq_(self.hexhunter.power, '1')
 
     def should_extract_toughness(self):
-        eq_(self.cards[0].toughness, '1')
+        eq_(self.hexhunter.toughness, '1')
 
     def should_extract_rules_text(self):
-        eq_(self.cards[0].rules_text, '{(g/w)}, {T}, Sacrifice Elvish Hexhunter'
+        eq_(self.hexhunter.rules_text, '{(g/w)}, {T}, Sacrifice Elvish Hexhunter'
             ': Destroy target enchantment.')
 
     def should_extract_multipart_card_text(self):
-        eq_(self.cards[7].rules_text, 'First strike ; Sacrifice Vampire Hexmage'
+        eq_(self.hexmage.rules_text, 'First strike ; Sacrifice Vampire Hexmage'
             ': Remove all counters from target permanent.')
 
     def should_extract_printings(self):
-        eq_(self.cards[0].printings, [('Shadowmoor', 'Common')])
+        eq_(self.hexhunter.printings, [('Shadowmoor', 'Common')])
 
     def should_extract_multiple_card_expansions(self):
-        eq_(self.cards[1].printings,
+        eq_(self.hex_.printings,
             [('Magic: The Gathering-Commander', 'Rare'),
              ('Ravnica: City of Guilds', 'Rare')])
 
