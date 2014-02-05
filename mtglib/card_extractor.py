@@ -81,9 +81,9 @@ class CardExtractor(object):
             if attr == 'cost':
                 card.mana_cost = value.text_content().strip()
             if attr == 'loyalty':
-                card.loyalty = value.text_content().strip(' \n()')
-            if attr == 'pow/tgh' and value.text_content().strip('\n() '):
-                card.power, card.toughness = self.split_pow_tgh(value.text_content().strip('\n() '))
+                card.loyalty = value.text_content().strip(' \n\r()')
+            if attr == 'pow/tgh' and value.text_content().strip('\n\r() '):
+                card.power, card.toughness = self.split_pow_tgh(value.text_content().strip('\n\r() '))
             if attr == 'rules_text':
                 card.rules_text = value.text_content().strip().replace('\n', ' ; ')
             if attr == 'set/rarity':
@@ -122,7 +122,7 @@ class CardExtractor(object):
 
     def printings_text(self, element):
         printings = []
-        for t in element.text_content().strip('\n ').split(','):
+        for t in element.text_content().strip().split(','):
             for r in RARITY_NAMES:
                 if t.endswith(r):
                     printings.append( (t.replace(' ' + r, '').strip(), r))
