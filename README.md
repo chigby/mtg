@@ -206,7 +206,7 @@ Rarity uses the following abbreviations:
  * `u`: uncommon
  * `r`: rare
  * `m`: mythic rare
- * `s`: special (Timeshifted cards)
+ * `s`: special ([timeshifted cards from _Time Spiral_](http://www.wizards.com/Magic/Magazine/Article.aspx?x=mtgcom/daily/mr247))
  * `l`: land
 
 E.g., all mythic rare goblins:
@@ -214,6 +214,10 @@ E.g., all mythic rare goblins:
 ```
 $ mtg --type=goblin --rarity=m
 ```
+
+Note: some cards have been printed with multiple rarities (e.g. Sengir
+Vampire).  Searching by rarity will match cards that have ever been
+printed at that rarity, even if it was only once fifteen years ago.
 
 Searches can be limited to sets, blocks, or formats using the full
 name of the set or an abbreviation, e.g. all alternate win conditions
