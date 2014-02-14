@@ -6,12 +6,17 @@ import sys
 
 import mtglib
 
+if sys.version_info < (2, 7):
+    install_requires = ['lxml', 'argparse', 'cssselect']
+else:
+    install_requires = ['lxml', 'cssselect']
+
 setup(
     name = 'mtg',
     packages = ['mtglib'],
     package_dir = {'mtglib': 'mtglib'},
     scripts = ['bin/mtg'],
-    install_requires = ['lxml', 'argparse', 'cssselect'] if sys.version_info < (2, 7) else ['lxml', 'cssselect'],
+    install_requires = install_requires,
     version = mtglib.__version__,
     description = 'Console-based access to the Gatherer Magic Card Database.',
     author = mtglib.__author__,
