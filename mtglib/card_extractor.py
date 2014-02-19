@@ -5,7 +5,7 @@ import textwrap
 from lxml.html import parse
 
 from mtglib.card_renderer import Card
-from mtglib.constants import RARITY_NAMES
+from mtglib.constants import RARITY_PATTERN
 from mtglib.functions import is_string
 
 __all__ = ['CardExtractor', 'Card']
@@ -122,11 +122,11 @@ class CardExtractor(object):
 
     def printings_text(self, element):
         printings = []
-        for t in element.text_content().strip().split(','):
-            for r in RARITY_NAMES:
-                if t.endswith(r):
-                    printings.append( (t.replace(' ' + r, '').strip(), r))
-                    break
+        for t in element.text_content().strip().split(', '):
+            match = re.search(RARITY_PATTERN, t)
+            if match:
+                expansion, rarity = match.groups()[0:2]
+                printings.append((expansion, rarity))
         return printings
 
     def printings(self, element, css):

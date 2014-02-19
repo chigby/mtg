@@ -143,6 +143,10 @@ class WhenExtractingManyCardsWithPlaneswalkers(object):
         eq_(self.sorin_markov.types, ['Planeswalker'])
         eq_(self.sorin_markov.subtypes, ['Sorin'])
 
+    def should_extract_printings(self):
+        eq_(self.sorin_markov.printings,
+            [('Magic 2012', 'Mythic Rare'), ('Zendikar', 'Mythic Rare')])
+
 
 class WhenExtractingFractionalNumbers(object):
 

@@ -9,8 +9,7 @@ TYPES = set(['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
 
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
-RARITY_NAMES = set(['Mythic Rare', 'Common', 'Uncommon', 'Rare', 'Land',
-                    'Special', 'Promo'])
+RARITY_PATTERN = r'(.*?) ((Unc|C)ommon|(Mythic )?Rare|Special|Promo|Land)$'
 
 RARITIES = {
     'c': 'C',
