@@ -122,6 +122,19 @@ class WhenParsingColors(unittest.TestCase):
         cond = parser.get_conditions()
         self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'not'),
                                                   SearchKeyword('R', 'and')])
+                                                  
+    def should_convert_guild_to_colors(self):
+        parser = ConditionParser({'color': 'dimir'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond['color'].keywords, [SearchKeyword('U', 'and'),
+                                                  SearchKeyword('B', 'and')])
+
+    def should_convert_shard_to_colors(self):
+        parser = ConditionParser({'color': 'grixis'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'and'),
+                                                  SearchKeyword('R', 'and'),
+                                                  SearchKeyword('U', 'and')])
 
     def should_raise_error_for_non_color_input(self):
         parser = ConditionParser({'color': 'd'})

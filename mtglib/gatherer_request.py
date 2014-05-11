@@ -2,7 +2,7 @@
 import re
 from collections import Iterable
 
-from mtglib.constants import base_url, TYPES, VALID_WORDS
+from mtglib.constants import base_url, TYPES, VALID_WORDS, COLOR_PROPER_NAMES
 from mtglib.functions import is_string
 
 __all__ = ['SearchRequest', 'CardRequest']
@@ -173,12 +173,19 @@ class ConditionParser(object):
             self.lexers[text_type] = Lexer(rules)
         return self.lexers.get(text_type)
 
+    def preprocess_color(self, value):
+        if COLOR_PROPER_NAMES.get(value.lower(), False):
+            return COLOR_PROPER_NAMES.get(value.lower(), False)
+        return value
+
+
     def get_conditions(self):
         conditions = {}
         for name, value in self.data.items():
             if not is_string(value):
                 continue
             if name == 'color':
+                value = self.preprocess_color(value)
                 self.lexer = self.getlexer('single_character')
             else:
                 self.lexer = self.getlexer('freeform')
