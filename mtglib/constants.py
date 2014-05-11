@@ -9,6 +9,24 @@ TYPES = set(['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
 
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
+COLOR_PROPER_NAMES = {
+    'boros': 'rw',
+    'golgari': 'bg',
+    'selesnya': 'wg',
+    'dimir': 'ub',
+    'orzhov': 'wb',
+    'izzet': 'ur',
+    'gruul': 'rg',
+    'azorius': 'uw',
+    'rakdos': 'br',
+    'simic': 'ug',
+    'bant': 'wug',
+    'esper': 'ubw',
+    'grixis': 'bru',
+    'jund': 'rbg',
+    'naya': 'wrg'
+}
+
 RARITY_PATTERN = r'(.*?) ((Unc|C)ommon|(Mythic )?Rare|Special|Promo|Land)$'
 
 RARITIES = {
