@@ -10,6 +10,12 @@ TYPES = set(['artifact', 'basic', 'creature', 'enchantment', 'instant', 'land',
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
 COLOR_PROPER_NAMES = {
+    'white': 'w',
+    'blue': 'u',
+    'black': 'b',
+    'red': 'r',
+    'green': 'g',
+    'colorless': 'c',
     'boros': 'rw',
     'golgari': 'bg',
     'selesnya': 'wg',
