@@ -40,6 +40,8 @@ def main():
                         'cost CMC (uses <, >, =)')
     display.add_argument('-r', '--reminder', action='store_true',
                          help='show reminder text')
+    display.add_argument('--exact', action='store_true',
+                         help='cards must match the name exactly (e.g. "fork" will not match "forked bolt")')
     display.add_argument('--hidesets', action='store_true',
                         help='hide which sets the card was printed in')
     display.add_argument('--rulings', action='store_true',
@@ -59,7 +61,13 @@ def main():
     parser.add_argument('--random', action='store_true', help='display a card selected at random')
 
     args = parser.parse_args()
-    if args.name: args.name =  ','.join(args.name)
+    if args.name and args.exact:
+        args.name = 'm/^{}$/'.format('\s'.join(args.name))
+    elif args.name:
+        args.name =  ','.join(args.name)
+    elif args.exact and not args.name:
+        parser.error('Cannot require exact name if no name given in search query.\n'
+                     '--exact must be used with name arguments.')
     if not (args.text or args.color or args.type or args.power or args.tough
             or args.block or args.set or args.rarity or args.cmc or args.name
             or args.random or args.format):
