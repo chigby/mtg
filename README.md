@@ -123,6 +123,19 @@ $ mtg --color=wg
 
 Both will find cards that are white and green.
 
+You can also use guild and shard names (e.g. boros, jund) to search
+for multicolored cards with those colors.  E.g.,
+
+```
+$ mtg --color=dimir
+```
+
+is the same as
+
+```
+$ mtg --color=ub
+```
+
 Similarly, to find cards that are white plus either blue _or_ green,
 the comma is optional, and you use the pipe operator as normal:
 
