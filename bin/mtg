@@ -33,7 +33,7 @@ def main():
     search.add_argument('--format',
                         help='cards from format FORMAT')
     search.add_argument('--set',
-                        help='cards matching expansion set SET (e.g. unlimited)')
+                        help='cards matching expansion set SET (e.g. unlimited, mirrodin, or official abbreviations such as RTR or WWK)')
     search.add_argument('--rarity',
                         help='cards matching rarity RARITY (c, u, r, m)')
     search.add_argument('--cmc', help='cards with converted mana '
@@ -41,22 +41,22 @@ def main():
     display.add_argument('-r', '--reminder', action='store_true',
                          help='show reminder text')
     display.add_argument('--hidesets', action='store_true',
-                        help='hide which sets the card was in')
+                        help='hide which sets the card was printed in')
     display.add_argument('--rulings', action='store_true',
                         help='show rulings for the card')
     search.add_argument('--special', action='store_true',
-                        help='include special cards (e.g. planes, schemes)')
+                        help='include special cards in search (e.g. planes, schemes)')
     display.add_argument('--flavor', action='store_true',
                         help='show flavor text')
     search.add_argument('-xc', '--exclude-other-colors', action='store_true',
                         help='exclude colors not explicity specified')
     search.add_argument('-xt', '--exclude-other-types', action='store_true',
                         help='exclude types not explicity specified')
-    search.add_argument('--json', action='store_true',
+    display.add_argument('--json', action='store_true',
                         help='output card in JSON format')
     search.add_argument('name', nargs='*', help='name of card (optional)')
     parser.add_argument('--version', action='version', version=__version__)
-    parser.add_argument('--random', action='store_true', help='display a random card')
+    parser.add_argument('--random', action='store_true', help='display a card selected at random')
 
     args = parser.parse_args()
     if args.name: args.name =  ','.join(args.name)
@@ -83,7 +83,12 @@ def main():
     else:
         request = SearchRequest(vars(args), special=args.special,
                                 exclude_others=exclude_others)
-        url = request.url
+        try:
+            url = request.url
+        except ValueError as e:
+            print('Problem with input: {}\nTry "mtg --help" for assistance.'.format(e))
+            return 0
+
 
     try:
         cards = CardExtractor(url).cards
