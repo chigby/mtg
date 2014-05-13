@@ -30,7 +30,7 @@ COLOR_PROPER_NAMES = {
     'esper': 'ubw',
     'grixis': 'bru',
     'jund': 'rbg',
-    'naya': 'wrg'
+    'naya': 'wrg',
 }
 
 RARITY_PATTERN = r'(.*?) ((Unc|C)ommon|(Mythic )?Rare|Special|Promo|Land)$'
@@ -49,7 +49,7 @@ RARITIES = {
     's': 'S',
     'special': 'S',
     'p': 'P',
-    'promo': 'P'
+    'promo': 'P',
 }
 
 VALID_WORDS = {'rarity': RARITIES, 'color': COLORS}
