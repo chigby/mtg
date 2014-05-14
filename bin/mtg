@@ -57,7 +57,7 @@ def main():
     display.add_argument('--json', action='store_true',
                         help='output card in JSON format')
     search.add_argument('name', nargs='*', help='name of card (optional)')
-    parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('--random', action='store_true', help='display a card selected at random')
 
     args = parser.parse_args()
