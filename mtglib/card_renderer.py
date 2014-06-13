@@ -50,8 +50,15 @@ class CardList(object):
             return self.render_human()
 
     def num_results(self):
-        return '\n{0} result{1} found.'.format(
-            len(self.cards), len(self.cards) != 1 and 's' or '')
+        num = len(self.cards)
+        if num != 1:
+            plural_char = 's'
+        else:
+            plural_char = ''
+        message = '\n{0} result{1} found.'.format(num, plural_char)
+        if num == 25:
+            message += '\nNote: more matching cards may exist; try refining your search.'
+        return message
 
     def render_human(self):
         lines = []
