@@ -8,5 +8,5 @@ class DescribeConstants(unittest.TestCase):
 
     def should_have_base_url(self):
         url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-               '?output=spoiler&method=text&action=advanced&')
+               '?action=advanced&')
         eq_(base_url, url)

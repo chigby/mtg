@@ -69,29 +69,25 @@ class CardExtractor(object):
 
     def extract_many(self):
         cards = []
-        p = [t for t in self.document.cssselect('td') if not t.get('colspan')]
-        card = Card()
-        for label, value in zip(p[0::2], p[1::2]):
-            attr = label.text_content().strip(': \n\r') \
-                                       .replace(' ', '_').lower()
-            if attr == 'name':
-                card.name = value.text_content().strip()
-            if attr == 'type':
-                card.types, card.subtypes = self.types(value.text_content().strip())
-            if attr == 'cost':
-                card.mana_cost = value.text_content().strip()
-            if attr == 'loyalty':
-                card.loyalty = value.text_content().strip(' \n\r()')
-            if attr == 'pow/tgh' and value.text_content().strip('\n\r() '):
-                card.power, card.toughness = self.split_pow_tgh(value.text_content().strip('\n\r() '))
-            if attr == 'rules_text':
-                card.rules_text = value.text_content().strip().replace('\n', ' ; ')
-            if attr == 'set/rarity':
-                card.printings = self.printings_text(value)
+        for card_item in self.document.cssselect('.cardItem'):
+            card = Card()
+            cardinfo = card_item.cssselect('.cardInfo')[0]
+            card.name = self.text_field(cardinfo, '.cardTitle')
+            card.mana_cost = self.symbol_field(cardinfo, '.manaCost img')
+            card.rules_text = self.box_field(cardinfo, '.rulesText p', ' ; ')
 
-                # kind of a hack, set/rarity is always last.
-                cards.append(card)
-                card = Card()
+            typeline = self.text_field(cardinfo, '.typeLine')
+            if '(' in typeline:
+                typeline, number = typeline.rsplit(' ', 1)
+                number = number.strip('()')
+                if number.isnumeric():
+                    card.loyalty = number
+                else:
+                    card.power, card.toughness = self.split_pow_tgh(number)
+            card.types, card.subtypes = self.types(typeline.strip('\n '))
+            setinfo = card_item.cssselect('.setVersions')[0]
+            card.printings = self.printings(setinfo, 'img')
+            cards.append(card)
         return cards
 
     def split_pow_tgh(self, text):

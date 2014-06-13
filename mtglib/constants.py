@@ -1,5 +1,5 @@
 base_url = ('http://gatherer.wizards.com/Pages/Search/Default.aspx'
-            '?output=spoiler&method=text&action=advanced&')
+            '?action=advanced&')
 
 random_url = 'http://gatherer.wizards.com/Pages/Card/Details.aspx?action=random'
 
