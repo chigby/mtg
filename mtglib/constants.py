@@ -29,6 +29,7 @@ SPECIAL_TYPES = set([
     'conspiracy',
     'phenomenon',
     'plane',
+    'ongoing',
     'scheme',
 ])
 
