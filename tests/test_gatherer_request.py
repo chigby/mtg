@@ -122,7 +122,7 @@ class WhenParsingColors(unittest.TestCase):
         cond = parser.get_conditions()
         self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'not'),
                                                   SearchKeyword('R', 'and')])
-                                                  
+
     def should_convert_guild_to_colors(self):
         parser = ConditionParser({'color': 'dimir'})
         cond = parser.get_conditions()
