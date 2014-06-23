@@ -24,6 +24,14 @@ TYPES = set([
     'world',
 ])
 
+# Types that require "special = True" to show any cards
+SPECIAL_TYPES = set([
+    'conspiracy',
+    'phenomenon',
+    'plane',
+    'scheme',
+])
+
 COLORS = {'w': 'W', 'u': 'U', 'b': 'B', 'r': 'R', 'g': 'G', 'c': 'C'}
 
 COLOR_PROPER_NAMES = {

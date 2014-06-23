@@ -2,7 +2,7 @@
 import re
 from collections import Iterable
 
-from mtglib.constants import base_url, TYPES, VALID_WORDS, COLOR_PROPER_NAMES
+from mtglib.constants import base_url, TYPES, SPECIAL_TYPES, VALID_WORDS, COLOR_PROPER_NAMES
 from mtglib.functions import is_string
 
 __all__ = ['SearchRequest', 'CardRequest']
@@ -265,6 +265,12 @@ class SearchRequest(object):
             exclude = 'type' in self.exclude_others
             type_words = [w for w in keywords if w.term.lower() in TYPES]
             subtype_words = [w for w in keywords if w.term.lower() not in TYPES]
+
+            # If one of our types is in SPECIAL_TYPES, override the special setting
+            for type_word in type_words:
+                if type_word.term.lower() in SPECIAL_TYPES:
+                    self.special = True
+                    break
 
             del conditions['type']
             if type_words:
