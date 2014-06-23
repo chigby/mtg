@@ -122,7 +122,7 @@ class WhenParsingColors(unittest.TestCase):
         cond = parser.get_conditions()
         self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'not'),
                                                   SearchKeyword('R', 'and')])
-                                                  
+
     def should_convert_guild_to_colors(self):
         parser = ConditionParser({'color': 'dimir'})
         cond = parser.get_conditions()
@@ -296,3 +296,7 @@ class WhenMakingSpecialRequest(unittest.TestCase):
         request = SearchRequest({'name': 'only,blood,ends,your,nightmares'},
                               special=True)
         assert request.special_fragment in request.url
+
+    def should_assume_special_if_looking_for_a_special_type(self):
+        request = SearchRequest({'type': 'plane'})
+        self.assertIn('&special=true', request.url)
