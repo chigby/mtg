@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import textwrap
 
 from lxml.html import parse
 
@@ -34,7 +33,7 @@ class CardExtractor(object):
     def _flatten(self, element):
         """Recursively enter and extract text from all child
         elements."""
-        result = [ (element.text or '') ]
+        result = [(element.text or '')]
         if element.attrib.get('alt'):
             result.append(Symbol(element.attrib.get('alt')).textbox)
         for sel in element:
@@ -74,7 +73,8 @@ class CardExtractor(object):
             cardinfo = card_item.cssselect('.cardInfo')[0]
             card.name = self.text_field(cardinfo, '.cardTitle')
             card.mana_cost = self.symbol_field(cardinfo, '.manaCost img')
-            card.rules_text = self.box_field(cardinfo, '.rulesText p', ' ; ')
+            card.rules_text = self.box_field(cardinfo, '.rulesText p', '\n')
+            card.img = self.img_field(card_item, '.leftCol a img')
 
             typeline = self.text_field(cardinfo, '.typeLine')
             if '(' in typeline:
@@ -89,6 +89,10 @@ class CardExtractor(object):
             card.printings = self.printings(setinfo, 'img')
             cards.append(card)
         return cards
+
+    def img_field(self, container, css):
+        tmp_url = container.cssselect(css)[0].attrib['src']
+        return tmp_url.replace('../..', "http://{}".format(self.card_source.split('/')[2]))
 
     def split_pow_tgh(self, text):
         """Split a power/toughness string on the correct slash.
@@ -138,9 +142,10 @@ class CardExtractor(object):
 
         for component in self.document.cssselect('td.cardComponentContainer'):
             if not component.getchildren():
-                continue # do not parse empty components
+                continue  # do not parse empty components
             labels = component.cssselect('div.label')
             values = component.cssselect('div.value')
+            img = component.cssselect('div.cardImage')
             pairs = zip(labels, values)
             card = Card()
             attributes = {}
