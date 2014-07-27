@@ -89,6 +89,7 @@ class CardExtractor(object):
             card.types, card.subtypes = self.types(typeline.strip('\n '))
             setinfo = card_item.cssselect('.setVersions')[0]
             card.printings = self.printings(setinfo, 'img')
+            card.printings_with_ids = self.printings(setinfo, 'img', get_ids=True)
             cards.append(card)
         return cards
 
@@ -118,19 +119,22 @@ class CardExtractor(object):
         typ = typeline.strip().split(' ')
         return typ, sub
 
-    def printings(self, element, css):
+    def printings(self, element, css, get_ids=False):
         printings = []
         for img in element.cssselect(css):
             matches = re.match('([^(]+) \(([^)]+)\)', img.attrib['alt'])
             if matches:
-                parent = img.getparent()
-                if parent.tag == 'a' and 'href' in parent.attrib:
-                    card_id = re.findall(r'[\d]+$', parent.attrib['href'])[0]
+                if get_ids:
+                    parent = img.getparent()
+                    if parent.tag == 'a' and 'href' in parent.attrib:
+                        card_id = re.findall(r'[\d]+$', parent.attrib['href'])[0]
+                    else:
+                        card_id = None
+                    eggs = list(matches.groups())
+                    eggs.append(card_id)
+                    printings.append(tuple(eggs))
                 else:
-                    card_id = None
-                eggs = list(matches.groups())
-                eggs.append(card_id)
-                printings.append(tuple(eggs))
+                    printings.append(matches.groups())
         return printings
 
     def extract(self):
