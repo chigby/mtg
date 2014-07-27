@@ -28,6 +28,9 @@ class CardExtractor(object):
 
     def __init__(self, card_source):
         self.card_source = card_source
+        # check if user is looking for complete set:
+        match = re.search(r'set=\+\[(?P<set>[\w]+)\]', card_source)
+        self.expansions = match.groups() if match else None
         self._document = None
 
     def _flatten(self, element):
@@ -74,7 +77,6 @@ class CardExtractor(object):
             card.name = self.text_field(cardinfo, '.cardTitle')
             card.mana_cost = self.symbol_field(cardinfo, '.manaCost img')
             card.rules_text = self.box_field(cardinfo, '.rulesText p', '\n')
-            card.img = self.img_field(card_item, '.leftCol a img')
 
             typeline = self.text_field(cardinfo, '.typeLine')
             if '(' in typeline:
@@ -89,10 +91,6 @@ class CardExtractor(object):
             card.printings = self.printings(setinfo, 'img')
             cards.append(card)
         return cards
-
-    def img_field(self, container, css):
-        tmp_url = container.cssselect(css)[0].attrib['src']
-        return tmp_url.replace('../..', "http://{}".format(self.card_source.split('/')[2]))
 
     def split_pow_tgh(self, text):
         """Split a power/toughness string on the correct slash.
@@ -120,21 +118,19 @@ class CardExtractor(object):
         typ = typeline.strip().split(' ')
         return typ, sub
 
-    def printings_text(self, element):
-        printings = []
-        for t in element.text_content().strip().split(', '):
-            match = re.search(RARITY_PATTERN, t)
-            if match:
-                expansion, rarity = match.groups()[0:2]
-                printings.append((expansion, rarity))
-        return printings
-
     def printings(self, element, css):
         printings = []
         for img in element.cssselect(css):
             matches = re.match('([^(]+) \(([^)]+)\)', img.attrib['alt'])
             if matches:
-                printings.append(matches.groups())
+                parent = img.getparent()
+                if parent.tag == 'a' and 'href' in parent.attrib:
+                    card_id = re.findall(r'[\d]+$', parent.attrib['href'])[0]
+                else:
+                    card_id = None
+                eggs = list(matches.groups())
+                eggs.append(card_id)
+                printings.append(eggs)
         return printings
 
     def extract(self):
