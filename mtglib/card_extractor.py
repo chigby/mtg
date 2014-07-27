@@ -145,7 +145,6 @@ class CardExtractor(object):
                 continue  # do not parse empty components
             labels = component.cssselect('div.label')
             values = component.cssselect('div.value')
-            img = component.cssselect('div.cardImage')
             pairs = zip(labels, values)
             card = Card()
             attributes = {}
