@@ -130,7 +130,7 @@ class CardExtractor(object):
                     card_id = None
                 eggs = list(matches.groups())
                 eggs.append(card_id)
-                printings.append(eggs)
+                printings.append(tuple(eggs))
         return printings
 
     def extract(self):
