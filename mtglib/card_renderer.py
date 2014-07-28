@@ -99,8 +99,10 @@ class CardRenderer(object):
         card_data.extend(self.render_rules_text())
         if self.flavor and self.card.flavor_text:
             card_data.extend(self.render_flavor_text())
-        if self.printings: card_data.extend(self.render_printings())
-        if self.rulings: card_data.extend(self.render_rulings())
+        if self.printings:
+            card_data.extend(self.render_printings())
+        if self.rulings:
+            card_data.extend(self.render_rulings())
 
         return card_data
 
@@ -112,7 +114,7 @@ class CardRenderer(object):
             else:
                 json_data[field] = getattr(self.card, field)
 
-        j_string = json.dumps(json_data, sort_keys=True,indent=4, separators=(',', ': '))
+        j_string = json.dumps(json_data, sort_keys=True, indent=4, separators=(',', ': '))
         return j_string.split('\n')
 
     def render_flavor_text(self):
@@ -152,4 +154,4 @@ class CardRenderer(object):
         if not self.card.subtypes:
             return [' '.join(self.card.types)]
         return [u'{0} \u2014 {1}'.format(' '.join(self.card.types),
-                                        ' '.join(self.card.subtypes))]
+                                         ' '.join(self.card.subtypes))]
