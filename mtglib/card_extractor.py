@@ -160,16 +160,14 @@ class CardExtractor(object):
                     attributes['power'], attributes['toughness'] = \
                         self.pow_tgh(value)
                 elif attr == 'rules_text':
-                    attributes[attr] = self.box_field(value,
-                                                      'div.cardtextbox', ' ; ')
+                    attributes[attr] = self.box_field(value, 'div.cardtextbox', ' ; ')
                 elif attr == 'printings':
                     attributes[attr] = self.printings(value, 'img')
                     attributes['printings_full'] = self.printings(value, 'img', full=True)
                 elif attr == 'rarity':
                     continue
                 elif attr == 'flavor_text':
-                    attributes[attr] = self.box_field(value,
-                                                      'div.cardtextbox', '\n')
+                    attributes[attr] = self.box_field(value, 'div.cardtextbox', '\n')
                 elif attr == 'mana_cost':
                     attributes[attr] = self.symbol_field(value, 'img')
                 elif attr == 'types':
