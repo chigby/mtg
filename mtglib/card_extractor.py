@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import textwrap
 
 from lxml.html import parse
 
@@ -29,12 +28,15 @@ class CardExtractor(object):
 
     def __init__(self, card_source):
         self.card_source = card_source
+        # check if user is looking for complete set:
+        match = re.search(r'set=\+\[(?P<set>[\w]+)\]', card_source)
+        self.expansions = match.groups() if match else None
         self._document = None
 
     def _flatten(self, element):
         """Recursively enter and extract text from all child
         elements."""
-        result = [ (element.text or '') ]
+        result = [(element.text or '')]
         if element.attrib.get('alt'):
             result.append(Symbol(element.attrib.get('alt')).textbox)
         for sel in element:
@@ -74,7 +76,7 @@ class CardExtractor(object):
             cardinfo = card_item.cssselect('.cardInfo')[0]
             card.name = self.text_field(cardinfo, '.cardTitle')
             card.mana_cost = self.symbol_field(cardinfo, '.manaCost img')
-            card.rules_text = self.box_field(cardinfo, '.rulesText p', ' ; ')
+            card.rules_text = self.box_field(cardinfo, '.rulesText p', '\n')
 
             typeline = self.text_field(cardinfo, '.typeLine')
             if '(' in typeline:
@@ -87,6 +89,7 @@ class CardExtractor(object):
             card.types, card.subtypes = self.types(typeline.strip('\n '))
             setinfo = card_item.cssselect('.setVersions')[0]
             card.printings = self.printings(setinfo, 'img')
+            card.printings_full = self.printings(setinfo, 'img', full=True)
             cards.append(card)
         return cards
 
@@ -116,21 +119,26 @@ class CardExtractor(object):
         typ = typeline.strip().split(' ')
         return typ, sub
 
-    def printings_text(self, element):
-        printings = []
-        for t in element.text_content().strip().split(', '):
-            match = re.search(RARITY_PATTERN, t)
-            if match:
-                expansion, rarity = match.groups()[0:2]
-                printings.append((expansion, rarity))
-        return printings
-
-    def printings(self, element, css):
-        printings = []
+    def printings(self, element, css, full=False):
+        if full:
+            printings = {}
+        else:
+            printings = []
         for img in element.cssselect(css):
             matches = re.match('([^(]+) \(([^)]+)\)', img.attrib['alt'])
             if matches:
-                printings.append(matches.groups())
+                if full:
+                    parent = img.getparent()
+                    if parent.tag == 'a' and 'href' in parent.attrib:
+                        card_id = re.findall(r'[\d]+$', parent.attrib['href'])[0]
+                    else:
+                        card_id = None
+                    mtg_set, rarity = list(matches.groups())
+                    versions = printings.setdefault(mtg_set, [])
+                    eggs = {'rarity': rarity, 'id': card_id}
+                    versions.append(eggs)
+                else:
+                    printings.append(matches.groups())
         return printings
 
     def extract(self):
@@ -138,7 +146,7 @@ class CardExtractor(object):
 
         for component in self.document.cssselect('td.cardComponentContainer'):
             if not component.getchildren():
-                continue # do not parse empty components
+                continue  # do not parse empty components
             labels = component.cssselect('div.label')
             values = component.cssselect('div.value')
             pairs = zip(labels, values)
@@ -152,15 +160,14 @@ class CardExtractor(object):
                     attributes['power'], attributes['toughness'] = \
                         self.pow_tgh(value)
                 elif attr == 'rules_text':
-                    attributes[attr] = self.box_field(value,
-                                                      'div.cardtextbox', ' ; ')
+                    attributes[attr] = self.box_field(value, 'div.cardtextbox', ' ; ')
                 elif attr == 'printings':
                     attributes[attr] = self.printings(value, 'img')
+                    attributes['printings_full'] = self.printings(value, 'img', full=True)
                 elif attr == 'rarity':
                     continue
                 elif attr == 'flavor_text':
-                    attributes[attr] = self.box_field(value,
-                                                      'div.cardtextbox', '\n')
+                    attributes[attr] = self.box_field(value, 'div.cardtextbox', '\n')
                 elif attr == 'mana_cost':
                     attributes[attr] = self.symbol_field(value, 'img')
                 elif attr == 'types':
