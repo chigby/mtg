@@ -57,6 +57,11 @@ COLOR_PROPER_NAMES = {
     'grixis': 'bru',
     'jund': 'rbg',
     'naya': 'wrg',
+    'abzan': 'wbg',
+    'jeskai': 'urw',
+    'sultai': 'bgu',
+    'mardu': 'rwb',
+    'temur': 'gur',
 }
 
 RARITY_PATTERN = r'(.*?) ((Unc|C)ommon|(Mythic )?Rare|Special|Promo|Land)$'
