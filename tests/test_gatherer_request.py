@@ -135,6 +135,13 @@ class WhenParsingColors(unittest.TestCase):
         self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'and'),
                                                   SearchKeyword('R', 'and'),
                                                   SearchKeyword('U', 'and')])
+                                                  
+    def should_convert_wedge_to_colors(self):
+        parser = ConditionParser({'color': 'sultai'})
+        cond = parser.get_conditions()
+        self.assertEqual(cond['color'].keywords, [SearchKeyword('B', 'and'),
+                                                  SearchKeyword('G', 'and'),
+                                                  SearchKeyword('U', 'and')])
 
     def should_raise_error_for_non_color_input(self):
         parser = ConditionParser({'color': 'd'})
