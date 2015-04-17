@@ -3,7 +3,7 @@ import textwrap
 import json
 
 from mtglib.constants import separator
-from mtglib.colors import ColoredManaCost
+from mtglib.colors import ColoredManaSymbol
 
 class Card(object):
 
@@ -93,7 +93,7 @@ class CardRenderer(object):
         if self.with_color:
             card_format = [u'{0.name}']
             card_data = [line.format(self.card) for line in card_format]
-            card_data[0] += ' ' + ColoredManaCost().draw(self.card.mana_cost)
+            card_data[0] += ' ' + ColoredManaSymbol().color(self.card.mana_cost)
         else:
             card_format = [u'{0.name} {0.mana_cost}']
             card_data = [line.format(self.card) for line in card_format]

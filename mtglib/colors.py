@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class ColoredManaCost(object):
+class ColoredManaSymbol(object):
 	YELLOW = '\033[33m'
 	BLUE = '\033[94m'
 	GREEN = '\033[92m'
@@ -10,7 +10,7 @@ class ColoredManaCost(object):
 	BOLD = '\033[1m'
 	UNDERLINE = '\033[4m'
 
-	def draw(self, string):
+	def color(self, string):
 		manaCost = ''
 		for letter in string:
 			if letter == 'U':
@@ -29,16 +29,16 @@ class ColoredManaCost(object):
 		return manaCost
 
 	def yellow(self, string):
-		return '{0}{1}{2}'.format(ColoredManaCost.YELLOW, string, ColoredManaCost.ENDC)
+		return '{0}{1}{2}'.format(ColoredManaSymbol.YELLOW, string, ColoredManaSymbol.ENDC)
 
 	def blue(self, string):
-		return '{0}{1}{2}'.format(ColoredManaCost.BLUE, string, ColoredManaCost.ENDC)
+		return '{0}{1}{2}'.format(ColoredManaSymbol.BLUE, string, ColoredManaSymbol.ENDC)
 
 	def green(self, string):
-		return '{0}{1}{2}'.format(ColoredManaCost.GREEN, string, ColoredManaCost.ENDC)
+		return '{0}{1}{2}'.format(ColoredManaSymbol.GREEN, string, ColoredManaSymbol.ENDC)
 
 	def red(self, string):
-		return '{0}{1}{2}'.format(ColoredManaCost.RED, string, ColoredManaCost.ENDC)
+		return '{0}{1}{2}'.format(ColoredManaSymbol.RED, string, ColoredManaSymbol.ENDC)
 
 	def black(self, string):
-		return '{0}{1}{2}'.format(ColoredManaCost.BLACK, string, ColoredManaCost.ENDC)
+		return '{0}{1}{2}'.format(ColoredManaSymbol.BLACK, string, ColoredManaSymbol.ENDC)
