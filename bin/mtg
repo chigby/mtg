@@ -22,7 +22,8 @@ def main():
 
     search.add_argument('-t', '--text',
                         help='containing rules text TEXT', metavar='TEXT')
-    search.add_argument('--color', action='store_true', help='cards matching COLOR.  Supports one-letter abbreviations (w, u, b, r, g), guilds/shards (e.g. boros, esper), and colorless (c).')
+    search.add_argument('--color', help='cards matching COLOR.  Supports one-letter abbreviations (w, u, b, r, g), guilds/shards (e.g. boros, esper), and colorless (c).')
+    search.add_argument('--colours', action='store_true', help='colours the mana cost')
     search.add_argument('--type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
     search.add_argument('--power',
                         help='cards with power POWER (uses <, >, =)')
@@ -56,8 +57,6 @@ def main():
                         help='exclude types not explicity specified')
     display.add_argument('--json', action='store_true',
                         help='output card in JSON format')
-    #display.add_argument('--color', action='store_true',
-    #                    help='color the mana cost')
     search.add_argument('name', nargs='*', help='name of card (optional)')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('--random', action='store_true', help='display a card selected at random')
@@ -109,7 +108,7 @@ def main():
         return 0
 
     cardlist = CardList(cards, rulings=args.rulings, reminders=args.reminder,
-                        flavor=args.flavor, printings=not args.hidesets, json=args.json, with_color=args.color)
+                        flavor=args.flavor, printings=not args.hidesets, json=args.json, with_color=args.colours)
     for line in cardlist.render(): print(line)
     return 0
 
