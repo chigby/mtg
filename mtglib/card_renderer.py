@@ -3,6 +3,7 @@ import textwrap
 import json
 
 from mtglib.constants import separator
+from mtglib.colors import ColoredManaCost
 
 class Card(object):
 
@@ -35,11 +36,11 @@ def remove_reminders(text):
 class CardList(object):
 
     def __init__(self, cards, rulings=False, reminders=True, flavor=False,
-                 printings=True, json=False):
+                 printings=True, json=False, with_color=False):
         self.cards = cards
         self.json = json
         self.renderer = CardRenderer(Card(), rulings, reminders, flavor,
-                                     printings)
+                                     printings, json, with_color)
 
     def render(self):
         if self.json:
@@ -79,18 +80,23 @@ class CardList(object):
 class CardRenderer(object):
 
     def __init__(self, card, rulings=False, reminders=True, flavor=False,
-                 printings=True, json=False):
+                 printings=True, json=False, with_color=False):
         self.card = card
         self.rulings = rulings
         self.reminders = reminders
         self.flavor = flavor
         self.printings = printings
         self.json = json
+        self.with_color = with_color
 
     def render(self):
-        card_format = [u'{0.name} {0.mana_cost}']
-
-        card_data = [line.format(self.card) for line in card_format]
+        if self.with_color:
+            card_format = [u'{0.name}']
+            card_data = [line.format(self.card) for line in card_format]
+            card_data[0] += ' ' + ColoredManaCost().draw(self.card.mana_cost)
+        else:
+            card_format = [u'{0.name} {0.mana_cost}']
+            card_data = [line.format(self.card) for line in card_format]
 
         if self.json:
             return self.render_json()
