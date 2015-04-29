@@ -22,8 +22,8 @@ def main():
 
     search.add_argument('-t', '--text',
                         help='containing rules text TEXT', metavar='TEXT')
-    search.add_argument('--color', help='cards matching COLOR.  Supports one-letter abbreviations (w, u, b, r, g), guilds/shards (e.g. boros, esper), and colorless (c).')
-    search.add_argument('--colourize', action='store_true', help='colourize the mana cost')
+    search.add_argument('--color', '--colour', help='cards matching COLOR.  Supports one-letter abbreviations (w, u, b, r, g), guilds/shards (e.g. boros, esper), and colorless (c).')
+    search.add_argument('--colorize', '--colourize', dest='colourize', action='store_true', help='colourize the mana cost')
     search.add_argument('--type', help='cards matching TYPE or SUBTYPE (e.g. artifact, creature, legendary, snow, goblin, forest, plane)')
     search.add_argument('--power',
                         help='cards with power POWER (uses <, >, =)')
@@ -51,7 +51,8 @@ def main():
                         help='include special cards in search (e.g. planes, schemes)')
     display.add_argument('--flavor', action='store_true',
                         help='show flavor text')
-    search.add_argument('-xc', '--exclude-other-colors', action='store_true',
+    search.add_argument('-xc', '--exclude-other-colors', '--exclude-other-colours',
+                        action='store_true',
                         help='exclude colors not explicity specified')
     search.add_argument('-xt', '--exclude-other-types', action='store_true',
                         help='exclude types not explicity specified')

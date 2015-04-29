@@ -66,6 +66,9 @@ $ mtg gideon --color=w
 To specify colors, use the one-letter abbrevations: `w`, `u`, `b`,
 `r`, `g`.  You may also specify `c` for colorless.
 
+Note for non-Americans: ``--color`` and ``--colour`` both work the
+same way.
+
 Filter by card text.  A string of comma separated terms searches cards
 containing all terms, not the exact phrase.  For example, to find all
 green cards that mention flying, use:
@@ -146,8 +149,8 @@ $ mtg --color=wg
 
 Both will find cards that are white and green.
 
-You can also use guild and shard names (e.g. boros, jund) to search
-for multicolored cards with those colors.  E.g.,
+You can also use guild, shard, and clan names (e.g. boros, jund,
+abzan) to search for multicolored cards with those colors.  So:
 
 ```
 $ mtg --color=dimir
