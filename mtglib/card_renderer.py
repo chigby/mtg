@@ -36,11 +36,11 @@ def remove_reminders(text):
 class CardList(object):
 
     def __init__(self, cards, rulings=False, reminders=True, flavor=False,
-                 printings=True, json=False, with_color=False):
+                 printings=True, json=False, colourize=False):
         self.cards = cards
         self.json = json
         self.renderer = CardRenderer(Card(), rulings, reminders, flavor,
-                                     printings, json, with_color)
+                                     printings, json, colourize)
 
     def render(self):
         if self.json:
@@ -80,17 +80,17 @@ class CardList(object):
 class CardRenderer(object):
 
     def __init__(self, card, rulings=False, reminders=True, flavor=False,
-                 printings=True, json=False, with_color=False):
+                 printings=True, json=False, colourize=False):
         self.card = card
         self.rulings = rulings
         self.reminders = reminders
         self.flavor = flavor
         self.printings = printings
         self.json = json
-        self.with_color = with_color
+        self.colourize = colourize
 
     def render(self):
-        if self.with_color:
+        if self.colourize:
             card_format = [u'{0.name}']
             card_data = [line.format(self.card) for line in card_format]
             card_data[0] += ' ' + ColoredManaSymbol().color(self.card.mana_cost)
