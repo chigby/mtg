@@ -206,8 +206,8 @@ class WhenExtractingMultipleCards(object):
             ': Destroy target enchantment.')
 
     def should_extract_multipart_card_text(self):
-        eq_(self.hexmage.rules_text, 'First strike ; Sacrifice Vampire Hexmage'
-            ': Remove all counters from target permanent.')
+        eq_(self.hexmage.rules_text, "First strike\nSacrifice Vampire Hexmage"
+            ": Remove all counters from target permanent.")
 
     def should_extract_printings(self):
         eq_(self.hexhunter.printings, [('Shadowmoor', 'Common')])

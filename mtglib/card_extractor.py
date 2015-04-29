@@ -28,9 +28,11 @@ class CardExtractor(object):
 
     def __init__(self, card_source):
         self.card_source = card_source
-        # check if user is looking for complete set:
-        match = re.search(r'set=\+\[(?P<set>[\w]+)\]', card_source)
-        self.expansions = match.groups() if match else None
+        # needed for test suite
+        if is_string(card_source):
+            # check if user is looking for complete set:
+            match = re.search(r'set=\+\[(?P<set>[\w]+)\]', card_source)
+            self.expansions = match.groups() if match else None
         self._document = None
 
     def _flatten(self, element):
@@ -112,7 +114,7 @@ class CardExtractor(object):
     def types(self, text):
         typeline = clean_dashes(text)
         if u'\u2014' in typeline:
-            typeline, sub = typeline.split(u'\u2014')
+            typeline, sub = typeline.split(u'\u2014', 1)
             sub = sub.strip().split(' ')
         else:
             sub = []

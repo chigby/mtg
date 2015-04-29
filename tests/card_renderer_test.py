@@ -42,6 +42,16 @@ class DescribeCardRenderer(TestCase):
              "opponent's control and deal no damage.",
              u'Time Spiral (Rare)'])
 
+    def should_wrap_multiline_rules_text_on_linebreaks(self):
+        self.card.rules_text = u'First Strike\nSacrifice Vampire Hexmage: Remove all counters from target permanent.'
+        self.assertEqual(
+            CardRenderer(self.card).render(),
+            [u'Name 2UUU',
+             u'Legendary Creature — Human Wizard',
+             u'Text: (3/4) First Strike',
+             u'Sacrifice Vampire Hexmage: Remove all counters from target permanent.',
+             u'Time Spiral (Rare)'])
+
     def should_wrap_printings(self):
         self.card.printings = [
             (u'Limited Edition Alpha', u'Common'),

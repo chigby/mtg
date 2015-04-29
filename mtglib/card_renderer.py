@@ -137,7 +137,10 @@ class CardRenderer(object):
             rules_text = self.card.rules_text
         else:
             rules_text = remove_reminders(self.card.rules_text).strip(' ;')
-        lines = textwrap.wrap(rules_text_format.format(self.card, rules_text))
+        lines = []
+        for line in rules_text_format.format(self.card, rules_text).split('\n'):
+            lines.extend(textwrap.wrap(line))
+
         if self.card.loyalty:
             lines.append(u'Loyalty: {0.loyalty}'.format(self.card))
         if self.card.color_indicator:
