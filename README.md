@@ -1,8 +1,10 @@
-## mtg
+# mtg
+
+[![PyPI version](https://badge.fury.io/py/mtg.svg)](http://badge.fury.io/py/mtg)
 
 Console-based access to the [Gatherer Magic Card Database](http://gatherer.wizards.com).
 
-### Motivation
+## Motivation
 
 I'm not going to lie: I look up a lot of Magic cards.  Sometimes I
 want to see the art, but usually I just want to know what the card
@@ -10,20 +12,35 @@ does.  There are plenty of web-based search engines, but even modest
 queries can involve manipulating many form elements when, really, all
 you want to do is type it out.  Thus: mtg.
 
-### To install
+## Installation
+
+### Requirements
+
+- Python 2.7 or 3.3+.
+- pip (to install)
+
+### How to install
+
+To install the latest release of mtg, use [pip](http://www.pip-installer.org/en/latest/index.html):
 
 ```
-python setup.py install
+$ pip install mtg
 ```
 
-### Documentation
+To update to the latest version, use:
+
+```
+$ pip install mtg --upgrade
+```
+
+## Documentation & Examples of Use
 
 Mtg is a command-line tool.  It accepts a number of arguments that
 specify what cards you are looking for.  There are a number of
 conventions it relies on to make complex queries remain compact.  The
 best way to learn these is to read some examples.
 
-#### Simple Queries
+### Simple Queries
 
 Search for cards by name.  Any positional arguments passed to `mtg`
 are assumed to be part of the card's name.  This lets you look up any
@@ -76,7 +93,7 @@ want.
 $ mtg --text='destroy all creatures' --type=instant
 ```
 
-#### Combining terms
+### Combining terms
 
 Sometimes, you want to search for more than one thing.  Give mtg a comma separated list and it will return only cards that match both words (logical _and_).
 
@@ -110,7 +127,7 @@ zombies or goblins or aurochs:
 $ mtg --type='snow,zombie|goblin|aurochs'
 ```
 
-#### Multicolored Cards
+### Multicolored Cards
 
 Searching for multicolored cards is sometimes tricky, so there are a
 few more options to help you out.
@@ -162,7 +179,7 @@ cards that are white-green and no other colors, use:
 $ mtg --color=wg -xc
 ```
 
-#### Numbers
+### Numbers
 
 Sometimes you want to find a card based on a numeric field.  Right now
 you can do that for these three: power, toughness, and converted mana
@@ -200,7 +217,7 @@ that cost either two or less or nine or greater, use:
 $ mtg --type=angel --cmc='<=2|=>9'
 ```
 
-#### Negation
+### Negation
 
 If you want to specifically exclude something from the results, you
 can use the _not_ operator: `!`.  This is helpful for weeding out junk
@@ -217,7 +234,7 @@ not white but are either blue or colorless, use:
 $ mtg --type=angel --color='!w,u|c'
 ```
 
-#### Other search fields
+### Other search fields
 
 Rarity uses the following abbreviations:
 
@@ -258,7 +275,7 @@ Or, all green 1-drops in Standard:
 $ mtg --color=g --type=creature --cmc=1 --format=standard
 ```
 
-#### Display options
+### Display options
 
 The output of "mtg" is customizable to a certain degree.  Add the
 flags below to format the results to your liking.
@@ -279,6 +296,31 @@ $ mtg --type='basic,!snow' --hidesets
 
 `--json`: Enable JSON-formatted output.  Useful if you want to pipe the output into another program or perform some other post-processing on the results of your card search.
 
-### Contact
+`--colourize`: Enable colored mana-costs in the output.  Very pretty.  Especially handy for multicolored cards.
+
+## Contact
 
 I love hearing from users of this software.  Any comments, criticism, nit-picks, kudos, requests, or other feedback are welcome.  Feel free to open an issue or email me.
+
+## Development
+
+As far as I can tell, neither Magic nor command lines are going away any time soon, so this project should continue until then.  So I welcome any and all developers and dabblers, neophytes and experts, djinni and angels to contribute to the code.
+
+The easiest way to get started is to clone or fork this repository and start making some changes.  Mtg has a fairly extensitve test suite, so you shouldn't have to worry too much about breaking something without knowing.  To get set-up, use:
+
+```bash
+$ pip install -r requirements-dev.txt
+$ python setup.py develop
+```
+
+And to run the tests:
+
+```bash
+python setup.py nosetests
+```
+
+Once you have fixed a bug or implemented a new feature, please sent a pull request!  I try to get around to merging these in as quickly as I am able, but if it seems like I'm ignoring you, just pester me until I respond.
+
+## License
+
+The MIT software license can be found in [this file](LICENSE).
