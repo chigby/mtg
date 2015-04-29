@@ -10,6 +10,12 @@ does.  There are plenty of web-based search engines, but even modest
 queries can involve manipulating many form elements when, really, all
 you want to do is type it out.  Thus: mtg.
 
+### To install
+
+```
+python setup.py install
+```
+
 ### Documentation
 
 Mtg is a command-line tool.  It accepts a number of arguments that
