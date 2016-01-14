@@ -226,7 +226,7 @@ class WhenExtractingFlavorText(object):
 
     def should_format_flavor_text(self):
         eq_(self.cards[0].flavor_text,
-            u'"It offers you what you want, not what you need."\n—Braids, dementia summoner')
+            u'"It offers you what you want, not what you need."—Braids, dementia summoner')
 
 
 class WhenExtractingRulings(object):

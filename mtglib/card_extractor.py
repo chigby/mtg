@@ -169,7 +169,7 @@ class CardExtractor(object):
                 elif attr == 'rarity':
                     continue
                 elif attr == 'flavor_text':
-                    attributes[attr] = self.box_field(value, 'div.cardtextbox', '\n')
+                    attributes[attr] = self.box_field(value, 'div.flavortextbox', '\n')
                 elif attr == 'mana_cost':
                     attributes[attr] = self.symbol_field(value, 'img')
                 elif attr == 'types':
