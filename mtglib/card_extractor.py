@@ -86,6 +86,8 @@ class CardExtractor(object):
                 number = number.strip('()')
                 if number.isnumeric():
                     card.loyalty = number
+                elif number == 'X':
+                    card.loyalty = 'X'
                 else:
                     card.power, card.toughness = self.split_pow_tgh(number)
             card.types, card.subtypes = self.types(typeline.strip('\n '))
