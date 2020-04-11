@@ -1,6 +1,9 @@
 """Request to the Gatherer site"""
 import re
-from collections import Iterable
+try:
+    from collections.abc import Iterable
+except ImportError:
+    from collections import Iterable
 
 from mtglib.constants import base_url, TYPES, SPECIAL_TYPES, VALID_WORDS, COLOR_PROPER_NAMES
 from mtglib.functions import is_string
